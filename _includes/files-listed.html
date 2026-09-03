@@ -1,0 +1,43 @@
+{% capture list-of-files %}
+
+    {% comment %} Output files for each work's current variant,
+    and then for any translations in that variant. {% endcomment %}
+
+    {% for work in site.data.works %}
+
+        {% comment %} If this work is not published, skip it. {% endcomment %}
+        {% if work[1][variant].published == false %}
+            {% continue %}
+        {% endif %}
+        {% if work[1].default.published == false %}
+            {% continue %}
+        {% endif %}
+
+        {% capture list-of-files-work-directory %}{{ work[0] }}{% endcapture %}
+
+        {% include files-listed-by-work.html directory=list-of-files-work-directory %}
+
+    {% endfor %}
+
+    {% comment %} Add the docs, if they are enabled. {% endcomment %}
+
+    {% for coll in site.collections %}
+        {% if coll.output == true and coll.label == "docs" %}
+        {% assign output-docs = true %}
+        {% break %}
+        {% endif %}
+    {% endfor %}
+
+    {% if output-docs == true %}
+        {% for doc in site.docs  %}
+            {{ doc.url }}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+    {% endif %}
+
+{% endcapture %}
+
+{% comment %} Clean up space in the list {% endcomment %}
+{% capture list-of-files %}{{ list-of-files | strip_newlines | replace: " ", "" }}{% endcapture %}
+
+{% comment %} Put the list in an array and sort it {% endcomment %}
+{% assign array-of-files = list-of-files | replace: "'", "" | split: "," | sort %}

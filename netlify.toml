@@ -1,0 +1,29 @@
+# See https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  command = "npm run update-modules && npm run eb -- output --baseurl='' --deploytype=development --dontserve=true"
+  publish = "_site"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # This forces npm to prioritize a clean state
+  NPM_FLAGS = "--no-audit --no-fund"
+
+[context.production.environment]
+
+  # We set NODE_ENV to development so that
+  # Netlify will install devDependencies in package.json.
+  NODE_ENV = "development"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+
+[context.branch-deploy.environment]
+  NODE_ENV = "development"
+
+[build.processing.html]
+
+  # Prevents Netlify from eliding the .html on page URLs,
+  # which we need when users copy the URL for use elsewhere
+  # (e.g. for cross references during digitisation).
+  pretty_urls = false

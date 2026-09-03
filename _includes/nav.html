@@ -1,0 +1,231 @@
+<div id="nav" class="non-printing">
+
+    {% comment %}If we're neither in a book or a docs page,
+    show the nav-title or the project name.
+    The nav-title can be set by adding it to locales.yml.{% endcomment %}
+    {% if is-book-subdirectory != true and is-docs-page != true %}
+    <div class="nav-title">
+        {% if locale.nav.nav-title and locale.nav.nav-title != "" %}
+            <a href="{{ path-to-root-directory }}">{{ locale.nav.nav-title }}</a>
+        {% else %}
+            <a href="{{ path-to-root-directory }}">{{ project-name }}</a>
+        {% endif %}
+    </div>
+
+    {% comment %}If docs are generating, and we're on a docs page,
+    show a docs heading{% endcomment %}
+    {% elsif output-docs == true and is-docs-page == true %}
+    <div class="nav-title">Electric Book docs</div>
+
+    {% comment %}Otherwise show the nav title or book title.
+    The nav-title can be set by adding it to locales.yml.{% endcomment %}
+    {% else %}
+    <div class="nav-title">
+        {% if locale.nav.nav-title and locale.nav.nav-title != "" %}
+            {{ locale.nav.nav-title }}
+        {% else %}
+            {{ title }}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% comment %} Add controls and settings {% endcomment %}
+    {% include controls.html %}
+
+    {% comment %}Add the search box.{% endcomment %}
+    <div class="search">
+        {% include search %}
+    </div>
+    <!--.search-->
+
+    {% comment %}Create the nav list{% endcomment %}
+    <div class="nav-list">
+
+        {% comment %}If this is not the homepage,
+        include a link to the homepage.{% endcomment %}
+        {% unless is-homepage or is-translation-homepage %}
+            <ol class="nav-project-home">
+
+                {% if is-translation %}
+
+                    {% comment %} Check if this language has a translated home page. {% endcomment %}
+                    {% capture path-for-translated-home-page %}{{ language }}/index.md{% endcapture %}
+                    {% assign translated-home-page-array = site.pages | where_exp: "page", "page.path == path-for-translated-home-page" %}
+                    {% assign translated-home-page-exists = false %}
+                    {% for page in translated-home-page-array %}
+                        {% if page.path == path-for-translated-home-page %}
+                            {% assign translated-home-page-exists = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+
+                <li>
+                    {% if translated-home-page-exists %}
+                        <a href="{{ path-to-root-directory }}{{ language }}/index.html">{{ locale.nav.home }}</a>
+                    {% else %}
+                        <a href="{{ path-to-root-directory }}index.html">{{ locale.nav.home }}</a>
+                    {% endif %}
+                </li>
+            </ol>
+        {% endunless %}
+
+        {% if site.data.settings[site.output].nav.project-nav.position != "after" %}
+
+            {% comment %} Include the nav.yml items for this language, if any. {% endcomment %}
+            {% if site.data.nav[language] %}
+                {% assign project-nav-tree = site.data.nav[language] %}
+            {% else %}
+                {% assign project-nav-tree = site.data.nav[project-language] %}
+            {% endif %}
+
+            {% if project-nav-tree %}
+                {% include nav-list.html nav-tree=project-nav-tree project-nav=true %}
+            {% endif %}
+
+        {% endif %}
+
+        {% comment %}If docs are on (i.e. output set to true in _config.yml),
+        show the docs nav.{% endcomment %}
+        {% if output-docs %}
+        <ul>
+            <li{% unless is-docs-page %} class="has-children" {% endunless %}><a
+                    href="{{ path-to-root-directory }}docs">Docs</a>
+                {% include docs-by-category.html %}
+                </li>
+        </ul>
+        {% endif %}
+
+        {% comment %}If this is any non-book, non-docs page,
+        such as the home page or project search...{% endcomment %}
+        {% if is-book-directory != true is-book-subdirectory != true and is-docs-page != true %}
+
+            {% comment %}If there is only one book, don't include its title{% endcomment %}
+            {% if number-of-works == 1 %}
+
+                {% assign site-data-works = site.data.works | sort %}
+                {% for work in site-data-works %}
+
+                    {% comment %} Assume the _data/works book dir is named
+                    the same as the book directory. {% endcomment %}
+                    {% assign home-nav-work-directory = work[0] %}
+
+                    {% comment %} If this page is a translation (e.g. translation landing page)
+                    we want to show the translated books if possible. {% endcomment %}
+                    {% if is-translation %}
+                        {% if work[1][language][1] %}
+                            {% assign this-work = work[1][language][1] %}
+                        {% endif %}
+                    {% else %}
+                        {% assign this-work = work[1] %}
+                    {% endif %}
+
+                    {% comment %} If this work is not published, skip it. {% endcomment %}
+                    {% if this-work[variant].published == false %}
+                        {% continue %}
+                    {% endif %}
+                    {% if this-work.default.published == false %}
+                        {% continue %}
+                    {% endif %}
+
+                    {% comment %}Use the relevant output's nav, all fallback to web nav.{% endcomment %}
+                    {% if this-work[variant].products[site.output].nav and this-work[variant].products[site.output].nav != "" %}
+                        {% assign home-nav-work-tree = this-work[variant].products[site.output].nav %}
+                    {% elsif this-work.default.products[site.output].nav and this-work.default.products[site.output].nav != "" %}
+                        {% assign home-nav-work-tree = this-work.default.products[site.output].nav %}
+                    {% elsif this-work[variant].products.web.nav and this-work[variant].products.web.nav != "" %}
+                        {% assign home-nav-work-tree = this-work[variant].products.web.nav %}
+                    {% else %}
+                        {% assign home-nav-work-tree = this-work.default.products.web.nav %}
+                    {% endif %}
+
+                    {% if home-nav-work-tree and home-nav-work-tree != "" %}
+                        {% include nav-list.html nav-tree=home-nav-work-tree directory=home-nav-work-directory %}
+                    {% else %}
+                        {% include nav-list-files.html directory=home-nav-work-directory %}
+                    {% endif %}
+                {% endfor %}
+
+            {% else %}
+
+                <ol id="nav-js-gen-book-list" class="nav-book-list">
+
+                    {% comment %} 
+                    Defaults that JS-generated nav will replace
+                    {% endcomment %}
+                    {% for work in site.data.works %}
+                        <li>
+                            <a href="{{ path-to-root-directory }}{{ work[0] }}{% if is-translation %}/{{ language }}{% endif %}/">
+                                {% if is-translation and work[1][language][variant].title %}{{ work[1][language][variant].title }}{% else %}{{ work[1][variant].title }}{% endif %}
+                            </a>
+                        </li>    
+                    {% endfor %}
+
+                </ol>
+
+            {% endif %}
+
+        {% else %}
+
+            {% comment %}Fetch recursive navigation{% endcomment %}
+            {% if site.output == "app" %}
+                {% if app-nav-tree and app-nav-tree != "" %}
+                    {% comment %} Create link to TOC, which will be replaced by JS
+                    with a full dropdown nav menu. {% endcomment %}
+                    <ol id="nav-js-gen-book-chapters">
+                        <li>
+                            {% if app-contents-page and app-contents-page != "" %}
+                                <a href="{{ path-to-root-directory }}{{ book-directory }}{% if is-translation %}/{{ language }}{% endif %}/{{ app-contents-page }}.html">{{ locale.nav.toc }}</a>
+                            {% else %}
+                                <a href="{{ path-to-root-directory }}{{ book-directory }}{% if is-translation %}/{{ language }}{% endif %}/{{ app-start-page }}.html">{{ locale.nav.read }}</a>
+                            {% endif %}
+                        </li>
+                    </ol>
+                {% else %}
+                    {% include nav-list-files.html %}
+                {% endif %}
+            {% else %}
+                {% if web-nav-tree and web-nav-tree != "" %}
+                    {% comment %} Create link to TOC, which will be replaced by JS
+                    with a full dropdown nav menu. {% endcomment %}
+                    <ol id="nav-js-gen-book-chapters">
+                        <li>
+                            {% if web-contents-page and web-contents-page != "" %}
+                                <a href="{{ path-to-root-directory }}{{ book-directory }}{% if is-translation %}/{{ language }}{% endif %}/{{ web-contents-page }}.html">{{ locale.nav.toc }}</a>
+                            {% else %}
+                                <a href="{{ path-to-root-directory }}{{ book-directory }}{% if is-translation %}/{{ language }}{% endif %}/{{ web-start-page }}.html">{{ locale.nav.read }}</a>
+                            {% endif %}
+                        </li>
+                    </ol>
+                {% else %}
+                    {% include nav-list-files.html %}
+                {% endif %}
+            {% endif %}
+
+        {% endif %}
+
+        {% if site.data.settings[site.output].nav.project-nav.position == "after" %}
+
+            {% comment %} Include the nav.yml items for this language, if any. {% endcomment %}
+            {% if site.data.nav[language] %}
+                {% assign project-nav-tree = site.data.nav[language] %}
+            {% else %}
+                {% assign project-nav-tree = site.data.nav[project-language] %}
+            {% endif %}
+
+            {% if project-nav-tree %}
+                {% include nav-list.html nav-tree=project-nav-tree project-nav=true %}
+            {% endif %}
+
+        {% endif %}
+
+    </div>
+    <!--.nav-list-->
+
+    <div class="widgets">
+        {% include widgets.html %}
+    </div>
+    <!--.widgets-->
+
+</div>
+<!--#nav-->

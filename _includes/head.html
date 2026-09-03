@@ -1,0 +1,374 @@
+{% include metadata %}
+{% include html-title.html %}
+
+{% if site.output == "print-pdf" %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language }}" xml:lang="{{ language }}"{% if site.data.locales[language].direction %} dir="{{ site.data.locales[language].direction }}"{% endif %}>
+<head>
+
+    <title>{{ html-title }}</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {% include meta-tags.html %}
+
+    <meta name="author" content="{{ creator }}" />
+    <meta name="subject" content="{{ subject }}" />
+    <meta name="keywords" content="{{ keywords }}" />
+    <meta name="date" content="{{ date }}"/>
+    <meta name="generator" content="Electric Book"/>
+
+    {% comment %} If this is a translation with its own styles,
+    load the parent styles first, then translation styles override them. {% endcomment %}
+    {% if is-translation and translation-styles-exist %}
+        <link rel="stylesheet" type="text/css" href="{{ path-to-parent-styles-directory }}/{{ print-pdf-stylesheet }}" />
+    {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{{ path-to-styles-directory }}/{{ print-pdf-stylesheet }}" />
+
+    {% comment %} Note: MathJax script not included for PDF output.
+    MathJax rendered in PDF via gulp and mathjax-node-page. {% endcomment %}
+
+    {% include head-elements.html %}
+
+</head>
+
+{% comment %}
+Do not add classes to <body>, because in PDF output
+separate HTML files are merged into one body element.
+{% endcomment %}
+
+<body
+
+    {% comment %} Some scripts wait for `data-index-targets` to be ready.
+    If we are not using a dynamic index, index targets
+    will never be loaded, so we confirm that here. {% endcomment %}
+    {% if site.data.settings.dynamic-indexing == false %}
+        data-index-targets="none"
+    {% endif %}
+
+    {% comment %} Some scripts wait for `data-mathjax-rendered` to be ready.
+    If we are not using a mathjax, it will never be rendered,
+    so we confirm that here. {% endcomment %}
+    {% if site.mathjax-enabled == false %}
+        data-mathjax-rendered="true"
+    {% endif %}
+
+    >
+
+    <div class="wrapper {{ book-directory }} {{ page.style }}{% if is-homepage == true %} home{% endif %}"
+        {% if page.header %}data-header="{{ page.header }}"{% else %} data-header="{{ page.title }}"{% endif %}
+        {% if page.header-left %} data-header-left="{{ page.header-left }}"{% else %} data-header-left="{{ page.title }}"{% endif %}
+        {% if page.header-right %} data-header-right="{{ page.header-right }}"{% else %} data-header-right="{{ page.title }}"{% endif %}
+        data-page-info="{% unless site.data.settings.redact == true %}{{ title | truncate: 20 }}: {{ page.title | truncate: 20 }} • {{ page.url | split: "/" | last | split: "." | first | truncate: 20 }} • {% endunless %}{{ site.time | date: "%-d %b %Y, %H:%M" }}"
+        {% if site.data.settings.print-pdf.notes == "footnotes" or page.notes == "footnotes" %} data-page-footnotes{% endif %}
+        data-title="{% if title %}{{ title }}{% else %}{{ page.title }}{% endif %}"
+        data-creator="{% if creator %}{{ creator }}{% else %}{{ project.project-organisation }}{% endif %}"
+        data-book-directory="{{ book-directory }}"
+        {% if is-translation %} data-translation="{{ language }}"{% endif %}
+        data-variant="{{ variant }}">
+
+
+{% elsif site.output == "screen-pdf" %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language }}" xml:lang="{{ language }}"{% if site.data.locales[language].direction %} dir="{{ site.data.locales[language].direction }}"{% endif %}>
+<head>
+
+    <title>{{ html-title }}</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {% include meta-tags.html %}
+
+    <meta name="author" content="{{ creator }}" />
+    <meta name="subject" content="{{ subject }}" />
+    <meta name="keywords" content="{{ keywords }}" />
+    <meta name="date" content="{{ date }}"/>
+    <meta name="generator" content="Electric Book"/>
+
+    {% comment %} If this is a translation with its own styles,
+    load the parent styles first, then translation styles override them. {% endcomment %}
+    {% if is-translation and translation-styles-exist %}
+        <link rel="stylesheet" type="text/css" href="{{ path-to-parent-styles-directory }}/{{ screen-pdf-stylesheet }}" />
+    {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{{ path-to-styles-directory }}/{{ screen-pdf-stylesheet }}" />
+
+    {% comment %} Note: MathJax script not included for PDF output.
+    MathJax rendered in PDF via gulp and mathjax-node-page. {% endcomment %}
+
+    {% include head-elements.html %}
+
+</head>
+<body
+    {% if site.data.settings.dynamic-indexing == false %}
+        data-index-targets="none"
+    {% endif %}
+
+    {% comment %} Some scripts wait for `data-mathjax-rendered` to be ready.
+    If we are not using a mathjax, it will never be rendered,
+    so we confirm that here. {% endcomment %}
+    {% if site.mathjax-enabled == false %}
+        data-mathjax-rendered="true"
+    {% endif %}>
+
+    <div class="wrapper {{ book-directory }} {{ page.style }}{% if is-homepage == true %} home{% endif %}"
+        {% if page.header %} data-header="{{ page.header }}"{% else %} data-header="{{ page.title }}"{% endif %}
+        {% if page.header-left %} data-header-left="{{ page.header-left }}"{% else %} data-header-left="{{ page.title }}"{% endif %}
+        {% if page.header-right %} data-header-right="{{ page.header-right }}"{% else %} data-header-right="{{ page.title }}"{% endif %}
+        data-page-info="{{ title | truncate: 20 }}: {{ page.title | truncate: 20 }} • {{ page.url | split: "/" | last | split: "." | first }} • {{ site.time | date: "%-d %b %Y, %H:%M" }}"
+        {% if site.data.settings.screen-pdf.notes == "footnotes" or page.notes == "footnotes" %} data-page-footnotes{% endif %}
+        data-title="{% if title %}{{ title }}{% else %}{{ page.title }}{% endif %}"
+        data-creator="{% if creator %}{{ creator }}{% else %}{{ project.project-organisation }}{% endif %}"
+        data-book-directory="{{ book-directory }}"
+        {% if is-translation %} data-translation="{{ language }}"{% endif %}
+        data-variant="{{ variant }}">
+
+
+{% elsif site.output == "epub" %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" xml:lang="{{ language }}"{% if site.data.locales[language].direction %} dir="{{ site.data.locales[language].direction }}"{% endif %}>
+<head>
+
+    <title>{{ html-title }}</title>
+
+    {% comment %} This full meta tag is necessary for Kindle's character encoding to work. {% endcomment %}
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    {% comment %} If this is a translation with its own styles,
+    load the parent styles first, then translation styles override them. {% endcomment %}
+    {% if is-translation and translation-styles-exist %}
+        <link rel="stylesheet" type="text/css" href="{{ path-to-parent-styles-directory }}/{{ epub-stylesheet }}" />
+    {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="{{ path-to-styles-directory }}/{{ epub-stylesheet }}" />
+
+    {% comment %} Metadata defined in page frontmatter overrides
+    project metadata, which is the default from `_data/works`. {% endcomment %}
+    {% if page.title %}{% capture title %}{{ page.title }}{% endcapture %}{% endif %}
+    {% if page.language %}{% capture language %}{{ page.language }}{% endcapture %}{% endif %}
+    {% if page.creator %}{% capture creator %}{{ page.creator }}{% endcapture %}{% endif %}
+    {% if page.publisher %}{% capture publisher %}{{ page.publisher }}{% endcapture %}{% endif %}
+    {% if page.date %}{% capture date %}{{ page.date }}{% endcapture %}{% endif %}
+    {% if page.identifier %}{% capture identifier %}{{ page.identifier }}{% endcapture %}{% endif %}
+    {% if page.relation %}{% capture relation %}{{ page.relation }}{% endcapture %}{% endif %}
+    {% if page.description %}{% capture description %}{{ page.description }}{% endcapture %}{% endif %}
+
+    <link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+        <meta name="DC.Title" content="{{ title | escape }}" />
+        <meta name="DC.Language" content="{{ language | escape }}" />
+        <meta name="DC.Creator" content="{{ creator | escape }}" />
+        <meta name="DC.Publisher" content="{{ publisher | escape }}" />
+        <meta name="DC.Date" content="{{ date }}" />
+        <meta name="DC.Identifier" content="{{ epub-identifier }}" />
+        <meta name="DC.Relation" content="{{ print-pdf-identifier }}" />
+        <meta name="DC.Description" content="{{ description | escape }}" />
+
+    {% if site.mathjax-enabled == true %}
+        {% include mathjax-config.html %}
+    {% endif %}
+
+    {% include head-elements.html %}
+
+</head>
+<body
+    {% if site.data.settings.dynamic-indexing == false %}
+        data-index-targets="none"
+    {% endif %}
+
+    {% comment %} Some scripts wait for `data-mathjax-rendered` to be ready.
+    If we are not using a mathjax, it will never be rendered,
+    so we confirm that here. {% endcomment %}
+    {% if site.mathjax-enabled == false %}
+        data-mathjax-rendered="true"
+    {% endif %}>
+
+    <div class="wrapper {{ book-directory }} {{ page.style }}{% if is-homepage == true %} home{% endif %}"
+        data-title="{% if book-title %}{{ book-title }}{% else %}{{ page.title }}{% endif %}"
+        data-book-directory="{{ book-directory }}"
+        {% if is-translation %} data-translation="{{ language }}"{% endif %}
+        data-variant="{{ variant }}">
+
+
+{% elsif site.output == "app" %}
+<!DOCTYPE html>
+<html lang="{{ language }}"{% if site.data.locales[language].direction %} dir="{{ site.data.locales[language].direction }}"{% endif %}>
+    <head>
+
+    <title>{{ html-title }}</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=yes, initial-scale=1, width=device-width">
+
+    {% comment %}
+    Customize this policy to fit your own app's needs. For more guidance, see:
+        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+    {% endcomment %}
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com https://fonts.googleapis.com https://www.youtube.com http://player.vimeo.com; style-src 'self' 'unsafe-inline'; media-src * content:; img-src 'self' data: content:;{% if site.mathjax-enabled == true %} script-src 'self' 'unsafe-inline' 'unsafe-eval';{% endif %}">
+
+    {% comment %} OpenGraph metadata. While apps might not use this metadata,
+    descriptions etc. are useful for search indexing. {% endcomment %}
+
+    {% include meta-tags.html %}
+
+    <meta property="og:title" content="{{ meta-tag-title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ meta-tag-url }}" />
+    <meta property="og:description" content="{{ meta-tag-description }}" />
+    <meta property="og:image" content="{{ meta-tag-image }}" />
+
+    {% comment %} Reuse OG description for generic meta description tag {% endcomment %}
+    <meta name="description" content="{{ meta-tag-description }}" />
+
+    {% comment %} If we're not in a book subdirectory, load the project stylesheet.
+    Otherwise, load the styles for this book. {% endcomment %}
+    {% if is-root-directory == true or page.collection == "docs" or is-translation-root-directory == true %}
+        <link rel="stylesheet" type="text/css" media="all" href="{{ path-to-root-directory }}assets/styles/{{ app-stylesheet }}" />
+    {% else %}
+
+        {% comment %} If this is a translation with its own styles,
+        load the parent styles first, then translation styles override them. {% endcomment %}
+        {% if is-translation and translation-styles-exist %}
+            <link rel="stylesheet" type="text/css" href="{{ path-to-parent-styles-directory }}/{{ app-stylesheet }}" />
+        {% endif %}
+
+        <link rel="stylesheet" type="text/css" href="{{ path-to-styles-directory }}/{{ app-stylesheet }}" />
+
+    {% endif %}
+
+    {% if site.mathjax-enabled == true %}
+        {% include mathjax-config.html %}
+    {% endif %}
+
+    {% include head-elements.html %}
+
+    </head>
+    <body
+        {% if site.data.settings.dynamic-indexing == false %}
+            data-index-targets="none"
+        {% endif %}
+
+        {% comment %} Some scripts wait for `data-mathjax-rendered` to be ready.
+        If we are not using a mathjax, it will never be rendered,
+        so we confirm that here. {% endcomment %}
+        {% if site.mathjax-enabled == false %}
+            data-mathjax-rendered="true"
+        {% endif %}>
+
+        <div class="wrapper {{ book-directory }} {{ page.style }}{% if is-homepage == true %} home{% endif %}{% if is-search == true %} search-page{% endif %}{% if is-project-search == true %} project-search-page{% endif %}{% if is-book-search == true %} book-search-page{% endif %}"
+        {% if page.accordion != nil %}data-accordion-page="{{ page.accordion }}"{% endif %}
+        {% if page.accordion-level and page.accordion-level != "" %}data-accordion-level="{{ page.accordion-level }}"{% endif %}
+        data-title="{% if title %}{{ title }}{% else %}{{ page.title }}{% endif %}"
+        data-book-directory="{{ book-directory }}"
+        {% if is-translation %} data-translation="{{ language }}"{% endif %}
+        data-variant="{{ variant }}">
+
+
+{% else %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language }}" xml:lang="{{ language }}"{% if site.data.locales[language].direction %} dir="{{ site.data.locales[language].direction }}"{% endif %}>
+<head>
+
+    <title>{{ html-title }}</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {% comment %} Prevent search indexing if set in settings.yml {% endcomment %}
+    {% if site.build == "live" and site.data.settings.web.seo.indexing.live == "noindex" %}
+        <meta name="robots" content="noindex">
+    {% elsif site.build != "live" and site.data.settings.web.seo.indexing.development == "noindex" %}
+        <meta name="robots" content="noindex">
+    {% endif %}
+
+    {% comment %}
+    Self referencing canonicals help tell search engines
+    a specific URL is the master copy of a page avoiding problems
+    caused by ‘duplicate’ content appearing on multiple URLs.
+    https://developers.google.com/search/docs/advanced/crawling/consolidate-duplicate-urls
+    {% endcomment %}
+    {% if site.domain and site.domain != "" %}
+        <link rel="canonical" href="{{ page.url | replace:'/index.html','/' | prepend: site.baseurl | prepend: site.domain }}">
+    {% endif %}
+
+    {% comment %} Add favicon {% endcomment %}
+    {% if external-media and external-media != "" %}
+        <link rel="icon" type="image/png" href="{{ external-media }}/assets/images/web/favicon.png">
+    {% else %}
+    <link rel="icon" type="image/png" href="{{ path-to-root-directory }}assets/images/web/favicon.png">
+    {% endif %}
+
+    {% comment %} OpenGraph metadata {% endcomment %}
+
+    {% include meta-tags.html %}
+
+    <meta property="og:title" content="{{ meta-tag-title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ meta-tag-url }}" />
+    <meta property="og:description" content="{{ meta-tag-description }}" />
+    <meta property="og:image" content="{{ meta-tag-image }}" />
+
+    {% comment %} Reuse OG description for generic meta description tag {% endcomment %}
+    <meta name="description" content="{{ meta-tag-description }}" />
+
+    {% comment %} If we're not in a book subdirectory, load the project stylesheet.
+    Otherwise, load the styles for this book. {% endcomment %}
+    {% if is-root-directory == true or page.collection == "docs" or page.collection == "api" or is-translation-root-directory == true %}
+        <link rel="stylesheet" type="text/css" media="all" href="{{ site.baseurl }}/assets/styles/{{ web-stylesheet }}" />
+    {% else %}
+
+        {% comment %} If this is a translation with its own styles,
+        load the parent styles first, then translation styles override them. {% endcomment %}
+        {% if is-translation and translation-styles-exist %}
+            <link rel="stylesheet" type="text/css" href="{{ path-to-parent-styles-directory }}/{{ web-stylesheet }}" />
+        {% endif %}
+
+        <link rel="stylesheet" type="text/css" href="{{ path-to-styles-directory }}/{{ web-stylesheet }}" />
+
+    {% endif %}
+
+    {% comment %} Enable web monetization {% endcomment %}
+    {% if site.data.settings.web.monetization.enabled == true %}
+        <meta name="monetization" content={{ site.data.settings.web.monetization.ilp-pointer }}>
+    {% endif %}
+
+    {% if site.mathjax-enabled == true %}
+        {% include mathjax-config.html %}
+    {% endif %}
+
+    {% comment %} Include custom elements {% endcomment %}
+
+    {% include hreflang.html %}
+    {% include head-elements.html %}
+
+</head>
+<body
+    {% if site.data.settings.dynamic-indexing == false %}
+        data-index-targets="none"
+    {% endif %}
+
+    {% comment %} Some scripts wait for `data-mathjax-rendered` to be ready.
+    If we are not using a mathjax, it will never be rendered,
+    so we confirm that here. {% endcomment %}
+    {% if site.mathjax-enabled == false %}
+        data-mathjax-rendered="true"
+    {% endif %}>
+
+    <div class="wrapper {{ book-directory }} {{ page.style }}{% if is-homepage == true %} home{% endif %}{% if is-search == true %} search-page{% endif %}{% if is-project-search == true %} project-search-page{% endif %}{% if is-book-search == true %} book-search-page{% endif %}"
+        {% if page.accordion != nil %}data-accordion-page="{{ page.accordion }}"{% endif %}
+        {% if page.accordion-level and page.accordion-level != "" %}data-accordion-level="{{ page.accordion-level }}"{% endif %}
+        data-title="{% if title %}{{ title }}{% else %}{{ page.title }}{% endif %}"
+        data-book-directory="{{ book-directory }}"
+        {% if is-translation %} data-translation="{{ language }}"{% endif %}
+        data-variant="{{ variant }}">
+
+{% endif %}

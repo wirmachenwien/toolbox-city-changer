@@ -1,0 +1,7 @@
+$pdf-reset-sequences: true !default;
+@if $pdf-reset-sequences {
+
+    // Many partials include their own reset sequences like this.
+    // This partial should be included after all others, as a fallback.
+
+}

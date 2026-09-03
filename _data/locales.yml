@@ -1,0 +1,1017 @@
+# Localise your project here by adding translations
+# for phrases in the languages you're using. Some are
+# already defined for English and French.
+# For right-to-left languages, add direction: "rtl".
+
+# ab:
+#   iso-name: "Abkhaz"
+#   local-name: ""
+# aa:
+#   iso-name: "Afar"
+#   local-name: ""
+# af:
+#   iso-name: "Afrikaans"
+#   local-name: ""
+# ak:
+#   iso-name: "Akan"
+#   local-name: ""
+# sq:
+#   iso-name: "Albanian"
+#   local-name: ""
+# am:
+#   iso-name: "Amharic"
+#   local-name: ""
+# ar:
+#   iso-name: "Arabic"
+#   local-name: ""
+# an:
+#   iso-name: "Aragonese"
+#   local-name: ""
+# hy:
+#   iso-name: "Armenian"
+#   local-name: ""
+# as:
+#   iso-name: "Assamese"
+#   local-name: ""
+# av:
+#   iso-name: "Avaric"
+#   local-name: ""
+# ae:
+#   iso-name: "Avestan"
+#   local-name: ""
+# ay:
+#   iso-name: "Aymara"
+#   local-name: ""
+# az:
+#   iso-name: "Azerbaijani"
+#   local-name: ""
+# bm:
+#   iso-name: "Bambara"
+#   local-name: ""
+# ba:
+#   iso-name: "Bashkir"
+#   local-name: ""
+# eu:
+#   iso-name: "Basque"
+#   local-name: ""
+# be:
+#   iso-name: "Belarusian"
+#   local-name: ""
+# bn:
+#   iso-name: "Bengali, Bangla"
+#   local-name: ""
+# bh:
+#   iso-name: "Bihari"
+#   local-name: ""
+# bi:
+#   iso-name: "Bislama"
+#   local-name: ""
+# bs:
+#   iso-name: "Bosnian"
+#   local-name: ""
+# br:
+#   iso-name: "Breton"
+#   local-name: ""
+# bg:
+#   iso-name: "Bulgarian"
+#   local-name: ""
+# my:
+#   iso-name: "Burmese"
+#   local-name: ""
+# ca:
+#   iso-name: "Catalan"
+#   local-name: ""
+# ch:
+#   iso-name: "Chamorro"
+#   local-name: ""
+# ce:
+#   iso-name: "Chechen"
+#   local-name: ""
+# ny:
+#   iso-name: "Chichewa, Chewa, Nyanja"
+#   local-name: ""
+# zh:
+#   iso-name: "Chinese"
+#   local-name: ""
+# cv:
+#   iso-name: "Chuvash"
+#   local-name: ""
+# kw:
+#   iso-name: "Cornish"
+#   local-name: ""
+# co:
+#   iso-name: "Corsican"
+#   local-name: ""
+# cr:
+#   iso-name: "Cree"
+#   local-name: ""
+# hr:
+#   iso-name: "Croatian"
+#   local-name: ""
+# cs:
+#   iso-name: "Czech"
+#   local-name: ""
+# da:
+#   iso-name: "Danish"
+#   local-name: ""
+# dv:
+#   iso-name: "Divehi, Dhivehi, Maldivian"
+#   local-name: ""
+# nl:
+#   iso-name: "Dutch"
+#   local-name: ""
+# dz:
+#   iso-name: "Dzongkha"
+#   local-name: ""
+en:
+  iso-name: "English"
+  local-name: "English"
+  project:
+    # Project items are set for the parent language
+    # in _data/project.yml and can be overridden here.
+    # Project 'name' also sets the HTML title on the home page.
+    organisation: ""
+    url: ""
+    email: ""
+    name: ""
+    description: ""
+    image: ""
+    credit: ""
+  features:
+    copyright-page: "Copyright"
+  nav:
+    home: "Home"
+    menu: "Menu"
+    next: "Next"
+    previous: "Previous"
+    back: "&larr;"
+    toc: "Contents"
+    read: "Read"
+    login: "Log in"
+    logout: "Log out"
+  input:
+    submit: "Submit"
+    send: "Send"
+    show: "Show"
+    hide: "Hide"
+    close: "Close"
+  search:
+    search-title: "Search"
+    placeholder: "Search here..."
+    placeholder-searching: "Searching..."
+    search-results: "Search results"
+    results-for-singular: "result found for"
+    results-for-plural: "results found for"
+    results-for-none: "No results found for"
+    jump-to-first: "Jump to first result ↓"
+    notice: ""
+  questions:
+    check-answers-button: "Check my answers"
+    feedback-correct: "Correct!"
+    feedback-incorrect: "Incorrect"
+    feedback-unfinished: "You haven't selected all the correct answers."
+    mark-correct: "&#10003;" # check mark
+    mark-incorrect: "&#10007;" # ballot x
+  quiz:
+    total: "Total"
+  cross-references:
+    pre-page-number: "(page "
+    post-page-number: ")"
+  account:
+    login: "Log in"
+    my-account: "My account"
+  annotator:
+    show-sidebar-tooltip-title: "Open annotations"
+    show-sidebar-tooltip-description: "Tap here to show the annotations sidebar. Select text to highlight and create notes on this page."
+    show-annotated-text-tooltip-title: "Highlight annotations"
+    show-annotated-text-tooltip-description: "Tap here to show or hide the annotation highlights on this page."
+  bookmarks:
+    bookmark: "Bookmark"
+    bookmarks: "Bookmarks"
+    bookmarks-tip: "Tap or select text, and then tap the bookmark icon to save a bookmark. Bookmarks are saved in your browser cache when you are logged out. Clearing your cache without logging in first will remove them permanently."
+    last-location: "Your last visit"
+    last-locations-tip: "The last time you visited, you stopped reading here."
+    last-location-prompt: "Continue from your last visit?"
+    save-bookmark-note: "Save note"
+    bookmark-note-placeholder: "Add a note for this bookmark..."
+    bookmark-note-login: "Log in to add and view notes for your bookmarks"
+    delete-bookmark: "Delete"
+    delete-all: "Delete all"
+    delete-bookmark-confirm: "Are you sure you want to delete this bookmark?"
+    delete-all-bookmarks-confirm: "Are you sure you want to delete all bookmarks?"
+    bookmarks-shifted-warning: "A bookmark doesn't seem to match its original place exactly. The content on this page may have changed."
+  accordion:
+    show-all: "Expand all"
+    close-all: "Close all"
+  controls:
+    language-select: "Select language"
+    show-hide: "Show/Hide"
+  video:
+    options-button: "Other video options"
+    play-video: "Play video"
+  copy:
+    copy: "Copy"
+    copied: "Copied"
+    copy-failed: "Sorry, try again"
+  footnotes:
+    close-footnote: "Close footnote"
+    reversefootnote-alt: "Back to text"
+  pdf:
+    cover: "Cover"
+  # Comment out a network to remove it
+  # from the share menu
+  share:
+    share: "Share"
+    link: "Link"
+    email: "Email"
+    bluesky: "Bluesky"
+    facebook: "Facebook"
+    linkedin: "LinkedIn"
+    reddit: "Reddit"
+    twitter: "Twitter"
+    whatsapp: "WhatsApp"
+    # buffer: "Buffer"
+    # delicious: "Delicious"
+    # evernote: "Evernote"
+    # pinterest: "Pinterest"
+    # pocket: "Pocket"
+    # stumbleupon: "Stumbleupon"
+    # tumblr: "Tumblr"
+    # wordpress: "WordPress"
+  expandable-box:
+    read-more: "Expand"
+  feature-box:
+    link-to-feature-assistive-text: "A link for the relevant feature"
+  visual-toc:
+    link-to-page-assistive-text: "Link to page"
+# eo:
+#   iso-name: "Esperanto"
+#   local-name: ""
+# et:
+#   iso-name: "Estonian"
+#   local-name: ""
+# ee:
+#   iso-name: "Ewe"
+#   local-name: ""
+# fo:
+#   iso-name: "Faroese"
+#   local-name: ""
+# fj:
+#   iso-name: "Fijian"
+#   local-name: ""
+# fi:
+#   iso-name: "Finnish"
+#   local-name: ""
+fr:
+  iso-name: "French"
+  local-name: "Français"
+  project:
+    organisation: ""
+    url: ""
+    email: ""
+    name: ""
+    description: "Livres créés avec le flux de travail Electric Book"
+    image: ""
+    credit: "Construit avec [l'Electric Book](https://ebw.co/template)"
+  features:
+    copyright-page: "Droits"
+  nav:
+    home: "Accueil"
+    menu: "Menu"
+    next: "Suivant"
+    previous: "Précédent"
+    back: "&larr;"
+    toc: "Table des matières"
+    read: "Lire"
+    login: "Se connecter"
+    logout: "Se déconnecter"
+  input:
+    submit: "Soumettre"
+    send: "Envoyer"
+    show: "Montrer"
+    hide: "Cacher"
+    close: "Fermer"
+  search:
+    search-title: "Recherche"
+    placeholder: "Cherche ici..."
+    placeholder-searching: "Recherche..."
+    search-results: "Résultats de la recherche"
+    results-for-singular: "résultat trouvé pour"
+    results-for-plural: "résultats trouvés pour"
+    results-for-none: "Aucun résultat trouvé pour"
+    jump-to-first: "Aller au premier résultat ↓"
+    notice: ""
+  questions:
+    check-answers-button: "Vérifier mes réponses"
+    feedback-correct: "Correct!"
+    feedback-incorrect: "Incorrect"
+    feedback-unfinished: "Vous n'avez pas sélectionné toutes les bonnes réponses."
+    mark-correct: "&#10003;" # check mark
+    mark-incorrect: "&#10007;" # ballot x
+  quiz:
+    total: "Total"
+  cross-references:
+    pre-page-number: "(page "
+    post-page-number: ")"
+  account:
+    login: "Connectez-vous"
+    my-account: "Mon compte"
+  annotator:
+    show-sidebar-tooltip-title: "Ouvrir l'outil d'annotation"
+    show-sidebar-tooltip-description: "Cliquer ici pour afficher la barre latérale des annotations. Vous pouvez sélectionner le texte à surligner et à annoter sur cette page."
+    show-annotated-text-tooltip-title: "Surligner les annotations"
+    show-annotated-text-tooltip-description: "Cliquer ici pour afficher ou masquer les annotations surlignées sur cette page."
+  bookmarks:
+    bookmark: "Marque-page"
+    bookmarks: "Marque-pages"
+    bookmarks-tip: "Touchez ou sélectionnez du texte, puis touchez l'icône de marque-page pour enregistrer un marque-page. Les marque-pages sont sauvegardés dans le cache de votre navigateur lorsque vous êtes déconnecté. Vider votre cache sans vous connecter d'abord les supprimera définitivement."
+    last-location: "Votre dernière visite"
+    last-locations-tip: "Lors de votre dernière visite, vous vous êtes arrêté(e) de lire ici."
+    last-location-prompt: "Voulez-vous continuer à partir de votre dernière visite ?"
+    save-bookmark-note: "Enregistrer"
+    bookmark-note-placeholder: "Ajouter une note pour ce marque-page..."
+    bookmark-note-login: "Connectez-vous pour ajouter et voir des notes pour vos marque-pages"
+    delete-bookmark: "Supprimer"
+    delete-all: "Tout supprimer"
+    delete-bookmark-confirm: "Êtes-vous sûr de vouloir supprimer ce marque-page?"
+    delete-all-bookmarks-confirm: "Êtes-vous sûr de vouloir supprimer tous les marque-pages?"
+    bookmarks-shifted-warning: "Un marque-page ne semble pas correspondre exactement à son emplacement initial. Le contenu de cette page a peut-être été modifié."
+  accordion:
+    show-all: "Montre tout"
+    close-all: "Ferme tout"
+  controls:
+    language-select: "Sélectionnez la langue"
+    show-hide: "Afficher/Masquer"
+  video:
+    options-button: "Autres options vidéo"
+    play-video: "Lire la vidéo"
+  copy:
+    copy: "Copie"
+    copied: "Copié"
+    copy-failed: "Désolé, essayez encore"
+  footnotes:
+    close-footnote: "Fermer la note de bas de page"
+    reversefootnote-alt: "Retour au texte"
+  pdf:
+    cover: "Couverture"
+  # Comment out a network to remove it
+  # from the share menu
+  share:
+    share: "Partager"
+    link: "Lien"
+    email: "Email"
+    bluesky: "Bluesky"
+    facebook: "Facebook"
+    linkedin: "LinkedIn"
+    reddit: "Reddit"
+    twitter: "Twitter"
+    whatsapp: "WhatsApp"
+    # buffer: "Buffer"
+    # delicious: "Delicious"
+    # evernote: "Evernote"
+    # pinterest: "Pinterest"
+    # pocket: "Pocket"
+    # stumbleupon: "Stumbleupon"
+    # tumblr: "Tumblr"
+    # wordpress: "WordPress"
+  expandable-box:
+    read-more: "Ouvrir"
+  feature-box:
+    link-to-feature-assistive-text: "Un lien vers la fonctionnalité concernée"
+  visual-toc:
+    link-to-page-assistive-text: "Lien vers la page"
+# ff:
+#   iso-name: "Fula, Fulah, Pulaar, Pular"
+#   local-name: ""
+# gl:
+#   iso-name: "Galician"
+#   local-name: ""
+# ka:
+#   iso-name: "Georgian"
+#   local-name: ""
+de:
+  iso-name: "German"
+  local-name: "Deutsch"
+  features:
+    copyright-page: "Urheberrecht"
+  nav:
+    home: "Start"
+    menu: "Menü"
+    next: "Weiter"
+    previous: "Zurück"
+    back: "&larr;"
+    toc: "Inhalt"
+    read: "Lesen"
+    login: "Anmelden"
+    logout: "Abmelden"
+  input:
+    submit: "Absenden"
+    send: "Senden"
+    show: "Anzeigen"
+    hide: "Ausblenden"
+    close: "Schließen"
+  search:
+    search-title: "Suche"
+    placeholder: "Hier suchen..."
+    placeholder-searching: "Suche..."
+    search-results: "Suchergebnisse"
+    results-for-singular: "Ergebnis gefunden für"
+    results-for-plural: "Ergebnisse gefunden für"
+    results-for-none: "Keine Ergebnisse gefunden für"
+    jump-to-first: "Zum ersten Ergebnis springen ↓"
+    notice: ""
+  questions:
+    check-answers-button: "Antworten prüfen"
+    feedback-correct: "Richtig!"
+    feedback-incorrect: "Falsch"
+    feedback-unfinished: "Nicht alle richtigen Antworten ausgewählt."
+    mark-correct: "&#10003;"
+    mark-incorrect: "&#10007;"
+  quiz:
+    total: "Gesamt"
+  cross-references:
+    pre-page-number: "(Seite "
+    post-page-number: ")"
+  account:
+    login: "Anmelden"
+    my-account: "Mein Konto"
+  annotator:
+    show-sidebar-tooltip-title: "Annotationen öffnen"
+    show-sidebar-tooltip-description: "Hier tippen, um die Annotationen-Seitenleiste anzuzeigen. Text auswählen, um hervorzuheben und Notizen auf dieser Seite zu erstellen."
+    show-annotated-text-tooltip-title: "Annotationen hervorheben"
+    show-annotated-text-tooltip-description: "Hier tippen, um die Hervorhebungen von Annotationen auf dieser Seite anzuzeigen oder auszublenden."
+  bookmarks:
+    bookmark: "Lesezeichen"
+    bookmarks: "Lesezeichen"
+    bookmarks-tip: "Tippen oder Text auswählen, dann auf das Lesezeichen-Symbol tippen, um ein Lesezeichen zu speichern. Lesezeichen werden im Browser-Cache gespeichert. Das Leeren des Caches ohne vorheriges Anmelden entfernt sie dauerhaft."
+    last-location: "Ihr letzter Besuch"
+    last-locations-tip: "Bei Ihrem letzten Besuch haben Sie hier aufgehört zu lesen."
+    last-location-prompt: "Möchten Sie vom letzten Besuch weiterlesen?"
+    save-bookmark-note: "Speichern"
+    bookmark-note-placeholder: "Notiz für dieses Lesezeichen hinzufügen..."
+    bookmark-note-login: "Anmelden, um Notizen für Ihre Lesezeichen hinzuzusehen"
+    delete-bookmark: "Löschen"
+    delete-all: "Alle löschen"
+    delete-bookmark-confirm: "Sind Sie sicher, dass Sie dieses Lesezeichen löschen möchten?"
+    delete-all-bookmarks-confirm: "Sind Sie sicher, dass Sie alle Lesezeichen löschen möchten?"
+    bookmarks-shifted-warning: "Ein Lesezeichen scheint nicht genau mit seinem ursprünglichen Ort übereinzustimmen. Der Inhalt auf dieser Seite wurde möglicherweise geändert."
+  accordion:
+    show-all: "Alle aufklappen"
+    close-all: "Alle zuklappen"
+  controls:
+    language-select: "Sprache auswählen"
+    show-hide: "Anzeigen/Ausblenden"
+  video:
+    options-button: "Weitere Videooptionen"
+    play-video: "Video abspielen"
+  copy:
+    copy: "Kopieren"
+    copied: "Kopiert"
+    copy-failed: "Entschuldigung, versuchen Sie es erneut"
+  footnotes:
+    close-footnote: "Fußnote schließen"
+    reversefootnote-alt: "Zurück zum Text"
+  pdf:
+    cover: "Deckblatt"
+  share:
+    share: "Teilen"
+    link: "Link"
+    email: "E-Mail"
+    bluesky: "Bluesky"
+    facebook: "Facebook"
+    linkedin: "LinkedIn"
+    reddit: "Reddit"
+    twitter: "Twitter"
+    whatsapp: "WhatsApp"
+  expandable-box:
+    read-more: "Aufklappen"
+  feature-box:
+    link-to-feature-assistive-text: "Link zur entsprechenden Funktion"
+  visual-toc:
+    link-to-page-assistive-text: "Link zur Seite"
+# el:
+#   iso-name: "Greek (modern)"
+#   local-name: ""
+# gn:
+#   iso-name: "Guaraní"
+#   local-name: ""
+# gu:
+#   iso-name: "Gujarati"
+#   local-name: ""
+# ht:
+#   iso-name: "Haitian, Haitian Creole"
+#   local-name: ""
+# ha:
+#   iso-name: "Hausa"
+#   local-name: ""
+# he:
+#   iso-name: "Hebrew (modern)"
+#   local-name: ""
+# hz:
+#   iso-name: "Herero"
+#   local-name: ""
+# hi:
+#   iso-name: "Hindi"
+#   local-name: ""
+# ho:
+#   iso-name: "Hiri Motu"
+#   local-name: ""
+# hu:
+#   iso-name: "Hungarian"
+#   local-name: ""
+# ia:
+#   iso-name: "Interlingua"
+#   local-name: ""
+# id:
+#   iso-name: "Indonesian"
+#   local-name: ""
+# ie:
+#   iso-name: "Interlingue"
+#   local-name: ""
+# ga:
+#   iso-name: "Irish"
+#   local-name: ""
+# ig:
+#   iso-name: "Igbo"
+#   local-name: ""
+# ik:
+#   iso-name: "Inupiaq"
+#   local-name: ""
+# io:
+#   iso-name: "Ido"
+#   local-name: ""
+# is:
+#   iso-name: "Icelandic"
+#   local-name: ""
+# it:
+#   iso-name: "Italian"
+#   local-name: ""
+# iu:
+#   iso-name: "Inuktitut"
+#   local-name: ""
+# ja:
+#   iso-name: "Japanese"
+#   local-name: ""
+# jv:
+#   iso-name: "Javanese"
+#   local-name: ""
+# kl:
+#   iso-name: "Kalaallisut, Greenlandic"
+#   local-name: ""
+# kn:
+#   iso-name: "Kannada"
+#   local-name: ""
+# kr:
+#   iso-name: "Kanuri"
+#   local-name: ""
+# ks:
+#   iso-name: "Kashmiri"
+#   local-name: ""
+# kk:
+#   iso-name: "Kazakh"
+#   local-name: ""
+# km:
+#   iso-name: "Khmer"
+#   local-name: ""
+# ki:
+#   iso-name: "Kikuyu, Gikuyu"
+#   local-name: ""
+# rw:
+#   iso-name: "Kinyarwanda"
+#   local-name: ""
+# ky:
+#   iso-name: "Kyrgyz"
+#   local-name: ""
+# kv:
+#   iso-name: "Komi"
+#   local-name: ""
+# kg:
+#   iso-name: "Kongo"
+#   local-name: ""
+# ko:
+#   iso-name: "Korean"
+#   local-name: ""
+# ku:
+#   iso-name: "Kurdish"
+#   local-name: ""
+# kj:
+#   iso-name: "Kwanyama, Kuanyama"
+#   local-name: ""
+# la:
+#   iso-name: "Latin"
+#   local-name: ""
+# lb:
+#   iso-name: "Luxembourgish, Letzeburgesch"
+#   local-name: ""
+# lg:
+#   iso-name: "Ganda"
+#   local-name: ""
+# li:
+#   iso-name: "Limburgish, Limburgan, Limburger"
+#   local-name: ""
+# ln:
+#   iso-name: "Lingala"
+#   local-name: ""
+# lo:
+#   iso-name: "Lao"
+#   local-name: ""
+# lt:
+#   iso-name: "Lithuanian"
+#   local-name: ""
+# lu:
+#   iso-name: "Luba-Katanga"
+#   local-name: ""
+# lv:
+#   iso-name: "Latvian"
+#   local-name: ""
+# gv:
+#   iso-name: "Manx"
+#   local-name: ""
+# mk:
+#   iso-name: "Macedonian"
+#   local-name: ""
+# mg:
+#   iso-name: "Malagasy"
+#   local-name: ""
+# ms:
+#   iso-name: "Malay"
+#   local-name: ""
+# ml:
+#   iso-name: "Malayalam"
+#   local-name: ""
+# mt:
+#   iso-name: "Maltese"
+#   local-name: ""
+# mi:
+#   iso-name: "Māori"
+#   local-name: ""
+# mr:
+#   iso-name: "Marathi (Marāṭhī)"
+#   local-name: ""
+# mh:
+#   iso-name: "Marshallese"
+#   local-name: ""
+# mn:
+#   iso-name: "Mongolian"
+#   local-name: ""
+# na:
+#   iso-name: "Nauruan"
+#   local-name: ""
+# nv:
+#   iso-name: "Navajo, Navaho"
+#   local-name: ""
+# nd:
+#   iso-name: "Northern Ndebele"
+#   local-name: ""
+# ne:
+#   iso-name: "Nepali"
+#   local-name: ""
+# ng:
+#   iso-name: "Ndonga"
+#   local-name: ""
+# nb:
+#   iso-name: "Norwegian Bokmål"
+#   local-name: ""
+# nn:
+#   iso-name: "Norwegian Nynorsk"
+#   local-name: ""
+# no:
+#   iso-name: "Norwegian"
+#   local-name: ""
+# ii:
+#   iso-name: "Nuosu"
+#   local-name: ""
+# nr:
+#   iso-name: "Southern Ndebele"
+#   local-name: ""
+# oc:
+#   iso-name: "Occitan"
+#   local-name: ""
+# oj:
+#   iso-name: "Ojibwe, Ojibwa"
+#   local-name: ""
+# cu:
+#   iso-name: "Old Church Slavonic, Church Slavonic, Old Bulgarian"
+#   local-name: ""
+# om:
+#   iso-name: "Oromo"
+#   local-name: ""
+# or:
+#   iso-name: "Oriya"
+#   local-name: ""
+# os:
+#   iso-name: "Ossetian, Ossetic"
+#   local-name: ""
+# pa:
+#   iso-name: "Panjabi, Punjabi"
+#   local-name: ""
+# pi:
+#   iso-name: "Pāli"
+#   local-name: ""
+# fa:
+#   iso-name: "Persian (Farsi)"
+#   local-name: ""
+# pl:
+#   iso-name: "Polish"
+#   local-name: ""
+# ps:
+#   iso-name: "Pashto, Pushto"
+#   local-name: ""
+# pt:
+#   iso-name: "Portuguese"
+#   local-name: ""
+# qu:
+#   iso-name: "Quechua"
+#   local-name: ""
+# rm:
+#   iso-name: "Romansh"
+#   local-name: ""
+# rn:
+#   iso-name: "Kirundi"
+#   local-name: ""
+# ro:
+#   iso-name: "Romanian"
+#   local-name: ""
+# ru:
+#   iso-name: "Russian"
+#   local-name: ""
+# sa:
+#   iso-name: "Sanskrit (Saṁskṛta)"
+#   local-name: ""
+# sc:
+#   iso-name: "Sardinian"
+#   local-name: ""
+# sd:
+#   iso-name: "Sindhi"
+#   local-name: ""
+# se:
+#   iso-name: "Northern Sami"
+#   local-name: ""
+# sm:
+#   iso-name: "Samoan"
+#   local-name: ""
+# sg:
+#   iso-name: "Sango"
+#   local-name: ""
+# sr:
+#   iso-name: "Serbian"
+#   local-name: ""
+# gd:
+#   iso-name: "Scottish Gaelic, Gaelic"
+#   local-name: ""
+# sn:
+#   iso-name: "Shona"
+#   local-name: ""
+# si:
+#   iso-name: "Sinhala, Sinhalese"
+#   local-name: ""
+# sk:
+#   iso-name: "Slovak"
+#   local-name: ""
+# sl:
+#   iso-name: "Slovene"
+#   local-name: ""
+# so:
+#   iso-name: "Somali"
+#   local-name: ""
+# st:
+#   iso-name: "Southern Sotho"
+#   local-name: ""
+es:
+  iso-name: "Spanish"
+  local-name: "Español"
+  project:
+    organisation: ""
+    url: ""
+    email: ""
+    name: ""
+    description: "Libros creados con el Libro Eléctrico"
+    image: ""
+    credit: "Construido con el [Libro Eléctrico](https://ebw.co/template)"
+  features:
+    copyright-page: "Derechos"
+  nav:
+    home: "Inicio"
+    menu: "Menú"
+    next: "Siguiente"
+    previous: "Anterior"
+    back: "&larr;"
+    toc: "Tabla de contenidos"
+    read: "Leer"
+    login: "Iniciar sesión"
+    logout: "Cerrar sesión"
+  input:
+    submit: "Enviar"
+    send: "Enviar"
+    show: "Expandir"
+    hide: "Ocultar"
+    close: "Cerrar"
+  search:
+    search-title: "Buscar"
+    placeholder: "Busca aquí..."
+    placeholder-searching: "Buscar..."
+    search-results: "Resultados de la búsqueda"
+    results-for-singular: "resultado encontrado para"
+    results-for-plural: "resultados encontrados para"
+    results-for-none: "No se encontraron resultados para"
+    jump-to-first: "Ir al primer resultado ↓"
+    notice: ""
+  questions:
+    check-answers-button: "Validar mis respuestas"
+    feedback-correct: "¡Correcto!"
+    feedback-incorrect: "Incorrecto"
+    feedback-unfinished: "No ha seleccionado todas las respuestas correctas."
+    mark-correct: "&#10003;" # check mark
+    mark-incorrect: "&#10007;" # ballot x
+  quiz:
+    total: "Total"
+  cross-references:
+    pre-page-number: "(página "
+    post-page-number: ")"
+  account:
+    login: "Acceso"
+    my-account: "Mi cuenta"
+  annotator:
+    show-sidebar-tooltip-title: "Anotaciones abiertas"
+    show-sidebar-tooltip-description: "Ingrese aquí para mostrar la barra de anotaciones. Seleccione texto para resaltarlo y crear notas en esta página."
+    show-annotated-text-tooltip-title: "Resaltar anotaciones"
+    show-annotated-text-tooltip-description: "Ingrese aquí para mostrar u ocultar las anotaciones resaltadas en esta página."
+  bookmarks:
+    bookmark: "Marcador"
+    bookmarks: "Marcador"
+    bookmarks-tip: "Toque o seleccione texto, y luego toque el icono de marcador para guardar un marcador. Los marcadores se guardan en la caché de su navegador cuando está desconectado. Limpiar su caché sin iniciar sesión primero los eliminará permanentemente."
+    last-location: "Su última visita"
+    last-locations-tip: "En su última visita usted paró de leer aquí."
+    last-location-prompt: "¿Desea continuar desde su última visita?"
+    save-bookmark-note: "Guardar"
+    bookmark-note-placeholder: "Agregue una nota para este marcador..."
+    bookmark-note-login: "Inicie sesión para agregar y ver notas para sus marcadores"
+    delete-bookmark: "Eliminar"
+    delete-all: "Eliminar"
+    delete-bookmark-confirm: "¿Está seguro de que desea eliminar este marcador?"
+    delete-all-bookmarks-confirm: "¿Está seguro de que desea eliminar todos los marcadores?"
+    bookmarks-shifted-warning: "Un marcador parece no encontrar correspondencia exacta con su ubicación original. El contenido de esta página puede haber cambiado."
+  accordion:
+    show-all: "Expandir todo"
+    close-all: "Cerrar todo"
+  controls:
+    language-select: "Seleccione idioma"
+    show-hide: "Mostrar/Ocultar"
+  video:
+    options-button: "Otras opciones de vídeo"
+    play-video: "Reproduce el video"
+  copy:
+    copy: "Copiar"
+    copied: "Copiado"
+    copy-failed: "Lo siento, inténtalo de nuevo"
+  footnotes:
+    close-footnote: "Cerrar nota al pie"
+    reversefootnote-alt: "Volver al texto"
+  pdf:
+    cover: "La tapa"
+  # Comment out a network to remove it
+  # from the share menu
+  share:
+    share: "Compartir"
+    link: "Vínculo"
+    email: "Email"
+    bluesky: "Bluesky"
+    facebook: "Facebook"
+    linkedin: "LinkedIn"
+    reddit: "Reddit"
+    twitter: "Twitter"
+    whatsapp: "WhatsApp"
+    # buffer: "Buffer"
+    # delicious: "Delicious"
+    # evernote: "Evernote"
+    # pinterest: "Pinterest"
+    # pocket: "Pocket"
+    # stumbleupon: "Stumbleupon"
+    # tumblr: "Tumblr"
+    # wordpress: "WordPress"
+  expandable-box:
+    read-more: "Expandir"
+  feature-box:
+    link-to-feature-assistive-text: "Un enlace para la función relevante"
+  visual-toc:
+    link-to-page-assistive-text: "Enlace a la página"
+# su:
+#   iso-name: "Sundanese"
+#   local-name: ""
+# sw:
+#   iso-name: "Swahili"
+#   local-name: ""
+# ss:
+#   iso-name: "Swati"
+#   local-name: ""
+# sv:
+#   iso-name: "Swedish"
+#   local-name: ""
+# ta:
+#   iso-name: "Tamil"
+#   local-name: ""
+# te:
+#   iso-name: "Telugu"
+#   local-name: ""
+# tg:
+#   iso-name: "Tajik"
+#   local-name: ""
+# th:
+#   iso-name: "Thai"
+#   local-name: ""
+# ti:
+#   iso-name: "Tigrinya"
+#   local-name: ""
+# bo:
+#   iso-name: "Tibetan Standard, Tibetan, Central"
+#   local-name: ""
+# tk:
+#   iso-name: "Turkmen"
+#   local-name: ""
+# tl:
+#   iso-name: "Tagalog"
+#   local-name: ""
+# tn:
+#   iso-name: "Tswana"
+#   local-name: ""
+# to:
+#   iso-name: "Tonga (Tonga Islands)"
+#   local-name: ""
+# tr:
+#   iso-name: "Turkish"
+#   local-name: ""
+# ts:
+#   iso-name: "Tsonga"
+#   local-name: ""
+# tt:
+#   iso-name: "Tatar"
+#   local-name: ""
+# tw:
+#   iso-name: "Twi"
+#   local-name: ""
+# ty:
+#   iso-name: "Tahitian"
+#   local-name: ""
+# ug:
+#   iso-name: "Uyghur"
+#   local-name: ""
+# uk:
+#   iso-name: "Ukrainian"
+#   local-name: ""
+# ur:
+#   iso-name: "Urdu"
+#   local-name: ""
+# uz:
+#   iso-name: "Uzbek"
+#   local-name: ""
+# ve:
+#   iso-name: "Venda"
+#   local-name: ""
+# vi:
+#   iso-name: "Vietnamese"
+#   local-name: ""
+# vo:
+#   iso-name: "Volapük"
+#   local-name: ""
+# wa:
+#   iso-name: "Walloon"
+#   local-name: ""
+# cy:
+#   iso-name: "Welsh"
+#   local-name: ""
+# wo:
+#   iso-name: "Wolof"
+#   local-name: ""
+# fy:
+#   iso-name: "Western Frisian"
+#   local-name: ""
+# xh:
+#   iso-name: "Xhosa"
+#   local-name: ""
+# yi:
+#   iso-name: "Yiddish"
+#   local-name: ""
+# yo:
+#   iso-name: "Yoruba"
+#   local-name: ""
+# za:
+#   iso-name: "Zhuang, Chuang"
+#   local-name: ""
+# zu:
+#   iso-name: "Zulu"
+#   local-name: ""
+# nso:
+#   iso-name: "Sepedi/Nothern Sotho"
+#   local-name: ""
+# tuv:
+#   iso-name: "Turkana"
+#   local-name: ""
+# lwg:
+#   iso-name: "Wanga"
+#   local-name: ""
+# nuj:
+#   iso-name: "Nyole"
+#   local-name: ""
+# lgg:
+#   iso-name: "Lugbara"
+#   local-name: ""

@@ -1,0 +1,438 @@
+// What is this?
+// -------------
+// This is typography for the Electric Book template
+// (see http://ebw.co/template).
+// It is built with Sass. (See http://sass-lang.com,
+// and http://jekyllrb.com/docs/assets for how Jekyll implements Sass.)
+// It sets defaults that can be overridden in each book's
+// own stylesheets, where the variables here are duplicated.
+//
+// How to use it
+// -------------
+// Edit the default variables below.
+// Comment/uncomment or add font imports below.
+// Add your own custom CSS at the bottom.
+
+// -------------
+// Set variables
+// -------------
+
+// Provide a variable for site output
+$output-format: "web" !default;
+
+// Custom variables
+@import "custom/colors";
+@import "template/colors";
+@import "custom/web-variables";
+
+// Edition suffix: identifies this edition in certain classes
+// (e.g. in _epub-layout-utilities.scss).
+$edition-suffix: null !default;
+
+// The path to the project root, for setting paths
+// to fonts and colour profiles.
+// Override this in translation styles, which need an extra leading ../
+$path-to-root-directory: "../.." !default;
+
+// Max width of main body area
+$max-width-default: 45rem !default;
+
+// The minimum empty space around the main content area
+$content-padding-top: 1rem;
+$content-padding-bottom: 1rem;
+$content-padding-left: 1rem;
+$content-padding-right: 1rem;
+
+// We name font variables for two categories:
+// - 'text' fonts are used for body text and some page features;
+// - 'display' fonts are used for headings and similar short-string features.
+// For each category, we set a main font and a secondary font,
+// allowing up to four fonts.
+// Finally, we set a fifth, monospace font for elements like computer code.
+$font-text-main: "Apple Garamond", "Baskerville", "Cambria", "Droid Serif", "Times","Source Serif Pro", serif !default;
+$font-text-secondary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !default;
+$font-display-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !default;
+$font-display-secondary: "Apple Garamond", "Baskerville", "Cambria", "Droid Serif", "Times","Source Serif Pro", serif !default;
+$font-code: "SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", "Source Code Pro", monospace !default;
+
+// Set font size and line-height in rems, ems or px.
+// These values, especially $line-height-default,
+// are used to compute vertical rhythm for many features.
+// So do not use a unitless value for line-height,
+// and don't use percentages, which will break layouts
+// computed by multiplying this value.
+$font-size-default: 1.3rem !default;
+$line-height-default: 2rem !default;
+
+// How many times bigger than font-size-default
+// for features like headings and pullquotes?
+$font-size-bigger: 2 !default;
+
+// How much smaller than font-size-default
+// for features like sidenotes and footers?
+$font-size-smaller: 0.8 !default;
+
+// Do you want space between paragraphs, rather than a text-indent?
+// true or false
+$spaced-paras: true !default;
+
+// If not spacing paras, how large is the first-line indent on paragraphs?
+$paragraph-indent: 1em !default;
+
+// Rounded corners
+$button-border-radius: 0.1rem !default; // Roundness of button corners
+$box-border-radius: 0.1rem !default; // Roundness of box corners
+
+// Shadows
+$box-shadow: 1px 2px 7px grey !default;
+
+// Rules, lines
+$rule-thickness: 1.5px !default;
+
+// Colours
+$color-text-main: $black !default;
+$color-text-secondary: $grey-dark !default;
+$color-background: $white !default;
+$color-light: $grey-light !default;
+$color-mid: $grey-mid !default;
+$color-accent: $template-green !default;
+$color-links: $template-blue !default;
+$color-buttons: $color-accent !default;
+$color-buttons-text: $grey-dark !default;
+$color-buttons-hover: darken( $color-buttons, 20% ) !default;
+$color-highlight: $template-yellow !default;
+$color-notification-low-text: $color-text-main !default;
+$color-notification-medium-text: $color-text-main !default;
+$color-notification-high-text: $color-text-main !default;
+$color-notification-low-background: $template-green-light !default;
+$color-notification-medium-background: $template-yellow-light !default;
+$color-notification-high-background: $template-orange-light !default;
+
+// Ability to switch the main colors on specific pages.
+// $color-switched-pages is a comma-separated list of page styles
+// to apply switched colours to, e.g. home, contact-page
+// applied as `style:` in a markdown file's top-of-page YAML.
+$color-background-switched: $color-background !default;
+$color-text-main-switched: $color-text-main !default;
+$color-links-switched: $color-links !default;
+$color-headings-switched: $color-text-main-switched !default;
+$color-switched-pages: home !default;
+
+// Some features rearrange at certain screen sizes.
+// What are your screen-width break points?
+$break-width-small: 600px !default;
+$break-width-medium: 900px !default;
+$break-width-large: 1200px !default;
+$break-height-small: 600px !default;
+$break-height-medium: 900px !default;
+$break-height-large: 1200px !default;
+
+// Set the default start-depth of pages.
+// This is the distance from the top of the page
+// to the first element on the first page.
+$start-depth: $line-height-default * 2 !default;
+
+// Set the height of the opener image
+$opener-image-height: 40vh !default;
+
+// Hyphenation
+// Variables here apply to p, ul, ol, dl.
+// Note: Most browsers and ereaders do not support hyphenation rules.
+// Can be auto, none, or manual (only breaks on hyphens and soft hyphens)
+$hyphenation: manual !default;
+
+// Path to dictionary file, relative to `/book/styles`.
+// E.g. "../../assets/hyph.dic".
+$hyphenation-dictionary: "" !default;
+
+// Does your dictionary add to or replace built-in Prince dictionaries?
+// Use add or replace.
+$hyphenation-custom: add !default;
+
+// Minimum letters on new line after hyphen
+$hyphenate-after: 3 !default;
+
+// Minimum letters at end of line before hyphen
+$hyphenate-before: 3 !default;
+
+// Maximum number of consecutive lines ending with hyphens
+$hyphenate-lines: 1 !default;
+
+// Text dividers
+// For breaks created with *** in markdown.
+// If using an image, set $text-divider-image in CSS URL syntax, e.g.
+// $text-divider-image: url('../images/epub/text-divider.jpg');
+$text-divider-text: "" !default; // Empty leaves space. \2022 is a bullet
+$text-divider-image: "" !default;
+$text-divider-image-width: $line-height-default * 2 !default;
+
+// Title page
+$title-page-logo-width: 5rem !default;
+$title-page-logo-font: $font-text-main !default;
+$title-page-logo-font-size: 0.8rem !default;
+
+// Elements that float. When these are surrounded by paragraphs,
+// the following paragraph should be indented when we are not
+// using $spaced-paras.
+$floated-element-classes: sidenote !default;
+
+// Footer
+$footer-text-color: $color-text-main !default;
+$footer-background-color: $color-accent !default;
+$footer-border-color: $color-accent !default;
+
+// Website masthead
+$masthead-text-color: $color-links !default;
+$masthead-background-color: transparent !default;
+$masthead-border-color: transparent !default;
+$masthead-breadcrumb-divider: "\2044" !default; // 2044 is a fraction slash
+$masthead-height: 3.5rem !default;
+$masthead-align: left !default; // left, right or center (note $nav-position)
+$masthead-logo: true !default; // show logo in masthead?
+$masthead-logo-width: 2.5rem !default;
+
+// Website sidebar/navigation
+$nav-position: right !default; // left, right (note $masthead-align)
+$nav-bar-text-size: 1rem !default;
+
+// Does the nav list fully expand, or collapse until mouseover?
+$nav-bar-item-collapse: false !default;
+
+$nav-button-font: $font-text-secondary !default;
+$nav-bar-font: $font-text-secondary !default;
+$nav-bar-close: "\00D7" !default; // &times; ×
+$nav-bar-close-color: $grey-dark !default;
+$nav-bar-children-prompt: "+" !default;
+$nav-bar-children-prompt-hide: "\2212" !default; // \2212 is an actual minus sign
+$nav-bar-scrollbar: true !default;
+$nav-bar-width: 20rem !default;
+$nav-bar-fixed: true !default; // fixed not supported on some mobile browsers
+$nav-bar-back-button-hide: true !default;
+$nav-bar-accent-color: $color-accent !default; // should work behind dark or light text
+$nav-bar-title-color: $color-text-secondary !default;
+$nav-bar-label-color: $color-links !default;
+$nav-bar-label-background-color: $color-background !default;
+$nav-bar-label-border-color: $color-light !default;
+$nav-bar-border-color: $color-light !default;
+$nav-bar-background-color: $color-background !default;
+$nav-bar-search-background-color: $color-background !default;
+$nav-bar-parent-background-color: $color-background !default;
+$nav-bar-parent-text-color: $color-text-main !default;
+$nav-bar-parent-hover-color: $nav-bar-accent-color !default;
+$nav-bar-parent-text-hover-color: $color-background !default;
+$nav-bar-children-prompt-color: $grey-dark !default;
+$nav-bar-child-background-color: $color-light !default;
+$nav-bar-child-text-color: $color-text-main !default;
+$nav-bar-child-hover-color: $nav-bar-accent-color !default;
+$nav-bar-child-text-hover-color: $color-background !default;
+
+// Language selector
+$language-select-icon-color: $color-accent !default;
+$language-select-text-color: $color-text-secondary !default;
+$language-select-links-color: $color-links !default;
+$language-select-background-color: $color-background !default;
+
+// Annotator
+$annotator-sidebar-width: 16rem !default;
+$annotator-icon-line-color-active: $color-light !default;
+$annotator-icon-line-color-inactive: $color-mid !default;
+$annotator-icon-background-color-active: $color-accent !default;
+$annotator-icon-background-color-inactive: $color-background !default;
+$annotator-icon-thickness: 1.5px !default;
+
+// Bookmarks
+$bookmark-border-color: $color-light !default;
+$bookmark-text-color: $color-text-main !default;
+$bookmark-text-color-secondary: $color-mid !default;
+$bookmark-background-color: $color-background !default;
+$bookmark-icon-color-inactive: $color-background !default;
+$bookmark-icon-color-active: $color-accent !default;
+$bookmark-icon-outline-color-inactive: $color-accent !default;
+$bookmark-icon-outline-color-active: $color-accent !default;
+$bookmark-icon-text-size: 1rem !default;
+$bookmark-last-location-prompt-color-background: $color-links !default;
+$bookmark-last-location-prompt-color-text: $color-background !default;
+$bookmark-last-location-prompt-color-border: $color-links !default;
+
+// Share icon
+$share-icon-color: $color-accent !default;
+
+// ---------------------------------
+// Set to false to turn partials off
+// ---------------------------------
+
+// Reset browser CSS as best we can
+$web-css-reset: true !default;
+
+// Structural HTML components
+$web-wrappers: true !default;
+
+// Conventional helper classes
+$web-helpers: true !default;
+
+// Default typography
+$web-base-typography: true !default;
+
+// Navigation
+$web-masthead: true !default;
+$web-search: true !default;
+$web-nav-bar: true !default;
+$web-footer: true !default;
+$web-accordion: true !default;
+
+// Book parts
+$web-cover: true !default;
+$web-previous-publications-page: true !default;
+$web-title-pages: true !default;
+$web-copyright-page: true !default;
+$web-dedications: true !default;
+$web-epigraphs: true !default;
+$web-toc: true !default;
+$web-color-switches: true !default;
+
+// Book-feature classes
+$web-bibliographies: true !default;
+$web-boxes: true !default;
+$web-buttons: true !default;
+$web-code: true !default;
+$web-dialogue: true !default;
+$web-figures: true !default;
+$web-highlighter: true !default;
+$web-glossaries: true !default;
+$web-index: true !default;
+$web-maths: true !default;
+$web-notes: true !default;
+$web-openers: true !default;
+$web-pullquotes: true !default;
+$web-qr-codes: true !default;
+$web-sources: true !default;
+$web-tables: true !default;
+$web-letters: true !default;
+$web-verse: true !default;
+$web-video: true !default;
+$web-visual-toc: true !default;
+$web-pagination: true !default;
+$web-questions: true !default;
+$web-select-questions: true !default;
+$web-slides: true !default;
+$web-definitions: true !default;
+
+// Docs
+$web-docs: true !default;
+
+// Type-control classes
+$web-smallcaps: true !default;
+$web-layout-utilities: true !default;  // E.g. tracking and shrinking
+
+// Controls
+$web-controls: true !default;
+$web-language-select: true !default;
+$web-annotator: true !default;
+$web-bookmarks: true !default;
+$web-share: true !default;
+
+// Print-out styles
+$web-printout: true !default;
+
+// Logic (if this then that)
+// This should stay last in the @import list
+$web-reset-sequences: true !default;
+
+
+// ----------------------------------------------------
+// Import font files (@font-face) for fonts you specify
+// ----------------------------------------------------
+
+// Custom imports
+@import "custom/web-imports";
+
+// Import fonts from book-specific CSS.
+
+// ---------------------
+// Template modules
+// ---------------------
+
+// Reset browser CSS as best we can
+@import "template/partials/web-css-reset";
+
+// Load general-purpose mixins
+@import "template/partials/web-mixins--buttons";
+@import "template/partials/web-mixins--sidenotes";
+@import "template/partials/web-mixins--dialogs";
+@import "template/partials/web-mixins--search";
+
+// Structural HTML components
+@import "template/partials/web-wrappers";
+
+// Conventional helper classes
+@import "template/partials/web-helpers";
+
+// Default typography
+@import "template/partials/web-base-typography";
+
+// Navigation
+@import "template/partials/web-masthead";
+@import "template/partials/web-nav-bar";
+@import "template/partials/web-search";
+@import "template/partials/web-footer";
+@import "template/partials/web-accordion";
+
+// Book parts
+@import "template/partials/web-cover";
+@import "template/partials/web-previous-publications-page";
+@import "template/partials/web-title-pages";
+@import "template/partials/web-copyright-page";
+@import "template/partials/web-dedications";
+@import "template/partials/web-epigraphs";
+@import "template/partials/web-toc";
+@import "template/partials/web-color-switches";
+
+// Book-feature classes
+@import "template/partials/web-bibliographies";
+@import "template/partials/web-boxes";
+@import "template/partials/web-buttons";
+@import "template/partials/web-code";
+@import "template/partials/web-dialogue";
+@import "template/partials/web-figures";
+@import "template/partials/web-glossaries";
+@import "template/partials/web-highlighter";
+@import "template/partials/web-index";
+@import "template/partials/web-maths";
+@import "template/partials/web-notes";
+@import "template/partials/web-openers";
+@import "template/partials/web-qr-codes";
+@import "template/partials/web-pullquotes";
+@import "template/partials/web-sources";
+@import "template/partials/web-tables";
+@import "template/partials/web-letters";
+@import "template/partials/web-verse";
+@import "template/partials/web-video";
+@import "template/partials/web-visual-toc";
+@import "template/partials/web-pagination";
+@import "template/partials/web-questions";
+@import "template/partials/web-select-questions";
+@import "template/partials/web-slides";
+@import "template/partials/web-definitions";
+
+// Docs
+@import "template/partials/web-docs";
+
+// Type-control classes
+@import "template/partials/web-smallcaps";
+@import "template/partials/web-layout-utilities";  // E.g. tracking and shrinking
+
+// User features
+@import "template/partials/web-controls";
+@import "template/partials/web-annotator";
+@import "template/partials/web-language-select";
+@import "template/partials/web-bookmarks";
+@import "template/partials/web-share";
+
+// Print-out styles
+@import "template/partials/web-printout";
+
+// Logic (if this then that)
+@import "template/partials/web-reset-sequences"; // This should stay last in the @import list
+
+// Custom rules
+@import "custom/web-rules";

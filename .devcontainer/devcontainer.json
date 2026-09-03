@@ -1,0 +1,28 @@
+{
+  "name": "Electric Book",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "yandeu.five-server"
+      ]
+    },
+    "codespaces": {
+      "repositories": {
+        "electricbookworks/ebw-agent-skills": {
+          "permissions": {
+            "contents": "read"
+          }
+        }
+      }
+    }
+  },
+  "postCreateCommand": "bundle install && npm install",
+  "forwardPorts": [4000],
+  "remoteUser": "vscode",
+  "containerEnv": {
+    "PUPPETEER_ARGS": "--no-sandbox"
+  }
+}

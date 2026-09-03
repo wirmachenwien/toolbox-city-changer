@@ -1,0 +1,31 @@
+{
+  "name": "wmw-erasmus-handbuch",
+  "version": "2.3.0",
+  "description": "Electric Book Works handbook for the WirMachenWien Toolbox fuer City Changer workshops",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "electric-book": "node _tools/run/index.js",
+    "eb": "node _tools/run/index.js",
+    "setup": "rm -rf node_modules/@electricbookworks/electric-book-modules && rm -f package-lock.json && npm install && bundle install",
+    "update-modules": "rm -rf node_modules package-lock.json && npm install",
+    "postyalc": "node node_modules/@electricbookworks/electric-book-modules/install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electricbookworks/electric-book.git"
+  },
+  "author": "Arthur Attwell",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/electricbookworks/electric-book/issues"
+  },
+  "homepage": "https://github.com/electricbookworks/electric-book#readme",
+  "dependencies": {
+    "@electricbookworks/electric-book-modules": "github:electricbookworks/electric-book-modules#v3.1.1"
+  },
+  "prince": {
+    "version": "books-20220701",
+    "license": "_prince/license.dat"
+  }
+}

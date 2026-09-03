@@ -1,0 +1,316 @@
+---
+# Project CSS for web output
+---
+
+// This CSS is mainly for use on the project home-page,
+// used in web and app outputs. (Others don't have a home page.)
+// In older projects, we fetched the home-page CSS from
+// the first book in `_data/works`. But sometimes that book
+// is excluded from the build, or has idiosyncratic styles.
+// This Sass file is project-wide CSS for non-book pages.
+
+
+// -------------
+// Set variables
+// -------------
+
+// Set variables specific to the project here
+// that override the defaults in _sass/web.scss
+
+$wmw-green: #d7ff1f;
+$wmw-black: #161616;
+$wmw-cream: #fbfaf2;
+$wmw-dark-green: #005b44;
+
+$font-text-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+$font-display-main: $font-text-main;
+$color-text-main: $wmw-black;
+$color-background: $wmw-cream;
+$color-accent: $wmw-green;
+$color-links: $wmw-dark-green;
+$color-buttons: $wmw-black;
+$color-buttons-text: white;
+$color-buttons-hover: $wmw-dark-green;
+$share-icon-color: $wmw-dark-green;
+$button-border-radius: 999rem;
+
+
+// ------------
+// Import fonts
+// ------------
+
+// Add @font-face rules for fonts you specify here.
+// Add the actual font files to `../fonts`
+// For snippets, try https://github.com/arthurattwell/font-faces
+
+
+// ---------------
+// Template styles
+// ---------------
+
+// Import master styles
+@import 'template/web';
+
+
+// -------------
+// Custom styles
+// -------------
+
+// Add any custom Sass or CSS here.
+
+body {
+    background: $wmw-cream;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.button,
+a.button {
+    background: $wmw-black;
+    border: 2px solid $wmw-black;
+    box-shadow: 0.18rem 0.18rem 0 $wmw-green;
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.button:hover,
+.button:focus,
+a.button:hover,
+a.button:focus {
+    background: $wmw-dark-green;
+    color: white;
+}
+
+input,
+textarea {
+    background: white;
+    border-color: $wmw-black;
+    color: $wmw-black;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #555;
+    opacity: 1;
+}
+
+input[type="submit"],
+button {
+    background: $wmw-black;
+    color: white;
+}
+
+input[type="submit"]:hover,
+input[type="submit"]:focus,
+button:hover,
+button:focus {
+    background: $wmw-dark-green;
+    color: white;
+}
+
+.home .button,
+.home a.button,
+.home a.button:link,
+.home a.button:visited {
+    background: $wmw-green;
+    border: 0.18rem solid $wmw-black;
+    border-radius: 0;
+    box-shadow: 0.45rem 0.45rem 0 $wmw-black;
+    color: $wmw-black;
+    display: inline-block;
+    font-size: clamp(1.1rem, 2vw, 1.45rem);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    padding: 0.9rem 1.2rem;
+    text-decoration: none;
+}
+
+.home .button:hover,
+.home .button:focus,
+.home a.button:hover,
+.home a.button:focus,
+.home a.button:visited:hover,
+.home a.button:visited:focus {
+    background: white;
+    box-shadow: 0.45rem 0.45rem 0 $wmw-green;
+    color: $wmw-black;
+}
+
+.search input,
+.search input.search-box,
+.search-form input,
+.search-form input.search-box,
+#search input,
+#search input.search-box,
+input.search-box,
+input[type="search"] {
+    background: white;
+    border: 2px solid $wmw-black;
+    color: $wmw-black;
+}
+
+.search input::placeholder,
+.search-form input::placeholder,
+#search input::placeholder,
+input.search-box::placeholder,
+input[type="search"]::placeholder {
+    color: #555;
+    opacity: 1;
+}
+
+.search input[type="submit"],
+.search-form input[type="submit"],
+#search input[type="submit"] {
+    background: $wmw-black;
+    border: 2px solid $wmw-black;
+    color: white;
+}
+
+.search input[type="submit"]:hover,
+.search input[type="submit"]:focus,
+.search-form input[type="submit"]:hover,
+.search-form input[type="submit"]:focus,
+#search input[type="submit"]:hover,
+#search input[type="submit"]:focus {
+    background: $wmw-dark-green;
+    color: white;
+}
+
+.nav-buttons {
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 4;
+}
+
+[href="#nav"] {
+    border: 2px solid $wmw-black;
+    box-shadow: 0.18rem 0.18rem 0 $wmw-green;
+    color: $wmw-black;
+    font-weight: 800;
+}
+
+#nav {
+    border-left: 2px solid $wmw-black;
+    border-top: 0;
+    box-shadow: -0.4rem 0 0 $wmw-green;
+    height: 100vh;
+    max-width: 22rem;
+    overflow-y: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    transform: translateX(105%);
+    transition: transform 0.2s ease-out;
+    z-index: 5;
+}
+
+.js-nav-open #nav,
+#nav:target {
+    transform: translateX(0);
+}
+
+#nav .nav-title {
+    background: $wmw-green;
+    color: $wmw-black;
+    margin: 0 0 1rem;
+    padding: 1rem 3rem 1rem 1rem;
+}
+
+#nav a:hover,
+#nav a:focus {
+    color: $wmw-black;
+}
+
+#nav li:hover,
+#nav li:focus,
+#nav li:active,
+#nav li:hover > a,
+#nav li:focus > a,
+#nav li:active > a {
+    color: $wmw-black;
+}
+
+.share-button {
+    align-items: center;
+    background: white;
+    border: 2px solid $wmw-black;
+    border-radius: 999rem;
+    box-shadow: 0.14rem 0.14rem 0 $wmw-green;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 2.25rem;
+    min-width: 2.25rem;
+    padding: 0.45rem;
+}
+
+.share-button svg.share-icon path {
+    stroke: $wmw-dark-green;
+}
+
+.share-button:hover,
+.share-button:focus {
+    background: $wmw-dark-green;
+}
+
+.share-button:hover svg.share-icon path,
+.share-button:focus svg.share-icon path {
+    stroke: white;
+}
+
+#share-links {
+    background: white;
+    border: 2px solid $wmw-black;
+    box-shadow: 0.35rem 0.35rem 0 $wmw-green;
+    color: $wmw-black;
+}
+
+#share-links .share-links-close {
+    border-color: $wmw-black;
+}
+
+#share-links .share-links-close::before,
+#share-links .share-link-content {
+    color: $wmw-dark-green;
+}
+
+#share-links .share-link-content:hover,
+#share-links .share-link-content:focus {
+    color: $wmw-black;
+    text-decoration: underline;
+}
+
+#share-links .share-link-icon svg path {
+    fill: $wmw-dark-green;
+}
+
+.home .opener-image-wrapper {
+    line-height: 0;
+    padding: 0;
+}
+
+.home .opener-image {
+    display: block;
+    height: min(62vh, 42rem);
+    margin: 0;
+    max-height: none;
+    max-width: none;
+    object-fit: cover;
+    width: 100%;
+}
+
+.home p > img[src$="erasmus-plus.png"] {
+    background: white;
+    border: 2px solid $wmw-black;
+    box-shadow: 0.25rem 0.25rem 0 $wmw-green;
+    box-sizing: border-box;
+    max-width: 38rem;
+    padding: 0.5rem;
+    width: 100%;
+}

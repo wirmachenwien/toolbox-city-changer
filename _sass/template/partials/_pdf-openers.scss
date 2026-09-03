@@ -1,0 +1,44 @@
+$pdf-openers: true !default;
+@if $pdf-openers {
+
+    // A paragraph that starts a new set of paragraphs, with a gap above it.
+    .first {
+    	text-indent: 0;
+    	margin-top: $line-height-default; // Overridden by later rule for paragraphs after headings, blockquotes, lists and definition lists
+    }
+
+    .part-number,
+    .chapter-number {
+        display: block;
+    }
+
+    .opener-image-wrapper {
+        margin-inside: -($margin-inside + $bleed-print);
+        margin-outside: -($margin-outside + $bleed-print);
+        margin-top: -($margin-top + $bleed-print);
+        width: $page-width + ($bleed-print * 2);
+
+        .opener-image {
+            height: $opener-image-height;
+            object-fit: cover;
+            width: 100%;
+        }
+    }
+
+    // If the opener-image-wrapper is on a page
+    // that has a start-depth, account for that extra depth.
+    // Prince collapses the margin-tops on the .wrapper
+    // and the .opener-image-wrapper, so we just replace
+    // $margin-top with $start-depth below, if the
+    // $start-depth is greater than the $margin-top.
+
+    @if $start-depth > $margin-top {
+        @each $page-style in $start-depth-page-styles {
+            .#{$page-style} {
+                .opener-image-wrapper {
+                    margin-top: -($start-depth + $bleed-print);
+                }
+            }
+        }
+    }
+}

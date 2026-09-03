@@ -1,0 +1,23 @@
+$epub-openers: true !default;
+@if $epub-openers {
+
+    // A paragraph that starts a new set of paragraphs, with a gap above it.
+    .first {
+        text-indent: 0;
+        margin-top: $line-height-default; // Overridden by later rule for paragraphs after headings, blockquotes, lists and definition lists
+    }
+
+    .part-number,
+    .chapter-number {
+        display: block;
+    }
+
+    .opener-image-wrapper {
+
+        .opener-image {
+            height: $opener-image-height;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+$web-openers: true !default;
+@if $web-openers {
+
+    // A paragraph that starts a new set of paragraphs, with a gap above it.
+    .first {
+        text-indent: 0;
+        margin-top: $line-height-default; // Overridden by later rule for paragraphs after headings, blockquotes, lists and definition lists
+    }
+
+    .part-number,
+    .chapter-number {
+        display: block;
+    }
+
+    .opener-image-wrapper {
+
+        // Avoids white space after image
+        line-height: 0;
+
+        .opener-image {
+            height: $opener-image-height;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+}

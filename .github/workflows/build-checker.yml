@@ -1,0 +1,28 @@
+name: Check build
+on:
+    pull_request:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                fetch-depth: 2
+
+            - name: Set up Ruby 3.2.5
+              uses: ruby/setup-ruby@v1
+              with:
+                ruby-version: 3.2.5
+
+            - name: Install Bundler 2.5.16
+              run: gem install bundler -v 2.5.16
+
+            - name: Bundle install
+              run: bundle install
+
+            - name: Build with Jekyll
+              run: |
+                bundle exec jekyll build

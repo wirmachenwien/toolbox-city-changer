@@ -1,0 +1,76 @@
+$web-pagination: true !default;
+@if $web-pagination {
+
+    // Pagination (next and previous pages)
+
+    .pagination {
+        clear: both;
+        font-family: $font-text-secondary;
+        margin: auto;
+        padding: 1rem;
+
+        // On small screens, pagination fills
+        // the bottom of the screen.
+        position: fixed;
+        bottom: 0;
+        background-color: $color-background;
+        border-top: $rule-thickness solid $color-light;
+        width: 100%;
+
+        @media only screen and (min-width: $break-width-large) {
+            position: inherit;
+            background-color: transparent;
+            border-top: none;
+            width: auto;
+        }
+
+        // Clearfix
+        &::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        // Common features of pagination
+        .pagination-previous,
+        .pagination-next {
+            width: 50%;
+
+            @media only screen and (min-width: $break-width-large) {
+                position: fixed;
+                bottom: $content-padding-bottom;
+                width: 70%;
+            }
+
+            .pagination-marker {
+                background-color: $color-background;
+                border-radius: $button-border-radius;
+                display: inline-block;
+                padding: 0.5rem;
+            }
+        }
+
+        .pagination-previous {
+            float: left; // when not position: fixed
+            left: $content-padding-left;
+            max-width: 20rem;
+            padding-right: 0.5rem;
+
+            .pagination-previous-arrow {}
+        }
+
+        .pagination-next {
+            float: right; // when not position: fixed
+            right: $content-padding-right;
+            max-width: 20rem;
+            padding-left: 0.5rem;
+            text-align: right;
+
+            .pagination-next-arrow {}
+        }
+    }
+}

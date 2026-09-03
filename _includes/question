@@ -1,0 +1,62 @@
+{% comment %}This turns a markdown file into a .question block.{% endcomment %}
+
+{% comment %} Reset variables set in any previous instances
+of this include on the page. {% endcomment %}
+{% assign question-file = "" %}
+{% assign question-correct-options = "" %}
+{% assign question-marks = "" %}
+
+{% comment %}Get the name of the file we're using, without any file extension.{% endcomment %}
+{% assign question-file = include.file | split: "." | first %}
+
+{% comment %}Create a one-file array of question pages
+to look through.{% endcomment %}
+{% capture path-to-question-file %}{{ book-directory }}{% if is-translation %}/{{ language }}{% endif %}/{{ question-file }}.md{% endcapture %}
+{% assign questions = site.pages | where_exp: "page", "page.path contains path-to-question-file" %}
+
+{% comment %}Check whether the question-file exists.{% endcomment %}
+{% for page in questions %}
+
+    {% comment %} Assign the question's components
+    to variables {% endcomment %}
+    {% assign question-correct-options = page.correct %}
+    {% assign question-marks = page.marks %}
+
+{% endfor %}
+
+{% comment %} Is this a multiple-choice question? {% endcomment %}
+{% assign question-is-mcq = false %}
+{% if question-correct-options != "" %}
+    {% assign question-is-mcq = true %}
+{% endif %}
+
+{% comment %} Even if we get page.content, it's too late to process
+Liquid tags, so figure includes wouldn't render in page.content.
+So, instead, we have to get the actual markdown content
+inserted here on Jekyll's first pass, using include_relative.
+We grab the markdown of the content by marking off the YAML
+frontmatter, and then splitting the resulting text
+into an array, then grabbing everything after the frontmatter.
+{% endcomment %}
+{% capture question-original %}
+{% include_relative {{ question-file }}.md %}
+{% endcapture %}
+{% capture question-notthreehyphens %}
+{{ question-original | replace_first: "---", "notthreehyphens" | replace_first: "---", "notthreehyphens" }}
+{% endcapture %}
+{% capture question-markdown %}{{ question-notthreehyphens | split: "notthreehyphens" | last }}{% endcapture %}
+
+{% comment %} Output a div containing its content. {% endcomment %}
+<div class="question{% if include.class %} {{ include.class }}{% endif %}{% if question-is-mcq %} mcq{% endif %}" markdown="1" data-question="{{ question-file }}" data-question-code="{% include question-secret-code.html correct=question-correct-options %}">
+
+<div class="question-content" markdown="1">
+{{ question-markdown }}
+</div>
+
+</div>
+
+{% if question-marks %}
+<div class="question-total-marks">
+    {{ question-marks }}
+</div>
+{% endif %}
