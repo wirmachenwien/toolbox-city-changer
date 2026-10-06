@@ -1,212 +1,111 @@
-# Information about this book
-
-# The book's main title
-title: "Toolbox für City Changer"
-
-# The subtitle, if any
-subtitle: "Ein Handbuch aus drei Workshops von WirMachenWien, Changing Cities und Prostorož"
-
-# The author
-creator: "WirMachenWien"
-
-# Other contributors
-contributor: "Changing Cities; Prostorož"
-
-# The book's blurb
-description: |
-  Ein praxisorientiertes Handbuch für Wiener Initiativen, die Superblocks, Tactical Urbanism, Street Design, Mobilisierung und Monitoring für klimafitte, verkehrsberuhigte Grätzl einsetzen wollen.
-
-# A image representing the book,
-# usually the front cover.
-image: "cover.jpg"
-
-# Publisher, imprint or brand name
-publisher: "WirMachenWien"
-
-# Publisher's website
-publisher-url: "https://wirmachen.wien"
-
-# Who owns the copyright?
-rightsholder: "WirMachenWien und die genannten Beitragenden"
-
-# A copyright statement or licence wording
-rights: |
-  Zusammengestellt aus öffentlich zugänglichen Materialien von WirMachenWien und verlinkten Partnerorganisationen. Rechte an Vorträgen, Fotos, PDFs und Videos verbleiben bei den jeweils genannten Rechteinhaber:innen.
-
-# Language code
-# Use ISO 639-1, 639-2, or 639-3 codes
-# (in that order of preference)
-language: "de"
-
-# Official, original publication date
-# YYYY-MM-DD
-date: "2026-09-03"
-
-# Date of last revision
-# YYYY-MM-DD
-modified: "2026-09-03"
-
-# Book type, e.g. Novel, Poetry, Memoir
-type: "Handbuch"
-
-# Subject areas
-# E.g. BISAC: https://bisg.org/page/BISACEdition
-#      BIC: https://ns.editeur.org/bic_categories
-subject: "Stadtentwicklung; Aktivismus; Verkehrsberuhigung; Beteiligung"
-
-# ISBN or UUID
-identifier: "wmw-toolbox-city-changer-2026"
-
-# Parent work's ISBN or ISTC
-# if this is a derivative work.
-source: ""
-
-# ISBN or ISTC of a related work
-relation: ""
-
-# Any specific place or time this book is about?
-# E.g. geographic place or chronological time span
-coverage: "Wien, Berlin, Ljubljana; 2026"
-
-# Keywords that describe this project, comma-separated.
-# Used, for example, in PDF metadata.
-keywords: "WirMachenWien, Erasmus+, Superblock, Supergrätzl, Kiezblock, Tactical Urbanism, Street Design, Mobilisierung, Monitoring, Wien"
-
-# Details about each product of this work
+title: Toolbox für City Changer
+subtitle: Ein Handbuch von WirMachenWien, Changing Cities und Prostorož
+creator: WirMachenWien
+contributor: Changing Cities; Prostorož
+description: Ein praxisorientiertes Handbuch für Initiativen, die ihre Stadt
+  sicherer, grüner, inklusiver und klimafitter machen wollen und dafür Werkzeuge
+  brauchen.
+image: cover.jpg
+publisher: WirMachenWien
+publisher-url: https://wirmachen.wien
+rightsholder: WirMachenWien und die genannten Beitragenden
+rights: >
+  Zusammengestellt aus öffentlich zugänglichen Materialien von WirMachenWien und
+  verlinkten Partnerorganisationen. Rechte an Vorträgen, Fotos, PDFs und Videos
+  verbleiben bei den jeweils genannten Rechteinhaber:innen.
+language: de
+date: 2026-09-03
+modified: 2026-09-03
+type: Handbuch
+subject: Stadtentwicklung; Aktivismus; Verkehrsberuhigung; Beteiligung
+identifier: wmw-toolbox-city-changer-2026
+coverage: Wien, Berlin, Ljubljana; 2026
+keywords: WirMachenWien, Erasmus+, Superblock, Supergrätzl, Kiezblock, Tactical
+  Urbanism, Street Design, Mobilisierung, Monitoring, Wien
 products:
-
-  # Details about the print version of this work
   print-pdf:
-
-    # Format
-    # e.g. Paperback, Digital download, Digital online
-    format: "Print"
-
+    format: Print
     files:
-      - "0-0-cover"
-      - "0-1-titlepage"
-      - "0-2-copyright"
-      - "0-3-contents"
+      - 0-0-cover
+      - 0-1-titlepage
+      - 0-2-copyright
+      - 0-3-contents
       - "01"
       - "02"
       - "03"
       - "04"
       - "05"
       - "06"
-
     toc:
-      - label: "Cover"
-        file: "0-0-cover"
-        class: "frontmatter-entry"
-      - label: "Titel"
-        file: "0-1-titlepage"
-        class: "frontmatter-entry"
-      - label: "Copyright"
-        file: "0-2-copyright"
-        class: "frontmatter-entry"
-      - label: "Inhalt"
-        file: "0-3-contents"
-        class: "frontmatter-entry"
-      - label: "1. Wozu diese Toolbox?"
+      - label: Cover
+        file: 0-0-cover
+        class: frontmatter-entry
+      - label: Titel
+        file: 0-1-titlepage
+        class: frontmatter-entry
+      - label: Copyright
+        file: 0-2-copyright
+        class: frontmatter-entry
+      - label: Inhalt
+        file: 0-3-contents
+        class: frontmatter-entry
+      - label: 1. Wozu diese Toolbox?
         file: "01"
-      - label: "2. Superblocks starten"
+      - label: 2. Superblocks starten
         file: "02"
-      - label: "3. Tactical Urbanism und Street Design"
+      - label: 3. Tactical Urbanism und Street Design
         file: "03"
-      - label: "4. Mobilisierung und Strategien des Wandels"
+      - label: 4. Mobilisierung und Strategien des Wandels
         file: "04"
       - label: "5. Monitoring: Wirkung sichtbar machen"
         file: "05"
-      - label: "6. Arbeitsplan und Quellen"
+      - label: 6. Arbeitsplan und Quellen
         file: "06"
-
-  # Details about the website version of this work
   web:
-
-    # Format
-    # e.g. Paperback, Digital download, Digital online
-    format: "Online" # e.g. Paperback, Digital download, Digital online
-
+    format: Online
     files:
-      - "0-0-cover"
-      - "0-1-titlepage"
-      - "0-2-copyright"
-      - "0-3-contents"
+      - 0-0-cover
+      - 0-1-titlepage
+      - 0-2-copyright
+      - 0-3-contents
       - "01"
       - "02"
       - "03"
       - "04"
       - "05"
       - "06"
-
-  # Details about the epub version of this work
   epub:
-
-    # Format
-    # e.g. Paperback, Digital download, Digital online
-    format: "Ebook" # e.g. Paperback, Digital download, Digital online
-
+    format: Ebook
     files:
-      - "0-0-cover": "cover"
-      - "0-1-titlepage": "title-page"
-      - "0-2-copyright": "copyright-page"
-      - "0-3-contents": "toc"
+      - 0-0-cover: cover
+      - 0-1-titlepage: title-page
+      - 0-2-copyright: copyright-page
+      - 0-3-contents: toc
       - "01"
       - "02"
       - "03"
       - "04"
       - "05"
       - "06"
-
-    # Your contents-page file, if you have one.
-    # An epub must have a contents page for navigation.
-    # Specify it here or with a 'toc' value
-    # at the relevant file in the files list below.
-    contents-page: "0-3-contents"
-
-    # Accessibility metadata to inform users
-    # about the accessibility features in this epub.
+    contents-page: 0-3-contents
     accessibility:
-
-      # A summary statement, see
-      # https://www.w3.org/TR/epub-a11y-tech-11/#accessibilitySummary
-      summary: "This publication conforms to WCAG 2.0 Level AA."
-
-      # Comma-separate textual, visual, auditory, tactile. See
-      # https://www.w3.org/TR/epub-a11y-tech-11/#accessMode
+      summary: This publication conforms to WCAG 2.0 Level AA.
       access-mode: textual, visual
       access-mode-sufficient: textual
-
-      # Comma-separate possible values, see
-      # https://www.w3.org/TR/epub-a11y-tech-11/#accessibilityFeature
       accessibility-features: tableOfContents
-
-      # Comma-separate possible values, see
-      # https://www.w3.org/TR/epub-a11y-tech-11/#accessibilityHazard
       accessibility-hazards: unknown
-
-  # Details about the screen-PDF version of this work
   screen-pdf:
-
-    # Format
-    # e.g. Paperback, Digital download, Digital online
-    format: "PDF" # e.g. Paperback, Digital download, Digital online
-
+    format: PDF
     files:
-      - "0-0-cover"
-      - "0-1-titlepage"
-      - "0-2-copyright"
-      - "0-3-contents"
+      - 0-0-cover
+      - 0-1-titlepage
+      - 0-2-copyright
+      - 0-3-contents
       - "01"
       - "02"
       - "03"
       - "04"
       - "05"
       - "06"
-
-  # Details about the app version of this work
   app:
-
-    # Format
-    # e.g. Paperback, Digital download, Digital online
-    format: "App" # e.g. Paperback, Digital download, Digital online
+    format: App
