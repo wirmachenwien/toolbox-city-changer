@@ -36,7 +36,7 @@ products:
       - "04"
       - "05"
       - "06"
-    toc:
+    toc: &id001
       - label: Cover
         file: 0-0-cover
         class: frontmatter-entry
@@ -74,6 +74,7 @@ products:
       - "04"
       - "05"
       - "06"
+    nav: *id001
   epub:
     format: Ebook
     files:
