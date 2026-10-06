@@ -1,0 +1,14 @@
+---
+// Über/About sheet for front matter: heading only. The metadata table was
+// removed; the CC BY badge lives in the print/PDF pipeline, not on screen.
+import { t } from '../lib/i18n';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+}
+const { lang } = Astro.props;
+---
+<div class="sheet copyright-sheet">
+  <h1>{t(lang, 'features.copyright-page', 'Copyright')}</h1>
+</div>

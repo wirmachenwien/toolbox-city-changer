@@ -1,0 +1,23 @@
+---
+// English home: /en/ (directory index, not /en.html).
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import MdxContent from '../../components/MdxContent.astro';
+import { pageUrl } from '../../lib/site';
+
+const entries = await getCollection('pages');
+const entry = entries.find((item) => item.id === 'en');
+if (!entry) throw new Error('Missing English home page');
+---
+<PageLayout
+  lang="en"
+  file="index"
+  title={entry.data.title}
+  description={entry.data.description}
+  layout="home"
+  currentUrl={pageUrl('en', 'index')}
+  openerImage={entry.data.openerImage}
+  openerImageAlt={entry.data.openerImageAlt}
+>
+  <MdxContent entry={entry} />
+</PageLayout>

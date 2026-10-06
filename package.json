@@ -1,31 +1,38 @@
 {
-  "name": "wmw-erasmus-handbuch",
-  "version": "2.3.0",
-  "description": "Electric Book Works handbook for the WirMachenWien Toolbox fuer City Changer workshops",
-  "main": "index.js",
+  "name": "toolbox-city-changer",
+  "type": "module",
+  "version": "3.0.0",
+  "description": "Toolbox for City Changers handbook site (Astro, static)",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "electric-book": "node _tools/run/index.js",
-    "eb": "node _tools/run/index.js",
-    "setup": "rm -rf node_modules/@electricbookworks/electric-book-modules && rm -f package-lock.json && npm install && bundle install",
-    "update-modules": "rm -rf node_modules package-lock.json && npm install",
-    "postyalc": "node node_modules/@electricbookworks/electric-book-modules/install.js"
+    "dev": "astro dev",
+    "build": "npm run build:downloads && astro build && node scripts/fix-dist.mjs && npm run build:search",
+    "build:search": "pagefind --site dist",
+    "build:pdf": "python3 scripts/build-pdf.py --all",
+    "build:epub": "python3 scripts/build-epub.py --all",
+    "build:downloads": "npm run build:pdf && npm run build:epub",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:baggage": "node scripts/check-baggage.mjs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/electricbookworks/electric-book.git"
-  },
-  "author": "Arthur Attwell",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/electricbookworks/electric-book/issues"
-  },
-  "homepage": "https://github.com/electricbookworks/electric-book#readme",
   "dependencies": {
-    "@electricbookworks/electric-book-modules": "github:electricbookworks/electric-book-modules#v3.1.1"
+    "astro": "^7.3.6",
+    "qrcode": "^1.5.4",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
   },
-  "prince": {
-    "version": "books-20220701",
-    "license": "_prince/license.dat"
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/mdx": "^8.0.3",
+    "@astrojs/sitemap": "^3.7.4",
+    "@types/qrcode": "^1.5.6",
+    "pagefind": "^1.5.2",
+    "typescript": "^6.0.3"
   }
 }

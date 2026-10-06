@@ -1,0 +1,19 @@
+---
+// Title sheet for front matter.
+import { getWork } from '../data/works';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+}
+const { lang } = Astro.props;
+const work = getWork(lang);
+---
+<div class="sheet title-sheet">
+  <p>{work.type}</p>
+  <h1>{work.title}</h1>
+  {work.subtitle && <p>{work.subtitle}</p>}
+  {work.creator && <p>{work.creator}</p>}
+  {work.contributor && <p>{work.contributor}</p>}
+  {work.publisher && <p>{work.publisher}</p>}
+</div>

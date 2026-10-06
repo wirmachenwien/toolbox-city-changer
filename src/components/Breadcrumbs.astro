@@ -1,0 +1,29 @@
+---
+// Breadcrumb trail. Compact mode (masthead) shows the trail inline;
+// the full mode is used above article content.
+export interface Crumb {
+  label: string;
+  url: string;
+  current: boolean;
+}
+
+interface Props {
+  items: Crumb[];
+  compact?: boolean;
+}
+
+const { items, compact = false } = Astro.props;
+---
+<nav class="crumbs" aria-label="Breadcrumb" data-compact={compact ? 'true' : undefined}>
+  <ol>
+    {items.map((item) => (
+      <li>
+        {item.current || !item.url ? (
+          <span aria-current="page">{item.label}</span>
+        ) : (
+          <a href={item.url}>{item.label}</a>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

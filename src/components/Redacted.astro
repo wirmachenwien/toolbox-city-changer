@@ -1,0 +1,8 @@
+---
+// Redacted span. Rendered visibly only when settings.redact is false;
+// otherwise the content is blacked out.
+import { settings } from '../data/settings';
+---
+<span class={settings.redact ? 'redacted' : undefined} aria-hidden={settings.redact ? 'true' : undefined}>
+  <slot />
+</span>

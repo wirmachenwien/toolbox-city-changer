@@ -1,0 +1,47 @@
+---
+ // Site masthead: brand mark, search shortcut, language dropdown, menu button.
+ // Breadcrumbs live with the article heading (single source, no duplication).
+import { project } from '../data/project';
+import { projectText, t } from '../lib/i18n';
+import { withBase } from '../lib/site';
+import type { Language } from '../data/locales';
+import Icon from './Icon.astro';
+import LanguageMenu from './LanguageMenu.astro';
+
+interface Props {
+  lang: Language;
+  kind: 'page' | 'book';
+  file: string;
+}
+
+const { lang, kind, file } = Astro.props;
+const text = projectText(lang);
+---
+<header class="site-head">
+  <div class="site-head-inner">
+    <a class="brand" href={withBase(lang === 'de' ? '/' : `/${lang}/`)}>
+      <img src={withBase('/logo.svg')} alt="" width="32" height="32" loading="eager" decoding="async" />
+      <span>{text.name || project.name}</span>
+    </a>
+    <form class="search-form search-form--mini" role="search" action={withBase(lang === 'de' ? '/search.html' : `/${lang}/search.html`)} method="get" data-search-form>
+      <label class="visually-hidden" for="head-search">
+        {t(lang, 'search.search-title', 'Search')}
+      </label>
+      <span class="search-box">
+        <Icon name="search" />
+        <input
+          id="head-search"
+          type="search"
+          name="query"
+          placeholder={t(lang, 'search.search-title', 'Search')}
+          autocomplete="off"
+        />
+      </span>
+    </form>
+    <LanguageMenu lang={lang} kind={kind} file={file} />
+    <button type="button" class="menu-toggle" data-open-drawer>
+      <Icon name="menu" />
+      <span>{t(lang, 'nav.menu', 'Menu')}</span>
+    </button>
+  </div>
+</header>

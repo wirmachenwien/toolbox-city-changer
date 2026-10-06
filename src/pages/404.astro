@@ -1,0 +1,17 @@
+---
+// Fallback page for unknown URLs (GitHub Pages serves dist/404.html).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/site';
+---
+<BaseLayout lang="de" title="Seite nicht gefunden" kind="page" file="index" currentUrl={withBase('/404.html')} noindex hreflang={false}>
+  <div class="prose">
+    <h1>Seite nicht gefunden</h1>
+    <p>
+      <a href={withBase('/')}>Start</a>
+      {' · '}
+      <a href={withBase('/en/')}>Home</a>
+      {' · '}
+      <a href={withBase('/sl/')}>Domov</a>
+    </p>
+  </div>
+</BaseLayout>

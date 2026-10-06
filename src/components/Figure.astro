@@ -1,0 +1,38 @@
+---
+// Responsive figure backed by bundled image assets. Looks up raster images
+// by filename across the book and site asset folders and renders an
+// optimised srcset; captions come from the default slot.
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: string;
+  alt: string;
+  eager?: boolean;
+}
+
+const { src, alt, eager = false } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
+  { eager: true },
+);
+
+const match = Object.entries(images).find(([path]) => path.endsWith(`/${src}`));
+if (!match) {
+  throw new Error(`Figure: unknown image "${src}"`);
+}
+const image = match[1].default;
+const hasCaption = await Astro.slots.has('default');
+---
+<figure class="figure">
+  <Image
+    src={image}
+    alt={alt}
+    title={alt || undefined}
+    widths={[400, 800, 1200]}
+    sizes="(max-width: 44rem) 100vw, 44rem"
+    loading={eager ? 'eager' : 'lazy'}
+    decoding="async"
+  />
+  {hasCaption && <figcaption><slot /></figcaption>}
+</figure>

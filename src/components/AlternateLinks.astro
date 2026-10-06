@@ -1,0 +1,19 @@
+---
+// hreflang alternates (plus x-default) for the document head.
+import { alternates, canonical } from '../lib/site';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+  kind: 'page' | 'book';
+  file: string;
+}
+
+const { lang, kind, file } = Astro.props;
+const targets = alternates(kind, file);
+const fallback = targets.find((target) => target.lang === lang) ?? targets[0];
+---
+{targets.map((target) => (
+  <link rel="alternate" hreflang={target.lang} href={canonical(target.url)} />
+))}
+<link rel="alternate" hreflang="x-default" href={canonical(fallback.url)} />

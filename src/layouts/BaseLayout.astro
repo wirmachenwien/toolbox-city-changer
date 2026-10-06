@@ -1,0 +1,77 @@
+---
+// Base document shell: head/SEO, masthead, nav drawer, sidebar, footer,
+// and the progressive-enhancement client bundle.
+import '../styles/global.css';
+import { settings } from '../data/settings';
+import { project } from '../data/project';
+import { projectText, t, htmlDir } from '../lib/i18n';
+import { canonical, withBase } from '../lib/site';
+import type { Language } from '../data/locales';
+import Masthead from '../components/Masthead.astro';
+import NavDrawer from '../components/NavDrawer.astro';
+import SideNav from '../components/SideNav.astro';
+import Footer from '../components/Footer.astro';
+import AlternateLinks from '../components/AlternateLinks.astro';
+
+interface Props {
+  lang: Language;
+  title: string;
+  description?: string;
+  kind: 'page' | 'book';
+  file: string;
+  currentUrl: string;
+  noindex?: boolean;
+  hreflang?: boolean;
+}
+
+const { lang, title, description, kind, file, currentUrl, noindex = false, hreflang = true } = Astro.props;
+const text = projectText(lang);
+const fullTitle = `${title}${settings.web.titleDivider}${text.name || project.name}`;
+const metaDescription = description ?? text.description;
+const hideFromIndex = noindex || settings.web.indexing.live === 'noindex';
+---
+<!doctype html>
+<html lang={lang} dir={htmlDir(lang)}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={metaDescription} />
+    {hideFromIndex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonical(currentUrl)} />
+    {hreflang && <AlternateLinks lang={lang} kind={kind} file={file} />}
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonical(currentUrl)} />
+    <meta property="og:locale" content={lang} />
+    <meta property="og:image" content={canonical(withBase('/images/cover.jpg'))} />
+    <link rel="icon" href={withBase('/favicon.png')} type="image/png" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} type="application/xml" title="Sitemap" />
+  </head>
+  <body
+    data-pagefind-ignore={noindex ? '' : undefined}
+    data-accordion={settings.web.accordion ? 'true' : 'false'}
+    data-accordion-level={settings.web.accordionLevel}
+    data-accordion-autoclose={settings.web.accordionAutoClose ? 'true' : 'false'}
+    data-svg-inject={settings.web.svgInject ? 'true' : 'false'}
+    data-lazyload={settings.web.lazyload ? 'true' : 'false'}
+    data-search-param={settings.web.search.param}
+  >
+    <a class="skip-link" href="#main">{t(lang, 'nav.toc', 'Contents')}</a>
+    <Masthead lang={lang} kind={kind} file={file} />
+    <NavDrawer lang={lang} currentUrl={currentUrl} />
+    <div class="shell">
+      <div class="main-grid">
+        <SideNav lang={lang} currentUrl={currentUrl} />
+        <main id="main" class="article" data-pagefind-body>
+          <slot />
+        </main>
+      </div>
+    </div>
+    <Footer lang={lang} kind={kind} file={file} />
+    <script>
+      import '../scripts/app';
+    </script>
+  </body>
+</html>

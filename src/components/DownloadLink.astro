@@ -1,0 +1,11 @@
+---
+import ButtonLink from './ButtonLink.astro';
+import { withBase } from '../lib/site';
+
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+<ButtonLink href={withBase(href)}><slot /></ButtonLink>

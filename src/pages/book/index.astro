@@ -1,0 +1,23 @@
+---
+ // German book landing: /book/ redirects to the contents page since the
+ // print-only cover/title sheets have no web version.
+import { alternates, bookUrl, canonical } from '../../lib/site';
+
+const target = bookUrl('de', '0-3-contents');
+const alternateLinks = alternates('book', 'index');
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={canonical(target)} />
+    {alternateLinks.map((entry) => (
+      <link rel="alternate" hreflang={entry.lang} href={entry.url} />
+    ))}
+    <title>Inhalt</title>
+  </head>
+  <body>
+    <p><a href={target}>Inhalt</a></p>
+  </body>
+</html>

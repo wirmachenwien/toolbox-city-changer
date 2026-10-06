@@ -1,0 +1,20 @@
+{
+  "de": [
+    {
+      "label": "Start",
+      "file": "index"
+    }
+  ],
+  "en": [
+    {
+      "label": "Home",
+      "file": "index"
+    }
+  ],
+  "sl": [
+    {
+      "label": "Domov",
+      "file": "index"
+    }
+  ]
+}

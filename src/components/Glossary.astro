@@ -1,0 +1,17 @@
+---
+// Glossary list (description list of terms + definitions).
+export interface GlossaryEntry {
+  term: string;
+  definition: string;
+}
+interface Props {
+  entries: GlossaryEntry[];
+}
+const { entries } = Astro.props;
+---
+<dl class="glossary">
+  {entries.map((entry) => (
+    <dt>{entry.term}</dt>
+    <dd>{entry.definition}</dd>
+  ))}
+</dl>

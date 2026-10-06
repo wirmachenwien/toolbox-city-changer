@@ -1,0 +1,13 @@
+---
+// Editorial annotation. Only renders when explicitly enabled; the default
+// build carries no annotation UI.
+interface Props {
+  enabled?: boolean;
+}
+const { enabled = false } = Astro.props;
+---
+{enabled && (
+  <aside class="annotation-note" role="note">
+    <slot />
+  </aside>
+)}

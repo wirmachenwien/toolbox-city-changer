@@ -1,8 +1,0 @@
-$epub-qr-codes: true !default;
-@if $epub-qr-codes {
-
-    // Currently not shown
-    .qr-code {
-        display: none;
-    }
-}

@@ -1,0 +1,10 @@
+---
+// Rotated content wrapper (e.g. sideways labels on figures).
+interface Props {
+  angle?: 90 | 180 | 270;
+}
+const { angle = 90 } = Astro.props;
+---
+<span class="rotated" data-angle={String(angle)} data-rotate>
+  <slot />
+</span>

@@ -1,0 +1,34 @@
+---
+// Slovene book: /book/sl/01.html ...
+import { getCollection } from 'astro:content';
+import BookLayout from '../../../layouts/BookLayout.astro';
+import MdxContent from '../../../components/MdxContent.astro';
+import { WEB_EXCLUDED_FILES } from '../../../data/works';
+import { bookUrl } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('book');
+  return entries
+    .filter((entry) => entry.id.startsWith('sl/'))
+    .map((entry) => entry.id.slice(3))
+    .filter((slug) => !WEB_EXCLUDED_FILES.includes(slug))
+    .map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const file = slug ?? 'index';
+const entries = await getCollection('book');
+const entry = entries.find((item) => item.id === (file === 'index' ? 'sl' : `sl/${file}`));
+if (!entry) throw new Error(`Missing Slovene chapter: ${file}`);
+const url = bookUrl('sl', file);
+---
+<BookLayout
+  lang="sl"
+  file={file}
+  title={entry.data.title}
+  description={entry.data.description}
+  layout={entry.data.template}
+  currentUrl={url}
+>
+  <MdxContent entry={entry} />
+</BookLayout>

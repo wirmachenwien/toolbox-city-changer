@@ -1,0 +1,32 @@
+---
+// Large opening image for home pages. Always eager, never lazy.
+import { Image } from 'astro:assets';
+
+interface Props {
+  file: string;
+  alt: string;
+}
+
+const { file, alt } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
+  { eager: true },
+);
+
+const match = Object.entries(images).find(([path]) => path.endsWith(`/${file}`));
+if (!match) {
+  throw new Error(`OpenerImage: unknown image "${file}"`);
+}
+---
+<div class="opener">
+  <Image
+    src={match[1].default}
+    alt={alt}
+    title={alt || undefined}
+    widths={[640, 1024, 2048]}
+    sizes="100vw"
+    loading="eager"
+    decoding="async"
+  />
+</div>
