@@ -23,6 +23,25 @@ jobs:
             - name: Bundle install
               run: bundle install
 
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                node-version: 22
+                cache: npm
+
+            - name: Install web build dependencies
+              run: |
+                npm ci --ignore-scripts
+                node node_modules/@electricbookworks/electric-book-modules/install.js
+
+            - name: Build JavaScript
+              run: output=web npx webpack --config _webpack/webpack.config.js --mode production
+
             - name: Build with Jekyll
               run: |
                 bundle exec jekyll build
+
+            - name: Check language versions
+              run: |
+                python3 _tests/check-translations.py
+                node _tests/search-languages.cjs

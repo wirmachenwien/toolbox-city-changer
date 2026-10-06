@@ -47,6 +47,10 @@ $color-buttons-text: white;
 $color-buttons-hover: $wmw-dark-green;
 $color-highlight: $wmw-green;
 $share-icon-color: $wmw-dark-green;
+// Neon $wmw-green on cream is unreadable, so use dark green for the icon.
+$language-select-icon-color: $wmw-dark-green;
+$language-select-links-color: $wmw-dark-green;
+$language-select-background-color: white;
 $box-border-radius: 0.65rem;
 $button-border-radius: 999rem;
 
@@ -338,4 +342,38 @@ p > img[src$="erasmus-plus.png"] {
 
 #share-links .share-link-icon svg path {
     fill: $wmw-dark-green;
+}
+
+// Language selector: readable icon + anchored dropdown.
+// $language-select-icon-color above handles the Sass variable;
+// these rules harden it and match the site's 2px-black-border style.
+.language-select {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+svg.language-select-icon path {
+    fill: $wmw-dark-green;
+}
+
+.language-select .language-select-list {
+    background: white;
+    border: 2px solid $wmw-black;
+    box-shadow: 0.35rem 0.35rem 0 $wmw-green;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: auto;
+    margin: 0;
+    min-width: 8rem;
+    text-align: left;
+    white-space: nowrap;
+    z-index: 200;
+}
+
+.language-select .language-select-list a,
+.language-select .language-select-list a:link,
+.language-select .language-select-list a:visited {
+    color: $wmw-dark-green;
 }

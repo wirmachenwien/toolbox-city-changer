@@ -44,6 +44,9 @@ is already loaded on this page. {% endcomment %}
 
                 {% comment %} Check if the translated file actually exists. {% endcomment %}
                 {% assign translated-file-built = false %}
+                {% if current-file == "index" and site.output == "web" %}
+                    {% assign translated-file-listed = true %}
+                {% endif %}
 
                 {% if translated-file-listed %}
                     {% capture translated-file-with-path %}{{ book-directory }}/{{ translation }}/{{ current-file }}.md{% endcapture %}
@@ -95,6 +98,9 @@ is already loaded on this page. {% endcomment %}
 
             {% comment %} Check if the parent-language file actually exists. {% endcomment %}
             {% assign parent-language-file-built = false %}
+            {% if current-file == "index" and site.output == "web" %}
+                {% assign parent-language-file-listed = true %}
+            {% endif %}
 
             {% if parent-language-file-listed %}
                 {% capture parent-language-file-with-path %}{{ book-directory }}/{{ current-file }}.md{% endcapture %}
