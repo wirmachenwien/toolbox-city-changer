@@ -4,11 +4,24 @@
     show the nav-title or the project name.
     The nav-title can be set by adding it to locales.yml.{% endcomment %}
     {% if is-book-subdirectory != true and is-docs-page != true %}
+    {% comment %}Link the nav title to the current language's home
+    when this page is a translation, else the project home.{% endcomment %}
+    {% if is-translation %}
+        {% capture path-for-translated-nav-home-page %}{{ language }}/index.md{% endcapture %}
+        {% assign translated-nav-home-page-array = site.pages | where_exp: "page", "page.path == path-for-translated-nav-home-page" %}
+        {% if translated-nav-home-page-array.size > 0 %}
+            {% capture nav-home-dir %}{{ path-to-root-directory }}{{ language }}/{% endcapture %}
+        {% else %}
+            {% capture nav-home-dir %}{{ path-to-root-directory }}{% endcapture %}
+        {% endif %}
+    {% else %}
+        {% capture nav-home-dir %}{{ path-to-root-directory }}{% endcapture %}
+    {% endif %}
     <div class="nav-title">
         {% if locale.nav.nav-title and locale.nav.nav-title != "" %}
-            <a href="{{ path-to-root-directory }}">{{ locale.nav.nav-title }}</a>
+            <a href="{{ nav-home-dir }}">{{ locale.nav.nav-title }}</a>
         {% else %}
-            <a href="{{ path-to-root-directory }}">{{ project-name }}</a>
+            <a href="{{ nav-home-dir }}">{{ project-name }}</a>
         {% endif %}
     </div>
 
