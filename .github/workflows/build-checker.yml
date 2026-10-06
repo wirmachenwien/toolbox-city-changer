@@ -18,9 +18,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site
-        run: npm run build
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -34,8 +31,8 @@ jobs:
       - name: Install PDF dependencies
         run: pip install -r requirements.txt
 
-      - name: Build PDFs
-        run: npm run build:pdf
+      - name: Build static site, PDF, etc
+        run: npm run build
 
       - name: Check translations and links
         run: npm run check:i18n
