@@ -2,30 +2,21 @@
 title: Toolbox für City Changer
 style: home
 opener-image: supergraetzel-favoriten-poller-opener.jpg
-opener-image-alt-text: "Poller, Betonpflanzringe und junge Bäume im Supergrätzl Favoriten"
+opener-image-alt-text: Poller, Betonpflanzringe und junge Bäume im Supergrätzl Favoriten
 ---
-
 # Toolbox für City Changer
 
-Dieses Handbuch bündelt die öffentlich dokumentierten Materialien aus der WirMachenWien-Workshopreihe mit Changing Cities aus Berlin und Prostorož aus Ljubljana.
+Die "Toolbox für City Changer" richtet sich an Menschen, die ihr Grätzl sicherer, grüner, inklusiver und klimafitter machen wollen und dafür konkrete Werkzeuge brauchen.
 
 [Handbuch öffnen](book/0-3-contents.html){:.button}
 
-## Worum es geht
+**Das Handbuch ist deine Anleitung, wie deine Initiative aus einer Idee für gerechtere Straßen konkrete Veränderung bewirken kannst**: Von einem klaren Konzept (Superblocks) und Methoden, um deine Vision sichtbar zu machen (spielerische Interventionen), über Werkzeuge für den Perspektivwechsel (Street Design Tools) von Anwohner:innen und deren Mobilisierung, hin zu Belegen für dein Anliegen (Monitoring) und niederschwelligen Methoden für Veränderung vor Ort (Tactical Urbanism).
 
-Die drei Workshops zeigen, wie Initiativen in Wien aus einer Idee für gerechtere Straßen konkrete Veränderung machen können: mit Superblocks, spielerischen Interventionen, Tactical Urbanism, Street Design, Mobilisierung und Monitoring.
+"Toolbox für City Changer" ist eine Zusammenarbeit von WirMachenWien mit Changing Cities aus Berlin und Prostorož aus Ljubljana.
 
-## Workshops
-
-- Superblocks & Spielerische Interventionen, 21. März 2026
-- Tactical Urbanism & Street Design, 9. Mai 2026
-- Mobilisierung & Monitoring-Tools, 30. Mai 2026
-
-## Grundlage
+## Hintergrund
 
 Die Inhalte basieren auf den How-to-Artikeln und Workshopmaterialien von [WirMachenWien](https://wirmachen.wien), ergänzt durch Ressourcen der Partnerorganisationen [Changing Cities](https://changing-cities.org) und [Prostorož](https://www.prostoroz.org).
-
-## Förderung
 
 ![Kofinanziert von der Europäischen Union: Erasmus+](assets/images/web/erasmus-plus.png)
 
