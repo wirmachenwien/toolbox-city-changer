@@ -17,6 +17,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -29,9 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Build static site
-        run: npm run build
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -46,8 +44,11 @@ jobs:
       - name: Install PDF dependencies
         run: pip install -r requirements.txt
 
-      - name: Build PDFs
-        run: npm run build:pdf
+      - name: Set up GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static site, PDFs, etc.
+        run: npm run build
 
       - name: Check translations and links
         run: npm run check:i18n
@@ -56,17 +57,19 @@ jobs:
         run: npm run check:baggage
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist/
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
