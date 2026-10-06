@@ -1,0 +1,112 @@
+title: Toolbox für City Changer
+subtitle: Ein Handbuch von WirMachenWien, Changing Cities und Prostorož
+creator: WirMachenWien
+contributor: Changing Cities; Prostorož
+description: Ein praxisorientiertes Handbuch für Initiativen, die ihre Stadt
+  sicherer, grüner, inklusiver und klimafitter machen wollen und dafür Werkzeuge
+  brauchen.
+image: cover.jpg
+publisher: WirMachenWien
+publisher-url: https://wirmachen.wien
+rightsholder: WirMachenWien und die genannten Beitragenden
+rights: >
+  Zusammengestellt aus öffentlich zugänglichen Materialien von WirMachenWien und
+  verlinkten Partnerorganisationen. Rechte an Vorträgen, Fotos, PDFs und Videos
+  verbleiben bei den jeweils genannten Rechteinhaber:innen.
+language: de
+date: 2026-09-03
+modified: 2026-09-03
+type: Handbuch
+subject: Stadtentwicklung; Aktivismus; Verkehrsberuhigung; Beteiligung
+identifier: wmw-toolbox-city-changer-2026
+coverage: Wien, Berlin, Ljubljana; 2026
+keywords: WirMachenWien, Erasmus+, Superblock, Supergrätzl, Kiezblock, Tactical
+  Urbanism, Street Design, Mobilisierung, Monitoring, Wien
+products:
+  print-pdf:
+    format: Print
+    files:
+      - 0-0-cover
+      - 0-1-titlepage
+      - 0-2-copyright
+      - 0-3-contents
+      - "01"
+      - "02"
+      - "03"
+      - "04"
+      - "05"
+      - "06"
+    toc: &id001
+      - label: Cover
+        file: 0-0-cover
+        class: frontmatter-entry
+      - label: Titel
+        file: 0-1-titlepage
+        class: frontmatter-entry
+      - label: Copyright
+        file: 0-2-copyright
+        class: frontmatter-entry
+      - label: Inhalt
+        file: 0-3-contents
+        class: frontmatter-entry
+      - label: 1. Wozu diese Toolbox?
+        file: "01"
+      - label: 2. Superblocks starten
+        file: "02"
+      - label: 3. Tactical Urbanism und Street Design
+        file: "03"
+      - label: 4. Mobilisierung und Strategien des Wandels
+        file: "04"
+      - label: "5. Monitoring: Wirkung sichtbar machen"
+        file: "05"
+      - label: 6. Arbeitsplan und Quellen
+        file: "06"
+  web:
+    format: Online
+    files:
+      - 0-0-cover
+      - 0-1-titlepage
+      - 0-2-copyright
+      - 0-3-contents
+      - "01"
+      - "02"
+      - "03"
+      - "04"
+      - "05"
+      - "06"
+    nav: *id001
+  epub:
+    format: Ebook
+    files:
+      - 0-0-cover: cover
+      - 0-1-titlepage: title-page
+      - 0-2-copyright: copyright-page
+      - 0-3-contents: toc
+      - "01"
+      - "02"
+      - "03"
+      - "04"
+      - "05"
+      - "06"
+    contents-page: 0-3-contents
+    accessibility:
+      summary: This publication conforms to WCAG 2.0 Level AA.
+      access-mode: textual, visual
+      access-mode-sufficient: textual
+      accessibility-features: tableOfContents
+      accessibility-hazards: unknown
+  screen-pdf:
+    format: PDF
+    files:
+      - 0-0-cover
+      - 0-1-titlepage
+      - 0-2-copyright
+      - 0-3-contents
+      - "01"
+      - "02"
+      - "03"
+      - "04"
+      - "05"
+      - "06"
+  app:
+    format: App

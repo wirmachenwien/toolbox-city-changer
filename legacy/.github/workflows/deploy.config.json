@@ -1,0 +1,22 @@
+{
+  "ftp-ssh": {
+    "configs-comment": "All configs are relative to the _configs folder.",
+    "configs": ["_config.live.yml"],
+    "builds": [
+      {
+        "configs": [],
+        "dir": "electric-book"
+      }
+    ],
+    "live-disabled":{
+      "type": "ftp",
+      "web-root": "",
+      "path": ""
+    },
+    "staging": {
+      "type": "ssh",
+      "web-root": "public_html/ebt.ebw.co",
+      "path": ""
+    }
+  }
+}

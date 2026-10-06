@@ -1,0 +1,23 @@
+# Image settings
+# --------------
+# This file sets non-default settings for specific images.
+# Add your book directory (or '_all' for all books), then each image at a "-".
+# For each image, you can set a colorspace (e.g. "gray", "cmyk")
+# or set it to not be modified by automated image processessing.
+# Possible formats: print-pdf, screen-pdf, web, epub, app
+# See the docs for more detail: /docs/images/image-conversions.html#image-settings
+# For advanced SVG options, see /docs/images/svg-processing.html
+#
+# E.g.
+# book:
+#   - file: "duckrabbit.jpg"
+#     print-pdf:
+#       colorspace: "gray"
+#
+# To apply settings to all images at once,
+# use "all" instead of a filename.
+# E.g.
+# book:
+#   - file: "all"
+#     print-pdf:
+#       colorspace: "gray"

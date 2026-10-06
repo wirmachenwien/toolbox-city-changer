@@ -1,0 +1,141 @@
+/*
+Unused imports will be tree-shaken in production mode when using process.env values as execution conditionals.
+The process.env values are created by webpack at buildtime - see _webpack/webpack.config.js.
+Conditionals using runtime values (e.g. from YAML data imported with yaml-loader) will not be tree-shaken.
+*/
+import '@electricbookworks/electric-book-modules/assets/js/polyfills'
+import ebMarkParents from '@electricbookworks/electric-book-modules/assets/js/mark-parents'
+import ebColorPanels from '@electricbookworks/electric-book-modules/assets/js/color-panels'
+import ebRedact from '@electricbookworks/electric-book-modules/assets/js/redact'
+import ebSetup from '@electricbookworks/electric-book-modules/assets/js/setup'
+import ebSearchTerms from '@electricbookworks/electric-book-modules/assets/js/search-terms'
+import ebNav from '@electricbookworks/electric-book-modules/assets/js/nav'
+import ebVideos from '@electricbookworks/electric-book-modules/assets/js/videos'
+import ebDefinitions from '@electricbookworks/electric-book-modules/assets/js/definitions'
+import ebMCQs from '@electricbookworks/electric-book-modules/assets/js/mcqs'
+import ebSelectList from '@electricbookworks/electric-book-modules/assets/js/select-list'
+import ebTables from '@electricbookworks/electric-book-modules/assets/js/tables'
+import ebFootnotePopups from '@electricbookworks/electric-book-modules/assets/js/footnote-popups'
+import ebSlides from '@electricbookworks/electric-book-modules/assets/js/slides'
+import ebShowHide from '@electricbookworks/electric-book-modules/assets/js/show-hide'
+import { ebAddCopyButtons } from '@electricbookworks/electric-book-modules/assets/js/copy-to-clipboard'
+import ebShare from '@electricbookworks/electric-book-modules/assets/js/share'
+import ebExpandableBox from '@electricbookworks/electric-book-modules/assets/js/expandable-box'
+import ebSVGManagement from '@electricbookworks/electric-book-modules/assets/js/svg-management'
+import ebLazyLoad from '@electricbookworks/electric-book-modules/assets/js/lazyload'
+import ebTestingImages from '@electricbookworks/electric-book-modules/assets/js/testing-images'
+import ebAnnotation from '@electricbookworks/electric-book-modules/assets/js/annotation'
+import ebBookmarks from '@electricbookworks/electric-book-modules/assets/js/bookmarks'
+import ebPrinceBoxInfo from '@electricbookworks/electric-book-modules/assets/js/prince-box-info'
+import ebHeadingTitles from '@electricbookworks/electric-book-modules/assets/js/heading-titles'
+import ebRotate from '@electricbookworks/electric-book-modules/assets/js/rotate'
+import ebFootnotes from '@electricbookworks/electric-book-modules/assets/js/footnotes'
+import ebShiftElements from '@electricbookworks/electric-book-modules/assets/js/shift-elements'
+import ebPageReference from '@electricbookworks/electric-book-modules/assets/js/page-reference'
+import ebAddLoginButton from '@electricbookworks/electric-book-modules/assets/js/add-login-button'
+import ebIndexTargetsInit from '@electricbookworks/electric-book-modules/assets/js/index-targets'
+// import ebBaselineGrid from '@electricbookworks/electric-book-modules/assets/js/baseline-grid'
+
+// console.log('Config:', process.env.config)
+// console.log('Settings:', process.env.settings)
+// console.log('Works:', process.env.works)
+// console.log('Output:', process.env.output)
+// console.log('Build:', process.env.build)
+// console.log('Files:', process.env.files)
+
+// Create index targets first because this script reconstructs the DOM,
+// potentially breaking event listeners, state, and node lists for other scripts.
+if (process.env.settings['dynamic-indexing'] !== false) {
+  /*
+    Script to turn HTML comments into anchor targets.
+    Also handled by gulp in PDF, epub; but included
+    in all outputs so that Puppeteer can index.
+  */
+  ebIndexTargetsInit()
+}
+
+ebMarkParents()
+ebColorPanels()
+
+if (process.env.settings.redact === true) {
+  ebRedact()
+}
+
+if (process.env.output === 'web' || process.env.output === 'app') {
+  ebAddLoginButton()
+  ebSetup()
+  ebSearchTerms()
+  ebNav()
+  ebVideos()
+  ebDefinitions()
+  ebMCQs()
+  ebSelectList()
+  ebTables()
+  ebFootnotePopups()
+  ebSlides()
+  ebShowHide()
+  ebAddCopyButtons()
+  ebShare()
+  ebExpandableBox()
+  if (process.env.settings.web.svg.inject === true) {
+    ebSVGManagement()
+  }
+  ebLazyLoad()
+}
+
+ebTestingImages()
+
+const webDevAnnotation = process.env.output === 'web' && process.env.build !== 'live' && process.env.settings.web.annotator.development === true
+const webLiveAnnotation = process.env.output === 'web' && process.env.build === 'live' && process.env.settings.web.annotator.live === true
+if (webDevAnnotation || webLiveAnnotation) {
+  ebAnnotation()
+}
+
+/*
+Enable bookmarks in _data settings.yml, and define options in assets/bookmarks.js.
+This lets us have different behaviour for web or app.
+*/
+const webBookmarks = process.env.output === 'web' && process.env.settings.web.bookmarks.enabled === true
+const appBookmarks = process.env.output === 'app' && process.env.settings.app.bookmarks.enabled === true
+if (webBookmarks || appBookmarks) {
+  ebBookmarks()
+}
+
+if (process.env.output === 'screen-pdf' || process.env.output === 'print-pdf') {
+  // Load Prince-specific utilities.
+  ebPrinceBoxInfo()
+
+  /*
+    This script gives every heading a title attribute.
+    This is useful to Prince, which can use title attributes for running heads.
+    By default, we only load it for PDF outputs.
+    */
+  ebHeadingTitles()
+
+  // This script helps rotate large figures on the page.
+  ebRotate()
+
+  // This script moves endnotes to the bottoms of pages.
+  ebFootnotes()
+
+  // This script shifts elements in the DOM.
+  ebShiftElements()
+
+  /*
+    This script detects the page number we are on and provides
+    the relevant page cross-reference text as generated content.
+    */
+  ebPageReference()
+
+  /*
+    This aligns elements to a baseline grid.
+    This is experimental, so it's commented out by default.
+    */
+  // ebBaselineGrid()
+}
+
+// Scripts for epub output. Do not expect support in many readers.
+if (process.env.output === 'epub') {
+  ebMCQs()
+  ebShowHide()
+}

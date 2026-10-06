@@ -1,0 +1,11 @@
+$web-docs: true !default;
+@if $web-docs {
+
+	#nav {
+		.docs-list-title {
+			// Match styling for `a` tag in book nav
+			padding: 0 2em;
+		}
+	}
+
+}

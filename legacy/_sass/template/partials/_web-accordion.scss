@@ -1,0 +1,67 @@
+$web-accordion: true !default;
+@if $web-accordion {
+
+    // Accordions
+    button[aria-expanded] {
+        
+        background-color: inherit;
+        border: inherit;
+        color: inherit;
+        font-size: inherit;
+        font-style: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        padding: inherit;
+        text-align: inherit;
+        width: 100%;
+
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        
+        &:hover {
+            background-color: $color-background;
+            cursor: pointer;
+        }
+    }
+
+    // Don't let floating elements from previous section
+    // overlap with next section.
+    section[aria-labelledby] {
+        clear: both;
+    }
+
+    section[aria-hidden="true"] {
+        display: none;
+    }
+
+    .accordion-show-all-button-wrapper {
+        margin-top: $line-height-default;
+        text-align: right;
+    }
+
+    a.accordion-show-all-button {
+        border-radius: $button-border-radius;
+        border: 1px solid $color-mid;
+        color: $color-mid;
+        cursor: pointer;
+        display: inline-block;
+        font-family: $font-text-secondary;
+        font-size: $font-size-default / 2;
+        letter-spacing: 0.05em;
+        line-height: 1;
+        padding: 0.2em 0.3em;
+        text-transform: uppercase;
+
+        // Shift closer to section header
+        // transform: translateY($line-height-default);
+        & + * {
+            clear: both;
+        }
+    }
+
+    // Don't show the button if the page accordion setting is 'none'
+    [data-accordion-page='none'] .accordion-show-all-button-wrapper {
+        display: none;
+    }
+}

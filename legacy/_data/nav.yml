@@ -1,0 +1,23 @@
+# Nav items in the menu below the book titles, per language.
+# Add an entry for each translation language that has files in
+# a folder in the root directory named with that language code.
+# Include a node for the parent language, e.g. `en`.
+# See _docs/setup/tocs for more detail.
+# Files must be listed here to be included in the search index.
+
+de:
+  - label: "Start"
+    file: "index"
+  - label: "Handbuch"
+    file: "book/0-3-contents"
+
+en:
+  - label: Home
+    file: index
+  - label: Handbook
+    file: book/en/0-3-contents
+sl:
+  - label: Domov
+    file: index
+  - label: Priročnik
+    file: book/sl/0-3-contents

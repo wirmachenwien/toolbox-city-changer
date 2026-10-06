@@ -1,0 +1,125 @@
+// Boxes
+
+@mixin box($text-color: inherit, $background-color: $color-light, $border-color: $color-mid, $text-color-reversed: white, $background-color-reversed: $color-accent) {
+
+    // Default box does not have a background color
+    background-color: inherit;
+
+    // Don't let hanging sidenotes overlap over boxes
+    clear: both;
+
+    border-radius: $box-border-radius;
+    box-decoration-break: slice; // no bottom border when box crosses page
+    box-sizing: border-box;
+    color: $text-color;
+    font-weight: inherit;
+    font-size: inherit;
+    border: $rule-thickness solid $border-color;
+    margin: $line-height-default 0;
+    padding: ($line-height-default - $rule-thickness) $line-height-default;
+
+    // No text-indent on paragraphs after boxes
+    & + p {
+        text-indent: 0;
+    }
+
+    // No indent on first paragraphs in boxes
+    & p:first-of-type {
+        text-indent: 0;
+    }
+
+    // But paragraphs after boxes floated out of the flow must still be indented
+    // unless we're not spacing paragraphs
+    @if $spaced-paras == false {
+        &.float-top + p,
+        &.float-bottom + p {
+            text-indent: $paragraph-indent;
+        }
+    }
+
+    // No margin above the first headings in a box
+    h1:first-of-type, 
+    h2:first-of-type, 
+    h3:first-of-type, 
+    h4:first-of-type, 
+    h5:first-of-type, 
+    h6:first-of-type {
+        margin-top: 0;
+    }
+
+    // Some margin below main headings in boxes
+    h2, h3 {
+        margin-bottom: $line-height-default;
+    }
+
+    // No extra space at bottom of box
+    // from elements that usually have margin-bottom
+    p, ol, ul, dl {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    li {
+        // Paragraphs within list items in a box
+        p:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+
+    // Different kinds of box
+
+    &.box-shaded {
+        border: $background-color;
+        background-color: $background-color;
+    }
+
+    &.box-reversed {
+        border: $background-color-reversed;
+        background-color: $background-color-reversed;
+        color: $text-color-reversed;
+    }
+}
+
+$pdf-boxes: true !default;
+@if $pdf-boxes {
+
+    .box {
+        @include box();
+    }
+
+    // A regular paragraph as a box
+    p.box {
+        padding-bottom: $line-height-default - $rule-thickness;
+        text-indent: 0;
+    }
+
+    // A list as a box
+    ol.box,
+    ul.box {
+        padding: ($line-height-default - $rule-thickness) line-height-default;
+    }
+
+    // A regular list item as a box
+    li.box {
+        padding: ($line-height-default - $rule-thickness) line-height-default;
+        margin-left: $paragraph-indent;
+    }
+
+    // Expandable boxes
+    .expandable-box {
+        @include box();
+
+        h3:first-child,
+        h4:first-child,
+        h5:first-child,
+        h6:first-child {
+            font-style: normal;
+        }
+    
+        .expandable-box-preview {
+            font-style: italic;
+            margin-bottom: $line-height-default;
+        }
+    }
+}

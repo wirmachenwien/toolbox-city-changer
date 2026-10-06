@@ -1,0 +1,44 @@
+$pdf-start-on-recto-or-verso: true !default;
+@if $pdf-start-on-recto-or-verso {
+
+    @each $page-style in $start-on-recto {
+        .#{$page-style},
+        .#{$page-style}.page-1,
+        .page-1 {
+            page-break-before: right;
+
+            // Need to make this very specific, hence repetition
+            @include page-continued();
+        }
+    }
+
+    @if $start-on-verso {
+        @each $page-style in $start-on-verso {
+            .#{$page-style} {
+                page-break-before: left;
+
+                // Need to make this very specific, hence repetition
+                @include page-continued();
+            }
+        }
+    }
+
+    @if $start-on-recto-or-verso {
+        @each $page-style in $start-on-recto-or-verso {
+            .#{$page-style}{
+                page-break-before: auto;
+            }
+        }
+    }
+
+    // Let user start any element on right, e.g. with
+    // `style: default start-on-right`
+    .start-on-right, .start-on-recto {
+        page-break-before: right;
+    }
+
+    // Also see:
+    // _pdf-page-break-tools.scss
+    // _pdf-front-cover.scss
+
+}

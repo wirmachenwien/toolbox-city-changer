@@ -1,0 +1,43 @@
+$pdf-copyright-page: true !default;
+@if $pdf-copyright-page {
+
+    // Copyright page
+
+    .copyright-page {
+        position: absolute;
+        bottom: 0;    
+        font-size: $font-size-default * $font-size-smaller;
+        line-height: $line-height-default * $font-size-smaller;
+        hyphens: none;
+        text-align: left;
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: inherit;
+            font-size: inherit;
+            hyphens: none;
+            margin: ($line-height-default * 0.5) 0 ($line-height-default * 0.5) 0;
+            text-align: inherit;
+        }
+
+        p, ol, ul {
+            hyphens: none;
+            margin: 0 0 ($line-height-default * $font-size-smaller) 0;
+            text-align: inherit;
+            text-indent: 0;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            &.identifier {
+                margin: 0;
+            }
+        }
+
+        .identifiers {
+            list-style-type: none;
+            margin-left: 0;
+            padding-left: 0;
+        }
+    }
+}

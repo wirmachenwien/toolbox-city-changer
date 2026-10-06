@@ -1,0 +1,70 @@
+$epub-index: true !default;
+@if $epub-index {
+
+    // Index
+
+    // .reference-index-manual is for indexes that
+    // are manually created, and should not be processed
+    // by our dynamic-indexing scripts to save build time.
+
+    .reference-index,
+    .reference-index-manual {
+        margin-left: $paragraph-indent;
+        list-style-type: none;
+
+        // If we're not spacing paragraphs,
+        // and the index appears after a paragraph,
+        // then add some space above it.
+        @if not ($spaced-paras) {
+            p + & {
+                margin-top: $line-height-default;
+            }
+        }
+
+        ul, ol {
+            list-style-type: none;
+        }
+        li {
+            text-indent: -($paragraph-indent);
+            li {
+                margin: 0;
+            }
+
+            a {
+                text-decoration: none;
+
+                &:after {
+                    content: ", ";
+                }
+                &:last-of-type:after {
+                    content: "";
+                }
+                &.indexed {
+                    color: inherit;
+                    text-decoration: none;
+                }
+
+                // Space between entry and first reference number
+                &:first-of-type {
+                    margin-left: .5em;
+                }
+
+                // If this starts a range, use an en dash not a comma
+                &.index-range-from {
+
+                    &:after {
+                        content: "\2013"
+                    }
+                }
+            }
+        }
+    }
+    // We don't nest .duplicate under this ol/ul, because if we do
+    // then Kindlegen says we're hiding too much and errors out,
+    // even if we're not actually using the class. It seems Kindlegen
+    // freaks out just because we might use the class on 10000+
+    // characters, which is its display: none limit.
+    .duplicate {
+        display: none;
+    }
+}
