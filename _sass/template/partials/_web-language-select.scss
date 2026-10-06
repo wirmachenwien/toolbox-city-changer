@@ -8,12 +8,32 @@ $web-language-select: true !default;
         cursor: pointer;
         text-align: right;
         z-index: 100;
+        // Anchor the dropdown to the icon instead of the viewport.
+        // (position: fixed here breaks inside #nav, which is transformed
+        // and has overflow-x: hidden, so the list was clipped/misplaced.)
+        position: relative;
+        display: inline-flex;
+        align-items: center;
 
         .language-select-list {
             @include dialog-styles();
             background-color: $language-select-background-color;
             list-style-type: none;
-            margin-top: -1rem; // prevents disappearing when mouse moves
+            // Keep the list attached to the icon so hover doesn't drop.
+            margin: 0;
+            min-width: 8rem;
+            text-align: left;
+            white-space: nowrap;
+            // Hidden by default, shown on hover/focus below.
+            display: none;
+            position: absolute;
+            top: 100%;
+            // Left-align: the icon is the first item in .controls,
+            // so right-aligning would push the list past #nav's
+            // left edge where overflow-x: hidden clips it.
+            left: 0;
+            right: auto;
+            z-index: 200;
             li {
                 display: block; // overrides masthead ul styles
                 a {
@@ -25,15 +45,11 @@ $web-language-select: true !default;
                 }
             }
         }
-        // Hide the list till hover on parent
-        .language-select-list {
-            display: none;
-        }
-        &:hover {
+        // Show the list on hover and keyboard focus
+        &:hover,
+        &:focus-within {
             .language-select-list {
                 display: block;
-                margin: 0;
-                position: fixed;
             }
         }
     }
