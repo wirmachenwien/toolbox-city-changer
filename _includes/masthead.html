@@ -19,7 +19,9 @@
 
     <div class="masthead-logo">
         <a href="{% if page.masthead-logo-link %}{{ page.masthead-logo-link }}{% else %}{{ project-home-dir }}{% endif %}" aria-label="{% if locale.project.name and locale.project.name != "" %}{{ locale.project.name }}{% else %}{{ project-name }}{% endif %}">
-            {% include image file=project-logo folder="assets" %}
+            {% comment %}loading="eager" so the logo has a real src
+            and renders even if lazy-load JS is unavailable.{% endcomment %}
+            {% include image file=project-logo folder="assets" loading="eager" %}
         </a>
     </div>
 
