@@ -1,0 +1,34 @@
+---
+ // Search form. Points at the language-local search page with ?query= and is
+ // progressively enhanced by the client search UI.
+import { t } from '../lib/i18n';
+import { pageUrl } from '../lib/site';
+import type { Language } from '../data/locales';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Language;
+  query?: string;
+  autofocus?: boolean;
+}
+
+const { lang, query = '', autofocus = false } = Astro.props;
+---
+<form class="search-form" role="search" action={pageUrl(lang, 'search')} method="get" data-search-form>
+  <label class="visually-hidden" for="site-search">
+    {t(lang, 'search.search-title', 'Search')}
+  </label>
+  <span class="search-box">
+    <Icon name="search" />
+    <input
+      id="site-search"
+      type="search"
+      name="query"
+      value={query}
+      placeholder={t(lang, 'search.placeholder', 'Search here...')}
+      autocomplete="off"
+      autofocus={autofocus || undefined}
+    />
+  </span>
+  <button type="submit">{t(lang, 'input.submit', 'Submit')}</button>
+</form>

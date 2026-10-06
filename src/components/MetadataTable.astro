@@ -1,0 +1,29 @@
+---
+// Book metadata table (title, creator, publisher, rights, ...).
+import { getWork } from '../data/works';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+}
+const { lang } = Astro.props;
+const work = getWork(lang);
+const rows: [string, string][] = [
+  ['Title', work.title],
+  ['Subtitle', work.subtitle],
+  ['Creator', work.creator],
+  ['Contributor', work.contributor],
+  ['Publisher', work.publisher],
+  ['Rights holder', work.rightsholder],
+  ['Language', work.language],
+  ['Identifier', work.identifier],
+].filter((row): row is [string, string] => Boolean(row[1]));
+---
+<dl class="metadata-table">
+  {rows.map(([term, value]) => (
+    <dt>{term}</dt>
+    <dd>{value}</dd>
+  ))}
+  <dt>Description</dt>
+  <dd>{work.description}</dd>
+</dl>

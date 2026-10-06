@@ -1,0 +1,19 @@
+---
+// QR code for the current page URL, rendered server-side as inline SVG
+// (no runtime dependency, works offline and in print).
+import QRCode from 'qrcode';
+import { canonical } from '../lib/site';
+
+interface Props {
+  url: string;
+  label?: string;
+  size?: number;
+}
+
+const { url, label, size = 160 } = Astro.props;
+const svg = await QRCode.toString(canonical(url), { type: 'svg', width: size, margin: 1 });
+---
+<figure class="qr">
+  <div set:html={svg} role="img" aria-label={label ?? url} />
+  {label && <figcaption>{label}</figcaption>}
+</figure>

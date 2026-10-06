@@ -1,0 +1,12 @@
+---
+// Term with an inline definition popup (title attribute fallback + client
+// enhancement from src/scripts/definitions.ts).
+interface Props {
+  term: string;
+  definition: string;
+}
+const { term, definition } = Astro.props;
+---
+<dfn class="definition-term" data-definition={definition} tabindex="0" title={definition}>
+  {term}
+</dfn>

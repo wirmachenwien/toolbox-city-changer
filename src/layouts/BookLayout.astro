@@ -1,0 +1,50 @@
+---
+// Book page layout: breadcrumbs, reading aids, share links, pagination.
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Pagination from '../components/Pagination.astro';
+import Share from '../components/Share.astro';
+import BookmarkAdd from '../components/BookmarkAdd.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import Cover from '../components/Cover.astro';
+import TitlePage from '../components/TitlePage.astro';
+import CopyrightPage from '../components/CopyrightPage.astro';
+import ContentsPage from '../components/ContentsPage.astro';
+import { settings } from '../data/settings';
+import { bookCrumbs } from '../lib/nav';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+  file: string;
+  title: string;
+  description?: string;
+  layout: 'chapter' | 'cover' | 'title' | 'copyright' | 'contents';
+  currentUrl: string;
+}
+
+const { lang, file, title, description, layout, currentUrl } = Astro.props;
+const crumbs = bookCrumbs(lang, title);
+const isChapter = layout === 'chapter';
+---
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  kind="book"
+  file={file}
+  currentUrl={currentUrl}
+>
+  <ReadingProgress />
+  {isChapter && <Breadcrumbs items={crumbs} />}
+  {layout === 'cover' && <Cover lang={lang} />}
+  {layout === 'title' && <TitlePage lang={lang} />}
+  {layout === 'copyright' && <CopyrightPage lang={lang} />}
+  {layout === 'contents' && <ContentsPage lang={lang} title={title} />}
+  {isChapter && <BookmarkAdd lang={lang} />}
+  <div class="prose" data-prose>
+    <slot />
+  </div>
+  {isChapter && <Share lang={lang} url={currentUrl} title={title} />}
+  {isChapter && settings.web.pagination && <Pagination lang={lang} file={file} />}
+</BaseLayout>

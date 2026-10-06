@@ -1,0 +1,392 @@
+{
+  "de": {
+    "title": "Toolbox für City Changer",
+    "subtitle": "Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož",
+    "creator": "Wir machen Wien",
+    "contributor": "Changing Cities; Prostorož",
+    "description": "Ein praxisorientiertes Handbuch für Initiativen, die ihre Stadt sicherer, grüner, inklusiver und klimagerechter machen wollen und dafür Werkzeuge brauchen.",
+    "image": "cover.jpg",
+    "publisher": "Wir machen Wien",
+    "publisher-url": "https://wirmachen.wien",
+    "rightsholder": "",
+    "rights": "Zusammengestellt aus öffentlich zugänglichen Materialien von Wir machen Wien und verlinkten Partnerorganisationen. Rechte an Vorträgen, Fotos, PDFs und Videos verbleiben bei den jeweils genannten Rechteinhaber:innen.\n",
+    "language": "de",
+    "date": "2026-09-03",
+    "modified": "2026-09-03",
+    "type": "Handbuch",
+    "subject": "Stadtentwicklung; Aktivismus; Verkehrsberuhigung; Beteiligung",
+    "identifier": "",
+    "coverage": "Wien, Berlin, Ljubljana; 2026",
+    "keywords": "Wir machen Wien, Erasmus+, Superblock, Supergrätzl, Kiezblock, Tactical Urbanism, Street Design, Mobilisierung, Monitoring, Wien",
+    "products": {
+      "pdf": {
+        "files": [
+          "0-0-cover",
+          "0-1-titlepage",
+          "0-2-about",
+          "0-3-contents",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06"
+        ],
+        "toc": [
+          {
+            "label": "Cover",
+            "file": "0-0-cover",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Titel",
+            "file": "0-1-titlepage",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Über",
+            "file": "0-2-about",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Inhalt",
+            "file": "0-3-contents",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "1. Wozu diese Toolbox?",
+            "file": "01"
+          },
+          {
+            "label": "2. Superblocks starten",
+            "file": "02"
+          },
+          {
+            "label": "3. Tactical Urbanism und Street Design",
+            "file": "03"
+          },
+          {
+            "label": "4. Mobilisierung und Strategien des Wandels",
+            "file": "04"
+          },
+          {
+            "label": "5. Monitoring: Wirkung sichtbar machen",
+            "file": "05"
+          },
+          {
+            "label": "6. Arbeitsplan und Quellen",
+            "file": "06"
+          }
+        ]
+      },
+      "web": {
+        "files": [
+          "0-2-about",
+          "0-3-contents",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06"
+        ],
+        "nav": [
+          {
+            "label": "Über",
+            "file": "0-2-about",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Inhalt",
+            "file": "0-3-contents",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "1. Wozu diese Toolbox?",
+            "file": "01"
+          },
+          {
+            "label": "2. Superblocks starten",
+            "file": "02"
+          },
+          {
+            "label": "3. Tactical Urbanism und Street Design",
+            "file": "03"
+          },
+          {
+            "label": "4. Mobilisierung und Strategien des Wandels",
+            "file": "04"
+          },
+          {
+            "label": "5. Monitoring: Wirkung sichtbar machen",
+            "file": "05"
+          },
+          {
+            "label": "6. Arbeitsplan und Quellen",
+            "file": "06"
+          }
+        ]
+      }
+    }
+  },
+  "en": {
+    "title": "Toolbox for City Changers",
+    "subtitle": "A handbook by Wir machen Wien, Changing Cities and Prostorož",
+    "creator": "Wir machen Wien",
+    "contributor": "Changing Cities; Prostorož",
+    "description": "A practical handbook for initiatives that want to make their city safer, greener, more inclusive and more resilient to climate change, and need tools to do so.",
+    "image": "cover.jpg",
+    "publisher": "Wir machen Wien",
+    "publisher-url": "https://wirmachen.wien",
+    "rightsholder": "",
+    "rights": "Compiled from publicly available materials by Wir machen Wien and linked partner organisations. Rights to talks, photos, PDFs and videos remain with the respective named rights holders.",
+    "language": "en",
+    "date": "2026-09-03",
+    "modified": "2026-09-03",
+    "type": "Handbook",
+    "subject": "Urban development; activism; traffic calming; participation",
+    "identifier": "",
+    "coverage": "Vienna, Berlin, Ljubljana; 2026",
+    "keywords": "Wir machen Wien, Erasmus+, superblock, Supergrätzl, Kiezblock, tactical urbanism, street design, mobilisation, monitoring, Vienna",
+    "products": {
+      "pdf": {
+        "files": [
+          "0-0-cover",
+          "0-1-titlepage",
+          "0-2-about",
+          "0-3-contents",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06"
+        ],
+        "toc": [
+          {
+            "label": "Cover",
+            "file": "0-0-cover",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Title page",
+            "file": "0-1-titlepage",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "About",
+            "file": "0-2-about",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Contents",
+            "file": "0-3-contents",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "1. Why this toolbox?",
+            "file": "01"
+          },
+          {
+            "label": "2. Starting superblocks",
+            "file": "02"
+          },
+          {
+            "label": "3. Tactical urbanism and street design",
+            "file": "03"
+          },
+          {
+            "label": "4. Mobilisation and strategies for change",
+            "file": "04"
+          },
+          {
+            "label": "5. Monitoring: making impact visible",
+            "file": "05"
+          },
+          {
+            "label": "6. Work plan and sources",
+            "file": "06"
+          }
+        ]
+      },
+      "web": {
+        "files": [
+          "0-2-about",
+          "0-3-contents",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06"
+        ],
+        "nav": [
+          {
+            "label": "About",
+            "file": "0-2-about",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Contents",
+            "file": "0-3-contents",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "1. Why this toolbox?",
+            "file": "01"
+          },
+          {
+            "label": "2. Starting superblocks",
+            "file": "02"
+          },
+          {
+            "label": "3. Tactical urbanism and street design",
+            "file": "03"
+          },
+          {
+            "label": "4. Mobilisation and strategies for change",
+            "file": "04"
+          },
+          {
+            "label": "5. Monitoring: making impact visible",
+            "file": "05"
+          },
+          {
+            "label": "6. Work plan and sources",
+            "file": "06"
+          }
+        ]
+      }
+    }
+  },
+  "sl": {
+    "title": "Zbirka orodij za spreminjanje mest",
+    "subtitle": "Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož",
+    "creator": "Wir machen Wien",
+    "contributor": "Changing Cities; Prostorož",
+    "description": "Praktični priročnik za pobude, ki želijo svoje mesto narediti varnejše, bolj zeleno, vključujoče in odpornejše na podnebne spremembe ter za to potrebujejo orodja.",
+    "image": "cover.jpg",
+    "publisher": "Wir machen Wien",
+    "publisher-url": "https://wirmachen.wien",
+    "rightsholder": "",
+    "rights": "Zbrano iz javno dostopnih gradiv Wir machen Wien in povezanih partnerskih organizacij. Pravice do predavanj, fotografij, dokumentov PDF in videoposnetkov ostajajo pri navedenih imetnikih pravic.",
+    "language": "sl",
+    "date": "2026-09-03",
+    "modified": "2026-09-03",
+    "type": "Priročnik",
+    "subject": "Urbani razvoj; aktivizem; umirjanje prometa; sodelovanje",
+    "identifier": "",
+    "coverage": "Dunaj, Berlin, Ljubljana; 2026",
+    "keywords": "Wir machen Wien, Erasmus+, superblok, Supergrätzl, Kiezblock, taktični urbanizem, oblikovanje ulic, mobilizacija, spremljanje, Dunaj",
+    "products": {
+      "pdf": {
+        "files": [
+          "0-0-cover",
+          "0-1-titlepage",
+          "0-2-about",
+          "0-3-contents",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06"
+        ],
+        "toc": [
+          {
+            "label": "Naslovnica",
+            "file": "0-0-cover",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Naslovna stran",
+            "file": "0-1-titlepage",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "O nas",
+            "file": "0-2-about",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Vsebina",
+            "file": "0-3-contents",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "1. Zakaj ta zbirka orodij?",
+            "file": "01"
+          },
+          {
+            "label": "2. Kako začeti s superbloki",
+            "file": "02"
+          },
+          {
+            "label": "3. Taktični urbanizem in oblikovanje ulic",
+            "file": "03"
+          },
+          {
+            "label": "4. Mobilizacija in strategije sprememb",
+            "file": "04"
+          },
+          {
+            "label": "5. Spremljanje: pokažimo učinek",
+            "file": "05"
+          },
+          {
+            "label": "6. Delovni načrt in viri",
+            "file": "06"
+          }
+        ]
+      },
+      "web": {
+        "files": [
+          "0-2-about",
+          "0-3-contents",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06"
+        ],
+        "nav": [
+          {
+            "label": "O nas",
+            "file": "0-2-about",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "Vsebina",
+            "file": "0-3-contents",
+            "class": "frontmatter-entry"
+          },
+          {
+            "label": "1. Zakaj ta zbirka orodij?",
+            "file": "01"
+          },
+          {
+            "label": "2. Kako začeti s superbloki",
+            "file": "02"
+          },
+          {
+            "label": "3. Taktični urbanizem in oblikovanje ulic",
+            "file": "03"
+          },
+          {
+            "label": "4. Mobilizacija in strategije sprememb",
+            "file": "04"
+          },
+          {
+            "label": "5. Spremljanje: pokažimo učinek",
+            "file": "05"
+          },
+          {
+            "label": "6. Delovni načrt in viri",
+            "file": "06"
+          }
+        ]
+      }
+    }
+  }
+}

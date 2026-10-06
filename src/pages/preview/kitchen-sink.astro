@@ -1,0 +1,221 @@
+---
+// Component showcase: exercises every content component in one place.
+// Excluded from the sitemap and search engines (see astro.config filter).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import SearchForm from '../../components/SearchForm.astro';
+import Pagination from '../../components/Pagination.astro';
+import Toc from '../../components/Toc.astro';
+import VisualToc from '../../components/VisualToc.astro';
+import MetadataTable from '../../components/MetadataTable.astro';
+import Cover from '../../components/Cover.astro';
+import TitlePage from '../../components/TitlePage.astro';
+import CopyrightPage from '../../components/CopyrightPage.astro';
+import ContentsPage from '../../components/ContentsPage.astro';
+import Figure from '../../components/Figure.astro';
+import OpenerImage from '../../components/OpenerImage.astro';
+import Video from '../../components/Video.astro';
+import ButtonLink from '../../components/ButtonLink.astro';
+import CopyText from '../../components/CopyText.astro';
+import FeatureBox from '../../components/FeatureBox.astro';
+import PullQuote from '../../components/PullQuote.astro';
+import ColorPanel from '../../components/ColorPanel.astro';
+import Accordion from '../../components/Accordion.astro';
+import ExpandableBox from '../../components/ExpandableBox.astro';
+import Quiz from '../../components/Quiz.astro';
+import Question from '../../components/Question.astro';
+import SelectList from '../../components/SelectList.astro';
+import Slideshow from '../../components/Slideshow.astro';
+import TableWrap from '../../components/TableWrap.astro';
+import DefinitionTerm from '../../components/DefinitionTerm.astro';
+import Glossary from '../../components/Glossary.astro';
+import FootnoteRef from '../../components/FootnoteRef.astro';
+import Endnotes from '../../components/Endnotes.astro';
+import Bibliography from '../../components/Bibliography.astro';
+import QrCode from '../../components/QrCode.astro';
+import Share from '../../components/Share.astro';
+import PageRef from '../../components/PageRef.astro';
+import Redacted from '../../components/Redacted.astro';
+import Rotate from '../../components/Rotate.astro';
+import Math from '../../components/Math.astro';
+import Annotation from '../../components/Annotation.astro';
+import BookmarkAdd from '../../components/BookmarkAdd.astro';
+import { withBase } from '../../lib/site';
+
+const url = withBase('/preview/kitchen-sink.html');
+---
+<BaseLayout lang="de" title="Komponenten-Showcase" kind="page" file="index" currentUrl={url} noindex hreflang={false}>
+  <div class="prose" data-prose>
+    <h1>Komponenten-Showcase</h1>
+    <p>Diese Seite demonstriert jede Inhaltskomponente. Sie ist von Sitemap und Suche ausgeschlossen.</p>
+
+    <h2 class="sink-label">Breadcrumbs</h2>
+    <div class="sink-demo">
+      <Breadcrumbs items={[{ label: 'Start', url: withBase('/'), current: false }, { label: 'Showcase', url: '', current: true }]} />
+    </div>
+
+    <h2 class="sink-label">LanguageSwitcher</h2>
+    <div class="sink-demo"><LanguageSwitcher lang="de" kind="page" file="index" /></div>
+
+    <h2 class="sink-label">SearchForm</h2>
+    <div class="sink-demo"><SearchForm lang="de" /></div>
+
+    <h2 class="sink-label">Toc</h2>
+    <div class="sink-demo"><Toc lang="de" /></div>
+
+    <h2 class="sink-label">VisualToc</h2>
+    <div class="sink-demo"><VisualToc lang="de" /></div>
+
+    <h2 class="sink-label">Pagination</h2>
+    <div class="sink-demo"><Pagination lang="de" file="02" /></div>
+
+    <h2 class="sink-label">Cover</h2>
+    <div class="sink-demo"><Cover lang="de" /></div>
+
+    <h2 class="sink-label">TitlePage</h2>
+    <div class="sink-demo"><TitlePage lang="de" /></div>
+
+    <h2 class="sink-label">CopyrightPage</h2>
+    <div class="sink-demo"><CopyrightPage lang="de" /></div>
+
+    <h2 class="sink-label">ContentsPage</h2>
+    <div class="sink-demo"><ContentsPage lang="de" title="Inhalt" /></div>
+
+    <h2 class="sink-label">MetadataTable</h2>
+    <div class="sink-demo"><MetadataTable lang="de" /></div>
+
+    <h2 class="sink-label">Figure</h2>
+    <div class="sink-demo">
+      <Figure src="berlin-kiezblock-bellermann.jpg" alt="Temporäre Sperre und Aufenthaltsraum im Bellermannkiezblock.">
+        Bellermannkiezblock in Berlin-Mitte. Foto: BA SGA Mitte, L. Fritsche.
+      </Figure>
+    </div>
+
+    <h2 class="sink-label">OpenerImage</h2>
+    <div class="sink-demo">
+      <OpenerImage file="supergraetzel-favoriten-poller-opener.jpg" alt="Poller und junge Bäume im Supergrätzl Favoriten" />
+    </div>
+
+    <h2 class="sink-label">Video</h2>
+    <div class="sink-demo">
+      <Video id="87JUbbq48r8" caption="Prostorož Ljubljana: Öffentlicher Raum ist gemeinsamer Raum." lang="de" />
+    </div>
+
+    <h2 class="sink-label">ButtonLink</h2>
+    <div class="sink-demo"><ButtonLink href={withBase('/book/0-3-contents.html')}>Handbuch öffnen</ButtonLink></div>
+
+    <h2 class="sink-label">CopyText</h2>
+    <div class="sink-demo">info@wirmachen.wien <CopyText value="info@wirmachen.wien" lang="de" /></div>
+
+    <h2 class="sink-label">FeatureBox</h2>
+    <div class="sink-demo"><FeatureBox title="Hinweis">Ein hervorgehobener Hinweis für Leserinnen und Leser.</FeatureBox></div>
+
+    <h2 class="sink-label">PullQuote</h2>
+    <div class="sink-demo"><PullQuote cite="Toolbox">Wie können wir unsere Stadt lebenswerter machen?</PullQuote></div>
+
+    <h2 class="sink-label">ColorPanel</h2>
+    <div class="sink-demo"><ColorPanel tone="warm">Eine farbige Markierung für wichtige Inhalte.</ColorPanel></div>
+
+    <h2 class="sink-label">Accordion</h2>
+    <div class="sink-demo">
+      <Accordion title="Erster Abschnitt">Inhalt des ersten Abschnitts.</Accordion>
+      <Accordion title="Zweiter Abschnitt">Inhalt des zweiten Abschnitts.</Accordion>
+    </div>
+
+    <h2 class="sink-label">ExpandableBox</h2>
+    <div class="sink-demo"><ExpandableBox lang="de">Ausführliche Zusatzinformationen zum Aufklappen.</ExpandableBox></div>
+
+    <h2 class="sink-label">Quiz</h2>
+    <div class="sink-demo">
+      <Quiz
+        id="sink-quiz"
+        lang="de"
+        question="Welche Hebel verändern Durchzugsverkehr?"
+        options={[{ label: 'Modalfilter', correct: true }, { label: 'Mehr Parkplätze' }, { label: 'Poller', correct: true }]}
+      />
+    </div>
+
+    <h2 class="sink-label">Question</h2>
+    <div class="sink-demo">
+      <Question
+        id="sink-question"
+        lang="de"
+        question="Was ist ein Superblock?"
+        options={['Eine Möblierung', 'Ein verkehrsberuhigtes Grätzl', 'Ein Parkhaus']}
+        answer={1}
+      />
+    </div>
+
+    <h2 class="sink-label">SelectList</h2>
+    <div class="sink-demo">
+      <SelectList
+        id="sink-select"
+        lang="de"
+        options={[{ label: 'Kapitel 1.', href: withBase('/book/01.html') }, { label: 'Kapitel 2.', href: withBase('/book/02.html') }]}
+      />
+    </div>
+
+    <h2 class="sink-label">Slideshow</h2>
+    <div class="sink-demo">
+      <Slideshow label="Beispielbilder">
+        <Figure src="lendplatz-graz-tactical-urbanism.jpg" alt="Lendplatz Graz" />
+        <Figure src="galileigasse-tactical-urbanism.jpg" alt="Galileigasse Wien" />
+      </Slideshow>
+    </div>
+
+    <h2 class="sink-label">TableWrap</h2>
+    <div class="sink-demo">
+      <TableWrap>
+        <table>
+          <thead><tr><th>Indikator</th><th>Methode</th></tr></thead>
+          <tbody>
+            <tr><td>Verkehrsmengen</td><td>Zählung</td></tr>
+            <tr><td>Aufenthalt</td><td>Beobachtung</td></tr>
+          </tbody>
+        </table>
+      </TableWrap>
+    </div>
+
+    <h2 class="sink-label">DefinitionTerm + Glossary</h2>
+    <div class="sink-demo">
+      <p>Ein <DefinitionTerm term="Modalfilter" definition="Bauliche Maßnahme, die Durchzugsverkehr verhindert." /> leitet Verkehr um.</p>
+      <Glossary entries={[{ term: 'Superblock', definition: 'Verkehrsberuhigtes Grätzl.' }, { term: 'Kiezblock', definition: 'Berliner Variante des Superblocks.' }]} />
+    </div>
+
+    <h2 class="sink-label">FootnoteRef + Endnotes</h2>
+    <div class="sink-demo">
+      <p>Eine Aussage mit Beleg<FootnoteRef id="sink-1" number={1} />.</p>
+      <Endnotes notes={[{ id: 'sink-1', text: 'Quellenangabe zum Beleg.' }]} />
+    </div>
+
+    <h2 class="sink-label">Bibliography</h2>
+    <div class="sink-demo">
+      <Bibliography sources={[{ label: 'Tactical Urbanism Guide', href: 'https://tacticalurbanismguide.com/' }, { label: 'Changing Cities', href: 'https://changing-cities.org/' }]} />
+    </div>
+
+    <h2 class="sink-label">QrCode</h2>
+    <div class="sink-demo"><QrCode url={withBase('/book/01.html')} label="Kapitel 1." /></div>
+
+    <h2 class="sink-label">Share</h2>
+    <div class="sink-demo"><Share lang="de" url={url} title="Komponenten-Showcase" /></div>
+
+    <h2 class="sink-label">PageRef</h2>
+    <div class="sink-demo"><PageRef lang="de" file="02" label="Weiter zu Kapitel 2." /></div>
+
+    <h2 class="sink-label">Redacted</h2>
+    <div class="sink-demo"><Redacted>Interner Vermerk</Redacted></div>
+
+    <h2 class="sink-label">Rotate</h2>
+    <div class="sink-demo"><Rotate angle={90}>Seitliche Notiz</Rotate></div>
+
+    <h2 class="sink-label">Math</h2>
+    <div class="sink-demo"><Math display={false}>{"\\( E = mc^2 \\)"}</Math></div>
+
+    <h2 class="sink-label">Annotation</h2>
+    <div class="sink-demo"><Annotation enabled>Redaktionelle Notiz (nur sichtbar, wenn aktiviert).</Annotation></div>
+
+    <h2 class="sink-label">BookmarkAdd</h2>
+    <div class="sink-demo"><BookmarkAdd lang="de" /></div>
+  </div>
+</BaseLayout>

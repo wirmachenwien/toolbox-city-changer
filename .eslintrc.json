@@ -1,6 +1,0 @@
-{
-  "extends": "standard",
-  "rules": {
-    "strict": ["error", "global"]
-  }
-}

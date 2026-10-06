@@ -1,0 +1,18 @@
+---
+// Minimal slideshow: figures grouped as slides with prev/next controls.
+// Without JavaScript every slide is listed in order.
+interface Props {
+  label?: string;
+}
+const { label = 'Slides' } = Astro.props;
+---
+<div class="slides" data-slides role="group" aria-label={label}>
+  <div class="slide-stage">
+    <slot />
+  </div>
+  <div class="slide-nav">
+    <button type="button" data-slide-prev>←</button>
+    <span data-slide-count aria-live="polite" />
+    <button type="button" data-slide-next>→</button>
+  </div>
+</div>

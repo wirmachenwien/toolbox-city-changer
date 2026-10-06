@@ -1,0 +1,11 @@
+---
+// Footnote reference marker linking to the endnotes section.
+interface Props {
+  id: string;
+  number: number;
+}
+const { id, number } = Astro.props;
+---
+<a class="footnote-ref" data-footnote-ref href={`#note-${id}`} id={`ref-${id}`} aria-describedby={`note-${id}`}>
+  <sup>{number}</sup>
+</a>

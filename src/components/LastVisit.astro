@@ -1,0 +1,28 @@
+---
+// "Continue from your last visit" toast for the start page. Content is
+// injected client-side by src/scripts/bookmarks.ts when a stored location
+// exists. Persistent toast visual (never auto-dismisses); the close button
+// dismisses it, and the link names the destination page.
+import { t } from '../lib/i18n';
+import type { Language } from '../data/locales';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Language;
+}
+const { lang } = Astro.props;
+const closeLabel = t(lang, 'input.close', 'Close');
+---
+<div
+  class="last-visit-toast"
+  data-last-visit
+  data-prompt={t(lang, 'bookmarks.last-location-prompt', 'Continue from your last visit?')}
+  role="status"
+  hidden
+>
+  <p>
+    <span data-last-visit-text></span>
+    <a data-last-visit-link href="#main"></a>
+  </p>
+  <button type="button" data-last-visit-close aria-label={closeLabel}><Icon name="x" /></button>
+</div>

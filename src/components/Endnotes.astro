@@ -1,0 +1,21 @@
+---
+// Endnotes section collecting FootnoteRef targets.
+export interface Note {
+  id: string;
+  text: string;
+}
+interface Props {
+  notes: Note[];
+  backLabel?: string;
+}
+const { notes, backLabel = 'Back to text' } = Astro.props;
+---
+<section class="endnotes" aria-label="Notes">
+  <ol>
+    {notes.map((note) => (
+      <li id={`note-${note.id}`}>
+        {note.text} <a href={`#ref-${note.id}`} aria-label={backLabel}>↩</a>
+      </li>
+    ))}
+  </ol>
+</section>

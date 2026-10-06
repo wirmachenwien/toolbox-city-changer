@@ -1,0 +1,15 @@
+---
+// Contents sheet: heading plus the full book table of contents.
+import Toc from './Toc.astro';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+  title: string;
+}
+const { lang, title } = Astro.props;
+---
+<div class="sheet">
+  <h1>{title}</h1>
+  <Toc lang={lang} />
+</div>

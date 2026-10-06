@@ -1,0 +1,39 @@
+---
+// Bookmark gutter for book pages: a single overlay column pinned directly
+// next to the text (not the viewport edge). The pending pin is always
+// visible; hovering it (or the gutter zone above/below it) snaps it to the
+// nearest text line and highlights that line, while hovering the text
+// itself does nothing. Clicking saves a bookmark that stays pinned to that
+// line. Saved pins swap their icon to an x icon on hover and delete on click.
+// State lives in localStorage and is wired by src/scripts/bookmarks.ts.
+import { t } from '../lib/i18n';
+import { settings } from '../data/settings';
+import type { Language } from '../data/locales';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Language;
+}
+const { lang } = Astro.props;
+const addLabel = t(lang, 'bookmarks.set-bookmark', 'Set bookmark');
+const deleteLabel = t(lang, 'bookmarks.remove-bookmark', 'Remove bookmark');
+---
+{settings.web.bookmarks.enabled && (
+  <div
+    class="bookmark-gutter"
+    data-bookmark-gutter
+    data-add-label={addLabel}
+    data-delete-label={deleteLabel}
+    aria-hidden="false"
+  >
+    <button
+      type="button"
+      class="bookmark-pin is-pending"
+      data-bookmark-add
+      title={addLabel}
+      aria-label={addLabel}
+    >
+      <Icon name="bookmark" />
+    </button>
+  </div>
+)}

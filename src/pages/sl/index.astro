@@ -1,0 +1,23 @@
+---
+// Slovene home: /sl/ (directory index, not /sl.html).
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import MdxContent from '../../components/MdxContent.astro';
+import { pageUrl } from '../../lib/site';
+
+const entries = await getCollection('pages');
+const entry = entries.find((item) => item.id === 'sl');
+if (!entry) throw new Error('Missing Slovene home page');
+---
+<PageLayout
+  lang="sl"
+  file="index"
+  title={entry.data.title}
+  description={entry.data.description}
+  layout="home"
+  currentUrl={pageUrl('sl', 'index')}
+  openerImage={entry.data.openerImage}
+  openerImageAlt={entry.data.openerImageAlt}
+>
+  <MdxContent entry={entry} />
+</PageLayout>

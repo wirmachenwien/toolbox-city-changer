@@ -1,14 +1,14 @@
 media:
   - name: book_images
     label: Book images
-    input: book/images/web
-    output: images/web
+    input: src/assets/book
+    output: src/assets/book
     categories: [image]
     rename: safe
   - name: site_images
     label: Site images
-    input: assets/images/web
-    output: assets/images/web
+    input: src/assets/site
+    output: src/assets/site
     categories: [image]
     rename: safe
 
@@ -30,58 +30,56 @@ components:
     options:
       format: markdown
       switcher: true
-  page_style:
-    label: Page style
+  book_template:
+    label: Template
     type: select
     options:
       values:
-        - name: default-page
-          label: Default page
-        - name: default-page page-1
-          label: First chapter page
         - name: chapter
           label: Chapter
-        - name: home
-          label: Home
-        - name: cover-page
-          label: Cover page
-        - name: index
-          label: Collection home page
         - name: cover
           label: Cover
-        - name: halftitle-page
-          label: Half-title page
-        - name: title-page
+        - name: title
           label: Title page
-        - name: copyright-page
+        - name: copyright
           label: Copyright page
-        - name: contents-page
+        - name: contents
           label: Contents page
-        - name: dedication-page
-          label: Dedication page
-        - name: epigraph-page
-          label: Epigraph page
-        - name: frontmatter
-          label: Other frontmatter
+  page_template:
+    label: Template
+    type: select
+    options:
+      values:
+        - name: home
+          label: Home
+        - name: page
+          label: Content page
+        - name: search
+          label: Search page
+  language:
+    label: Language
+    type: select
+    options:
+      values:
+        - name: de
+          label: German
+        - name: en
+          label: English
+        - name: sl
+          label: Slovene
 
 content:
   - name: handbook
     label: Handbook
     type: group
     items:
-      - name: chapters
-        label: Chapters
+      - name: chapters_de
+        label: Chapters (German)
         type: collection
-        path: book
+        path: src/content/book/de
         format: yaml-frontmatter
-        exclude:
-          - index.md
-          - 0-0-cover.md
-          - 0-1-titlepage.md
-          - 0-2-copyright.md
-          - 0-3-contents.md
         filename:
-          template: "{primary}.md"
+          template: "{primary}.mdx"
           field: create
         operations:
           create: false
@@ -92,16 +90,21 @@ content:
             label: Chapter title
             type: string
             required: true
-          - name: style
-            component: page_style
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
           - name: body
             component: markdown_body
             options:
               media: book_images
-              path: book/images/web
+              path: src/assets/book
               rename: safe
         view:
-          fields: [title, style]
+          fields: [title, template]
           primary: title
           sort: [title]
           search: [title, body]
@@ -109,37 +112,38 @@ content:
             sort: title
             order: asc
 
-      - name: front_matter
-        label: Front Matter
+      - name: chapters_en
+        label: Chapters (English)
         type: collection
-        path: book
+        path: src/content/book/en
         format: yaml-frontmatter
-        exclude:
-          - index.md
-          - 01.md
-          - 02.md
-          - 03.md
-          - 04.md
-          - 05.md
-          - 06.md
+        filename:
+          template: "{primary}.mdx"
+          field: create
         operations:
           create: false
           rename: false
           delete: false
         fields:
           - name: title
-            label: Page title
+            label: Chapter title
             type: string
-          - name: style
-            component: page_style
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
           - name: body
             component: markdown_body
             options:
               media: book_images
-              path: book/images/web
+              path: src/assets/book
               rename: safe
         view:
-          fields: [title, style]
+          fields: [title, template]
           primary: title
           sort: [title]
           search: [title, body]
@@ -147,32 +151,53 @@ content:
             sort: title
             order: asc
 
-      - name: book_cover_entry
-        label: Book Cover Entry
-        type: file
-        path: book/index.md
+      - name: chapters_sl
+        label: Chapters (Slovene)
+        type: collection
+        path: src/content/book/sl
         format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
         operations:
           create: false
+          rename: false
           delete: false
         fields:
-          - name: style
-            component: page_style
+          - name: title
+            label: Chapter title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
           - name: body
             component: markdown_body
             options:
               media: book_images
-              path: book/images/web
+              path: src/assets/book
               rename: safe
+        view:
+          fields: [title, template]
+          primary: title
+          sort: [title]
+          search: [title, body]
+          default:
+            sort: title
+            order: asc
 
   - name: site_pages
     label: Site Pages
     type: group
     items:
-      - name: home
-        label: Home Page
+      - name: home_de
+        label: Home Page (German)
         type: file
-        path: index.md
+        path: src/content/pages/de/index.mdx
         format: yaml-frontmatter
         operations:
           create: false
@@ -181,26 +206,86 @@ content:
           - name: title
             type: string
             required: true
-          - name: style
-            component: page_style
-          - name: opener-image
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
             label: Opener image filename
             type: string
-            description: "Filename from assets/images/web, for example supergraetzel-favoriten-poller-opener.jpg."
-          - name: opener-image-alt-text
+            description: "Filename from src/assets/site, for example supergraetzel-favoriten-poller-opener.jpg."
+          - name: openerImageAlt
             label: Opener image alt text
             type: text
           - name: body
             component: markdown_body
             options:
               media: site_images
-              path: assets/images/web
+              path: src/assets/site
               rename: safe
 
-      - name: about
-        label: About Page
+      - name: home_en
+        label: Home Page (English)
         type: file
-        path: about.md
+        path: src/content/pages/en/index.mdx
+        format: yaml-frontmatter
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image filename
+            type: string
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
+
+      - name: home_sl
+        label: Home Page (Slovene)
+        type: file
+        path: src/content/pages/sl/index.mdx
+        format: yaml-frontmatter
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image filename
+            type: string
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
+
+      - name: contact_de
+        label: Contact Page (German)
+        type: file
+        path: src/content/pages/de/contact.mdx
         format: yaml-frontmatter
         operations:
           create: false
@@ -213,13 +298,13 @@ content:
             component: markdown_body
             options:
               media: site_images
-              path: assets/images/web
+              path: src/assets/site
               rename: safe
 
-      - name: contact
-        label: Contact Page
+      - name: contact_en
+        label: Contact Page (English)
         type: file
-        path: contact.md
+        path: src/content/pages/en/contact.mdx
         format: yaml-frontmatter
         operations:
           create: false
@@ -232,7 +317,26 @@ content:
             component: markdown_body
             options:
               media: site_images
-              path: assets/images/web
+              path: src/assets/site
+              rename: safe
+
+      - name: contact_sl
+        label: Contact Page (Slovene)
+        type: file
+        path: src/content/pages/sl/contact.mdx
+        format: yaml-frontmatter
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
               rename: safe
 
   - name: metadata
@@ -242,8 +346,8 @@ content:
       - name: project_metadata
         label: Project Metadata
         type: file
-        path: _data/project.yml
-        format: yaml
+        path: src/data/project.json
+        format: json
         operations:
           create: false
           delete: false
@@ -271,77 +375,115 @@ content:
             type: text
           - name: language
             type: string
-          - name: app-id
-            label: App ID
-            type: string
           - name: version
             type: string
 
       - name: book_metadata
         label: Book Metadata
         type: file
-        path: _data/works/book/default.yml
-        format: yaml
+        path: src/data/works.json
+        format: json
         operations:
           create: false
           delete: false
         fields:
-          - name: title
-            type: string
-            required: true
-          - name: subtitle
-            type: string
-          - name: creator
-            type: string
-          - name: contributor
-            type: string
-          - name: description
-            type: text
-          - name: image
-            label: Cover image filename
-            type: string
-          - name: publisher
-            type: string
-          - name: publisher-url
-            label: Publisher URL
-            type: string
-          - name: rightsholder
-            type: string
-          - name: rights
-            type: text
-          - name: language
-            type: string
-          - name: date
-            type: date
-          - name: modified
-            type: date
-          - name: type
-            label: Book type
-            type: string
-          - name: subject
-            type: string
-          - name: identifier
-            type: string
-          - name: source
-            type: string
-          - name: relation
-            type: string
-          - name: coverage
-            type: string
-          - name: keywords
-            type: text
+          - name: de
+            label: German book metadata
+            type: object
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: subtitle
+                type: string
+              - name: creator
+                type: string
+              - name: contributor
+                type: string
+              - name: description
+                type: text
+              - name: publisher
+                type: string
+              - name: rights
+                type: text
+              - name: language
+                type: string
+          - name: en
+            label: English book metadata
+            type: object
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: subtitle
+                type: string
+              - name: creator
+                type: string
+              - name: contributor
+                type: string
+              - name: description
+                type: text
+              - name: publisher
+                type: string
+              - name: rights
+                type: text
+              - name: language
+                type: string
+          - name: sl
+            label: Slovene book metadata
+            type: object
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: subtitle
+                type: string
+              - name: creator
+                type: string
+              - name: contributor
+                type: string
+              - name: description
+                type: text
+              - name: publisher
+                type: string
+              - name: rights
+                type: text
+              - name: language
+                type: string
 
       - name: navigation
         label: Navigation
         type: file
-        path: _data/nav.yml
-        format: yaml
+        path: src/data/nav.json
+        format: json
         operations:
           create: false
           delete: false
         fields:
           - name: de
             label: German navigation
+            type: object
+            list: true
+            fields:
+              - name: label
+                type: string
+                required: true
+              - name: file
+                type: string
+                required: true
+          - name: en
+            label: English navigation
+            type: object
+            list: true
+            fields:
+              - name: label
+                type: string
+                required: true
+              - name: file
+                type: string
+                required: true
+          - name: sl
+            label: Slovene navigation
             type: object
             list: true
             fields:

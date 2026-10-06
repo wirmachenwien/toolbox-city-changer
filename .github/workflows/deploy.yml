@@ -1,10 +1,72 @@
-name: Deploy to web server with FTP or SSH
+name: Deploy to GitHub Pages
 
 on:
-  push: # Trigger on any push, but branch validation will filter
-  workflow_dispatch: # Allow manual triggering
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpango-1.0-0 libharfbuzz-subset0 libjpeg-dev libopenjp2-7-dev libffi-dev
+
+      - name: Install PDF dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build PDFs
+        run: npm run build:pdf
+
+      - name: Check translations and links
+        run: npm run check:i18n
+
+      - name: Check for legacy naming baggage
+        run: npm run check:baggage
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
   deploy:
-    uses: electricbookworks/electric-book-deploy-workflow-ftp-ssh/.github/workflows/deploy.yml@v1.2.2
-    secrets: inherit
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

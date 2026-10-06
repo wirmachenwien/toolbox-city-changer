@@ -1,0 +1,23 @@
+---
+// Site footer: credit line, Impressum link, language dropdown.
+import { project } from '../data/project';
+import { projectText } from '../lib/i18n';
+import type { Language } from '../data/locales';
+import LanguageMenu from './LanguageMenu.astro';
+
+interface Props {
+  lang: Language;
+  kind: 'page' | 'book';
+  file: string;
+}
+
+const { lang, kind, file } = Astro.props;
+const text = projectText(lang);
+const credit = `${text.credit || project.credit} <a href="https://wirmachen.wien/impressum/">Impressum</a>`;
+---
+<footer class="site-footer">
+  <div class="shell">
+    <p set:html={credit} />
+    <LanguageMenu lang={lang} kind={kind} file={file} id="foot-language" />
+  </div>
+</footer>

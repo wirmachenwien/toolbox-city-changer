@@ -1,0 +1,42 @@
+---
+// Single-question check (radio group): one correct answer.
+import { t } from '../lib/i18n';
+import type { Language } from '../data/locales';
+
+interface Props {
+  id: string;
+  question: string;
+  options: string[];
+  answer: number;
+  lang?: Language;
+}
+
+const { id, question, options, answer, lang = 'de' } = Astro.props;
+---
+<form
+  class="quiz"
+  data-quiz={id}
+  data-single="true"
+  data-feedback-correct={t(lang, 'questions.feedback-correct', 'Correct!')}
+  data-feedback-incorrect={t(lang, 'questions.feedback-incorrect', 'Incorrect')}
+  data-feedback-unfinished={t(lang, 'questions.feedback-unfinished', "You haven't selected all the correct answers.")}
+  data-mark-correct={t(lang, 'questions.mark-correct', '✓')}
+  data-mark-incorrect={t(lang, 'questions.mark-incorrect', '✗')}
+>
+  <fieldset>
+    <legend>{question}</legend>
+    {options.map((option, index) => (
+      <label>
+        <input
+          type="radio"
+          name={id}
+          value={String(index)}
+          data-correct={index === answer ? 'true' : undefined}
+        />
+        <span>{option}</span>
+      </label>
+    ))}
+  </fieldset>
+  <p class="quiz-feedback" data-feedback aria-live="polite" />
+  <button type="submit">{t(lang, 'questions.check-answers-button', 'Check my answers')}</button>
+</form>

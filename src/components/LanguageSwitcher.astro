@@ -1,0 +1,32 @@
+---
+ // Same-page language switcher (DE / EN / SL).
+import { alternates } from '../lib/site';
+import { t } from '../lib/i18n';
+import { locales, type Language } from '../data/locales';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Language;
+  kind: 'page' | 'book';
+  file: string;
+}
+
+const { lang, kind, file } = Astro.props;
+const targets = alternates(kind, file);
+---
+<p class="language-switcher-wrap">
+  <Icon name="globe" />
+  <ul class="language-switcher" aria-label={t(lang, 'controls.language-select', 'Select language')}>
+    {targets.map((target) => (
+      <li>
+        <a
+          href={target.url}
+          hreflang={target.lang}
+          aria-current={target.lang === lang ? 'true' : undefined}
+        >
+          {(locales[target.lang] as { 'local-name'?: string })['local-name'] ?? target.lang}
+        </a>
+      </li>
+    ))}
+  </ul>
+</p>

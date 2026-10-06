@@ -1,0 +1,14 @@
+---
+ // CC BY licence badge: official Creative Commons 88x31 button
+ // (public/images/cc-by.svg) linking to the licence deed.
+import { withBase } from '../lib/site';
+
+interface Props {
+  href?: string;
+}
+
+const { href = 'https://creativecommons.org/licenses/by/4.0/' } = Astro.props;
+---
+<a class="cc-badge" href={href} rel="license">
+  <img src={withBase('/images/cc-by.svg')} alt="CC BY 4.0" title="CC BY 4.0" width="88" height="31" loading="lazy" decoding="async" />
+</a>

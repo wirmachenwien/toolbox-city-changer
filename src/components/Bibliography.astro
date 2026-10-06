@@ -1,0 +1,18 @@
+---
+// Source list.
+export interface Source {
+  label: string;
+  href?: string;
+}
+interface Props {
+  sources: Source[];
+}
+const { sources } = Astro.props;
+---
+<ul class="bibliography">
+  {sources.map((source) => (
+    <li>
+      {source.href ? <a href={source.href}>{source.label}</a> : source.label}
+    </li>
+  ))}
+</ul>

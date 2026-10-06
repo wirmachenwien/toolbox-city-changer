@@ -1,0 +1,36 @@
+---
+// Localised select dropdown that reveals linked content on change
+// (progressive enhancement over a plain list of links in noscript).
+import { t } from '../lib/i18n';
+import type { Language } from '../data/locales';
+
+export interface SelectOption {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  id: string;
+  label?: string;
+  options: SelectOption[];
+  lang?: Language;
+}
+
+const { id, label, options, lang = 'de' } = Astro.props;
+const prompt = label ?? t(lang, 'controls.show-hide', 'Show/Hide');
+---
+<div class="select-list" data-select-list>
+  <label for={id}>{prompt}</label>
+  <select id={id} data-select>
+    {options.map((option) => (
+      <option value={option.href}>{option.label}</option>
+    ))}
+  </select>
+  <noscript>
+    <ul>
+      {options.map((option) => (
+        <li><a href={option.href}>{option.label}</a></li>
+      ))}
+    </ul>
+  </noscript>
+</div>

@@ -1,0 +1,39 @@
+---
+// Project page layout: home, contact, search.
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import OpenerImage from '../components/OpenerImage.astro';
+import LastVisit from '../components/LastVisit.astro';
+import { pageCrumbs } from '../lib/nav';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+  file: string;
+  title: string;
+  description?: string;
+  layout: 'home' | 'page' | 'search';
+  currentUrl: string;
+  openerImage?: string;
+  openerImageAlt?: string;
+}
+
+const { lang, file, title, description, layout, currentUrl, openerImage, openerImageAlt } = Astro.props;
+const crumbs = pageCrumbs(lang, title);
+const isHome = layout === 'home';
+---
+<BaseLayout
+  lang={lang}
+  title={title}
+  description={description}
+  kind="page"
+  file={file}
+  currentUrl={currentUrl}
+>
+  {!isHome && <Breadcrumbs items={crumbs} />}
+  {isHome && openerImage && <OpenerImage file={openerImage} alt={openerImageAlt ?? ''} />}
+  <div class="prose" data-prose>
+    <slot />
+  </div>
+  {isHome && <LastVisit lang={lang} />}
+</BaseLayout>

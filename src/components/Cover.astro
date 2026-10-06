@@ -1,0 +1,34 @@
+---
+ // Book cover sheet, generated automatically from the front-page hero image
+ // (the start page opener) and the book metadata — no static cover artwork.
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { getWork } from '../data/works';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+}
+const { lang } = Astro.props;
+const work = getWork(lang);
+
+const pages = await getCollection('pages');
+const home = pages.find((entry) => entry.id === lang);
+const file = home?.data.openerImage ?? work.image;
+const alt = home?.data.openerImageAlt ?? '';
+
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
+  { eager: true },
+);
+const cover = file
+  ? Object.entries(images).find(([path]) => path.endsWith(`/${file}`))?.[1].default
+  : undefined;
+---
+<div class="sheet cover-sheet">
+  {cover && <Image src={cover} alt={alt} title={alt || undefined} widths={[400, 800]} sizes="(max-width: 36rem) 100vw, 36rem" loading="eager" />}
+  <p>{work.type}</p>
+  <h1>{work.title}</h1>
+  {work.subtitle && <p>{work.subtitle}</p>}
+  {work.creator && <p>{work.creator}</p>}
+</div>
