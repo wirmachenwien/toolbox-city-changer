@@ -1,7 +1,24 @@
 <div class="masthead">
 
+    {% comment %}Link home to the current language's home when this page
+    is a translation, falling back to the project home otherwise.{% endcomment %}
+    {% if is-translation %}
+        {% capture path-for-translated-home-page %}{{ language }}/index.md{% endcapture %}
+        {% assign translated-home-page-array = site.pages | where_exp: "page", "page.path == path-for-translated-home-page" %}
+        {% if translated-home-page-array.size > 0 %}
+            {% capture project-home-url %}{{ path-to-root-directory }}{{ language }}/index.html{% endcapture %}
+            {% capture project-home-dir %}{{ path-to-root-directory }}{{ language }}/{% endcapture %}
+        {% else %}
+            {% capture project-home-url %}{{ path-to-root-directory }}index.html{% endcapture %}
+            {% capture project-home-dir %}{{ path-to-root-directory }}{% endcapture %}
+        {% endif %}
+    {% else %}
+        {% capture project-home-url %}{{ path-to-root-directory }}index.html{% endcapture %}
+        {% capture project-home-dir %}{{ path-to-root-directory }}{% endcapture %}
+    {% endif %}
+
     <div class="masthead-logo">
-        <a href="{% if page.masthead-logo-link %}{{ page.masthead-logo-link }}{% else %}{{ path-to-root-directory }}{% endif %}" aria-label="{% if locale.project.name and locale.project.name != "" %}{{ locale.project.name }}{% else %}{{ project-name }}{% endif %}">
+        <a href="{% if page.masthead-logo-link %}{{ page.masthead-logo-link }}{% else %}{{ project-home-dir }}{% endif %}" aria-label="{% if locale.project.name and locale.project.name != "" %}{{ locale.project.name }}{% else %}{{ project-name }}{% endif %}">
             {% include image file=project-logo folder="assets" %}
         </a>
     </div>
@@ -10,7 +27,7 @@
 {% if is-book-directory != true %}
 
     <ul>
-        <li class="masthead-project-name"><a href="{{ path-to-root-directory }}index.html">{{ project-name }}</a></li>
+        <li class="masthead-project-name"><a href="{{ project-home-url }}">{{ project-name }}</a></li>
     </ul>
 
 {% comment %} Book pages {% endcomment %}
@@ -28,10 +45,10 @@
 
         <ul>
             {% if number-of-works == 1 %}
-                <li class="masthead-book-title"><a href="{{ path-to-root-directory }}index.html">{{ title }}</a></li>
+                <li class="masthead-book-title"><a href="{{ project-home-url }}">{{ title }}</a></li>
                 {% include breadcrumbs.html breadcrumb-tree=breadcrumb-nav-tree %}
             {% else %}
-                <li class="masthead-project-name"><a href="{{ path-to-root-directory }}index.html">{{ project-name }}</a></li>
+                <li class="masthead-project-name"><a href="{{ project-home-url }}">{{ project-name }}</a></li>
                 <li class="masthead-book-title"><a href="{{ masthead-contents-page }}{% unless masthead-contents-page contains '.html' %}.html{% endunless %}">{{ title }}</a></li>
                 {% include breadcrumbs.html breadcrumb-tree=breadcrumb-nav-tree %}
             {% endif %}
@@ -40,16 +57,16 @@
     {% elsif site.data.settings.[output-format].masthead.content == "project-name" %}
 
         <ul>
-            <li class="masthead-project-name"><a href="{{ path-to-root-directory }}index.html">{{ project-name }}</a></li>
+            <li class="masthead-project-name"><a href="{{ project-home-url }}">{{ project-name }}</a></li>
         </ul>
 
     {% elsif site.data.settings.[output-format].masthead.content == "page-title" %}
 
         <ul>
             {% if number-of-works == 1 %}
-                <li class="masthead-book-title"><a href="{{ path-to-root-directory }}index.html">{{ title }}</a></li>
+                <li class="masthead-book-title"><a href="{{ project-home-url }}">{{ title }}</a></li>
             {% else %}
-                <li class="masthead-project-name"><a href="{{ path-to-root-directory }}index.html">{{ project-name }}</a></li>
+                <li class="masthead-project-name"><a href="{{ project-home-url }}">{{ project-name }}</a></li>
                 <li class="masthead-book-title"><a href="{{ masthead-contents-page }}{% unless masthead-contents-page contains '.html' %}.html{% endunless %}">{{ title }}</a></li>
                 <li class="masthead-page-title">{{ page.title }}</li>
             {% endif %}
@@ -60,9 +77,9 @@
 
         <ul>
             {% if number-of-works == 1 %}
-                <li class="masthead-book-title"><a href="{{ path-to-root-directory }}index.html">{{ title }}</a></li>
+                <li class="masthead-book-title"><a href="{{ project-home-url }}">{{ title }}</a></li>
             {% else %}
-                <li class="masthead-project-name"><a href="{{ path-to-root-directory }}index.html">{{ project-name }}</a></li>
+                <li class="masthead-project-name"><a href="{{ project-home-url }}">{{ project-name }}</a></li>
                 <li class="masthead-book-title"><a href="{{ masthead-contents-page }}{% unless masthead-contents-page contains '.html' %}.html{% endunless %}">{{ title }}</a></li>
             {% endif %}
         </ul>
