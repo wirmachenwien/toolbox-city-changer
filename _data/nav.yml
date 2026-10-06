@@ -10,3 +10,14 @@ de:
     file: "index"
   - label: "Handbuch"
     file: "book/0-3-contents"
+
+en:
+  - label: Home
+    file: index
+  - label: Handbook
+    file: book/en/0-3-contents
+sl:
+  - label: Domov
+    file: index
+  - label: Priročnik
+    file: book/sl/0-3-contents

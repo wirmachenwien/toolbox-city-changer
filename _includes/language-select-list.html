@@ -45,7 +45,7 @@ translation's file list in meta.yml.{% endcomment %}
                             </a>
                         {% endif %}
 
-                    {% elsif is-translation-homepage %}
+                    {% elsif is-translation-root-directory %}
                         
                         {% if translation == parent-language %}
                             <a title="{{ site.data.locales[translation].controls.language-select }}" href="../{{ current-file }}.html">

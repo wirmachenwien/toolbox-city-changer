@@ -15,6 +15,9 @@ don't include it again to avoid unnecessary looping.{% endcomment %}
 
 {% comment %} Establish the URL to send search requests to. {% endcomment %}
 {% capture search-form-action-url %}{{ path-to-root-directory }}search.html{% endcapture %}
+{% if is-translation %}
+    {% capture search-form-action-url %}{{ path-to-root-directory }}{{ language }}/search.html{% endcapture %}
+{% endif %}
 {% if search-settings.search-url and search-settings.search-url != "" %}
     {% capture search-form-action-url %}{{ search-settings.search-url }}{% endcapture %}
 {% endif %}
@@ -27,7 +30,6 @@ don't include it again to avoid unnecessary looping.{% endcomment %}
 
 <form class="search" action="{{ search-form-action-url }}" method="get">
   <label for="search-box" class="visuallyhidden">{{ locale.search.search-title }}</label>
-  <input id="search-language" type="hidden" name="lang" value="{{ language }}">
   <input type="text" size="1" id="search-box{{ include.id-suffix }}" class="search-box" name="{{ search-form-action-url-parameter }}" placeholder="{{ locale.search.placeholder }}">
   <input type="submit" class="search-submit" value="{{ locale.search.search-title }}">
 

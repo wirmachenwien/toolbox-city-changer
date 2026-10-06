@@ -113,8 +113,8 @@
                     {% comment %} If this page is a translation (e.g. translation landing page)
                     we want to show the translated books if possible. {% endcomment %}
                     {% if is-translation %}
-                        {% if work[1][language][1] %}
-                            {% assign this-work = work[1][language][1] %}
+                        {% if work[1][language] %}
+                            {% assign this-work = work[1][language] %}
                         {% endif %}
                     {% else %}
                         {% assign this-work = work[1] %}

@@ -127,16 +127,11 @@ en:
   iso-name: "English"
   local-name: "English"
   project:
-    # Project items are set for the parent language
-    # in _data/project.yml and can be overridden here.
-    # Project 'name' also sets the HTML title on the home page.
-    organisation: ""
-    url: ""
-    email: ""
-    name: ""
-    description: ""
-    image: ""
-    credit: ""
+    name: Toolbox for City Changers
+    description: A handbook by WirMachenWien, Changing Cities and Prostorož from the
+      Erasmus+ project Toolbox for City Changers.
+    credit: A handbook by <a href="https://wirmachen.wien">WirMachenWien</a> as part
+      of the Toolbox for City Changers.
   features:
     copyright-page: "Copyright"
   nav:
@@ -768,9 +763,117 @@ de:
 # sk:
 #   iso-name: "Slovak"
 #   local-name: ""
-# sl:
-#   iso-name: "Slovene"
-#   local-name: ""
+sl:
+  iso-name: Slovene
+  local-name: Slovenščina
+  features:
+    copyright-page: Avtorske pravice
+  nav:
+    home: Domov
+    menu: Meni
+    next: Naprej
+    previous: Nazaj
+    back: '&larr;'
+    toc: Vsebina
+    read: Beri
+    login: Prijava
+    logout: Odjava
+  input:
+    submit: Oddaj
+    send: Pošlji
+    show: Prikaži
+    hide: Skrij
+    close: Zapri
+  search:
+    search-title: Iskanje
+    placeholder: Išči tukaj...
+    placeholder-searching: Iskanje...
+    search-results: Rezultati iskanja
+    results-for-singular: rezultat za
+    results-for-plural: rezultati za
+    results-for-none: Ni rezultatov za
+    jump-to-first: Skoči na prvi rezultat ↓
+    notice: ''
+  questions:
+    check-answers-button: Preveri odgovore
+    feedback-correct: Pravilno!
+    feedback-incorrect: Napačno
+    feedback-unfinished: Nisi izbral vseh pravilnih odgovorov.
+    mark-correct: '&#10003;'
+    mark-incorrect: '&#10007;'
+  quiz:
+    total: Skupaj
+  cross-references:
+    pre-page-number: '(stran '
+    post-page-number: )
+  account:
+    login: Prijava
+    my-account: Moj račun
+  annotator:
+    show-sidebar-tooltip-title: Odpri opombe
+    show-sidebar-tooltip-description: Tapni tukaj, da prikažeš stransko vrstico z
+      opombami. Izberi besedilo, da ga označiš in dodaš opombe na tej strani.
+    show-annotated-text-tooltip-title: Označi opombe
+    show-annotated-text-tooltip-description: Tapni tukaj, da prikažeš ali skriješ
+      označene opombe na tej strani.
+  bookmarks:
+    bookmark: Zaznamek
+    bookmarks: Zaznamki
+    bookmarks-tip: Tapni ali izberi besedilo, nato tapni ikono zaznamka, da ga shraniš.
+      Zaznamki so shranjeni v predpomnilniku brskalnika. Če ga izprazniš, ne da bi
+      se prej prijavil, bodo trajno odstranjeni.
+    last-location: Tvoj zadnji obisk
+    last-locations-tip: Ob zadnjem obisku si tukaj prenehal brati.
+    last-location-prompt: Želiš nadaljevati branje od zadnjega obiska?
+    save-bookmark-note: Shrani
+    bookmark-note-placeholder: Dodaj opombo k temu zaznamku...
+    bookmark-note-login: Prijavi se, da dodaš in vidiš opombe k svojim zaznamkom
+    delete-bookmark: Izbriši
+    delete-all: Izbriši vse
+    delete-bookmark-confirm: Ali res želiš izbrisati ta zaznamek?
+    delete-all-bookmarks-confirm: Ali res želiš izbrisati vse zaznamke?
+    bookmarks-shifted-warning: Zdi se, da se zaznamek ne ujema povsem s prvotnim mestom.
+      Vsebina te strani se je morda spremenila.
+  accordion:
+    show-all: Razpri vse
+    close-all: Zapri vse
+  controls:
+    language-select: Izberi jezik
+    show-hide: Prikaži/Skrij
+  video:
+    options-button: Druge možnosti videa
+    play-video: Predvajaj video
+  copy:
+    copy: Kopiraj
+    copied: Kopirano
+    copy-failed: Poskusi znova
+  footnotes:
+    close-footnote: Zapri opombo
+    reversefootnote-alt: Nazaj na besedilo
+  pdf:
+    cover: Naslovnica
+  share:
+    share: Deli
+    link: Povezava
+    email: E-pošta
+    bluesky: Bluesky
+    facebook: Facebook
+    linkedin: LinkedIn
+    reddit: Reddit
+    twitter: Twitter
+    whatsapp: WhatsApp
+  expandable-box:
+    read-more: Razpri
+  feature-box:
+    link-to-feature-assistive-text: Povezava do ustrezne funkcije
+  visual-toc:
+    link-to-page-assistive-text: Povezava do strani
+  project:
+    name: Zbirka orodij za spreminjanje mest
+    description: Priročnik organizacij WirMachenWien, Changing Cities in Prostorož
+      iz projekta Erasmus+ Zbirka orodij za spreminjanje mest.
+    credit: Priročnik organizacije <a href="https://wirmachen.wien">WirMachenWien</a>
+      v okviru zbirke orodij za spreminjanje mest.
 # so:
 #   iso-name: "Somali"
 #   local-name: ""

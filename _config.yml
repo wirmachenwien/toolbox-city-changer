@@ -29,7 +29,7 @@ language: de
 # include the url where this site will live.
 # E.g. domain: "https://example.com"
 # In Open Graph metadata, the base URL will be appended.
-domain: "https://wirmachenwien.github.io/toolbox-city-changer"
+domain: "https://wirmachenwien.github.io"
 
 # Base URL
 # --------

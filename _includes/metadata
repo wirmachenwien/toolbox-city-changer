@@ -367,7 +367,7 @@ Check if we're on the search pages.
 {% endif %}
 
 {% assign is-project-search = false %}
-{% if pageurl-slug == project-search-url-slug %}
+{% if pageurl-slug == project-search-url-slug or is-translation-root-directory and is-search %}
     {% assign is-project-search = true %}
 {% endif %}
 
