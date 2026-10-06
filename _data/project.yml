@@ -1,32 +1,13 @@
-# The name of the organisation or entity that owns this project
-organisation: "WirMachenWien"
-
-# A live web address for the organisation
-url: "https://wirmachen.wien"
-
-# The default contact email address
-email: "info@wirmachen.wien"
-
-# The name of the project of books in this folder.
-name: "Toolbox für City Changer"
-
-# A one-liner about this project. Useful for Open Graph metadata.
-description: "Ein Electric-Book-Handbuch aus der WirMachenWien-Workshopreihe Toolbox für City Changer."
-
-# The logo of the organisation, saved web-ready in /assets
-logo: "logo.svg"
-
-# An image in /assets/images/web that stands for the project
-image: "cover.jpg"
-
-# Credit line, by default in the footer, overidden in locales.yml
-credit: "Ein Handbuch von <a href=\"https://wirmachen.wien\">WirMachenWien</a> im Rahmen der Toolbox für City Changer."
-
-# Primary language code for this project as a whole
-language: "de"
-
-# App bundle ID unique across all app stores
+organisation: WirMachenWien
+url: https://wirmachen.wien
+email: info@wirmachen.wien
+name: Toolbox für City Changer
+description: Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož aus
+  dem Erasmus+-Projekt Toolbox für City Changer.
+logo: logo.svg
+image: cover.jpg
+credit: Ein Handbuch von <a href="https://wirmachen.wien">WirMachenWien</a> im
+  Rahmen der Toolbox für City Changer.
+language: de
 app-id: wien.wirmachen.toolbox
-
-# Version. You must change this with each app update
-version: "1.0.0"
+version: 1.0.0
