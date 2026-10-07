@@ -26,6 +26,7 @@ const EB_PREFIX = /(^|[^a-z])eb-/i;
 const EXCLUDE_DIRS = new Set(['legacy', 'node_modules', 'dist', 'dist-pdf', '.git', '.astro', '.vscode']);
 const EXCLUDE_FILES = new Set([
   'docs/MIGRATION.md', // narrow provenance exception, documented in that file
+  'README.md', // attribution exception: the Electric Book Works shout-out lives here
   'ASTRO_MIGRATION_PROMPT.md', // the task brief itself, not delivered code
   'package-lock.json',
   'scripts/check-baggage.mjs', // this scanner names the patterns it forbids

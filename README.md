@@ -4,6 +4,15 @@ Trilingual handbook site (German, English, Slovene) for the Erasmus+
 Toolbox for City Changers project. Built with Astro 7 as pure static files
 and hosted on GitHub Pages.
 
+The code for this site is inspired by [Electric Book Works](https://electricbookworks.com)
+— shout out, and thank you! — and is licensed under the
+[AGPL-3.0](LICENSE) (see `LICENSE`).
+
+Unless stated otherwise, the contents of this handbook are licensed under
+[CC BY 4.0 Wir machen Wien, Changing Cities & Prostorož](https://creativecommons.org/licenses/by/4.0/).
+You may share and adapt the contents as long as you give appropriate credit
+to the authors.
+
 ## Development
 
 ```sh
