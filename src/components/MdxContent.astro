@@ -14,6 +14,7 @@ import PullQuote from './PullQuote.astro';
 import TableWrap from './TableWrap.astro';
 import Glossary from './Glossary.astro';
 import Quiz from './Quiz.astro';
+import Question from './Question.astro';
 import FootnoteRef from './FootnoteRef.astro';
 import Endnotes from './Endnotes.astro';
 
@@ -24,4 +25,4 @@ interface Props {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
-<Content components={{ Figure, Video, ButtonLink, DownloadLink, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, FootnoteRef, Endnotes }} />
+<Content components={{ Figure, Video, ButtonLink, DownloadLink, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, FootnoteRef, Endnotes }} />

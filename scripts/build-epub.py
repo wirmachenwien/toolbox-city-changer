@@ -61,7 +61,11 @@ FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
 ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
 QUIZ_RE = re.compile(
-    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"\s+options=\{\[(.*?)\]\}\s*/>',
+    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
+    re.DOTALL,
+)
+QUESTION_RE = re.compile(
+    r'<Question\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}[^>]*?answer=\{(\d+)\}[^>]*/?>',
     re.DOTALL,
 )
 
@@ -99,6 +103,18 @@ def quiz_html(question: str, source: str, lang: str = "de") -> str:
         f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
         f'<ol>{options}</ol>'
         f'<p style="transform: rotate(180deg);">{label}: {correct}</p></div>\n'
+    )
+
+
+def question_html(question: str, source: str, answer: str, lang: str = "de") -> str:
+    """Single-choice Question: plain string options plus a 0-based answer index."""
+    options = re.findall(r'"([^"]+)"', source)
+    items = ''.join(f'<li>{label}</li>' for label in options)
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
+    return (
+        f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
+        f'<ol>{items}</ol>'
+        f'<p style="transform: rotate(180deg);">{label}: {int(answer) + 1}</p></div>\n'
     )
 
 def front_opener(lang: str) -> str:
@@ -201,6 +217,7 @@ class EpubBook:
         text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
         text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
         text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), self.lang), text)
+        text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), self.lang), text)
         return text.strip() + "\n"
 
     def render_markdown(self, md_text: str) -> str:
