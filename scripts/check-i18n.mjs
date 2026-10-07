@@ -14,7 +14,7 @@ const BASE = '/toolbox-city-changer';
 const LANGS = ['de', 'en', 'sl'];
 // Cover/title sheets are print-only; the web book starts at the about
 // page and the "index" entry is a redirect to the contents page.
-const BOOK_FILES = ['about', 'contents', '01', '02', '03', '04', '05', '06', 'index'];
+const BOOK_FILES = ['about', 'contents', '01', '02', '03', '04', '05', '06', 'glossary', 'index'];
 const PAGE_FILES = ['index', 'search'];
 const SEARCH_TERMS = { de: 'Superblocks', en: 'superblocks', sl: 'superbloki' };
 
@@ -132,6 +132,8 @@ for (const lang of LANGS) {
         const target = `${BASE}/${lang === 'en' ? 'book' : `book/${lang}`}/${String(chapter).padStart(2, '0')}.html`;
         if (!hrefs.includes(target)) fail(`${rel}: contents missing chapter link ${target}`);
       }
+      const glossaryTarget = `${BASE}/${lang === 'en' ? 'book' : `book/${lang}`}/glossary.html`;
+      if (!hrefs.includes(glossaryTarget)) fail(`${rel}: contents missing chapter link ${glossaryTarget}`);
     }
   }
 

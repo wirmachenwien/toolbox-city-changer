@@ -25,7 +25,8 @@
           "03",
           "04",
           "05",
-          "06"
+          "06",
+          "glossary"
         ],
         "toc": [
           {
@@ -71,6 +72,10 @@
           {
             "label": "6. Arbeitsplan und Quellen",
             "file": "06"
+          },
+          {
+            "label": "Glossar",
+            "file": "glossary"
           }
         ]
       },
@@ -83,7 +88,8 @@
           "03",
           "04",
           "05",
-          "06"
+          "06",
+          "glossary"
         ],
         "nav": [
           {
@@ -119,6 +125,10 @@
           {
             "label": "6. Arbeitsplan und Quellen",
             "file": "06"
+          },
+          {
+            "label": "Glossar",
+            "file": "glossary"
           }
         ]
       }
@@ -150,7 +160,8 @@
           "03",
           "04",
           "05",
-          "06"
+          "06",
+          "glossary"
         ],
         "toc": [
           {
@@ -196,6 +207,10 @@
           {
             "label": "6. Work plan and sources",
             "file": "06"
+          },
+          {
+            "label": "Glossary",
+            "file": "glossary"
           }
         ]
       },
@@ -208,7 +223,8 @@
           "03",
           "04",
           "05",
-          "06"
+          "06",
+          "glossary"
         ],
         "nav": [
           {
@@ -244,6 +260,10 @@
           {
             "label": "6. Work plan and sources",
             "file": "06"
+          },
+          {
+            "label": "Glossary",
+            "file": "glossary"
           }
         ]
       }
@@ -275,7 +295,8 @@
           "03",
           "04",
           "05",
-          "06"
+          "06",
+          "glossary"
         ],
         "toc": [
           {
@@ -321,6 +342,10 @@
           {
             "label": "6. Delovni načrt in viri",
             "file": "06"
+          },
+          {
+            "label": "Glosar",
+            "file": "glossary"
           }
         ]
       },
@@ -333,7 +358,8 @@
           "03",
           "04",
           "05",
-          "06"
+          "06",
+          "glossary"
         ],
         "nav": [
           {
@@ -369,6 +395,10 @@
           {
             "label": "6. Delovni načrt in viri",
             "file": "06"
+          },
+          {
+            "label": "Glosar",
+            "file": "glossary"
           }
         ]
       }
