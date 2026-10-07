@@ -83,8 +83,8 @@ def cc_badge_html() -> str:
     return (
         '<p class="cc-badge">'
         f'<img src="{src}" alt="CC BY 4.0" width="88" height="31"/> '
-        '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 Wir machen Wien, '
-        'Changing Cities &amp; Prostorož</a></p>'
+        '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> Wir machen Wien, '
+        'Changing Cities &amp; Prostorož</p>'
     )
 
 

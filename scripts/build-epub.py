@@ -184,7 +184,7 @@ class EpubBook:
         text = COPY_RE.sub("", text)
         text = TOC_RE.sub("", text)
         text = CCBADGE_RE.sub(
-            '<p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 Wir machen Wien, Changing Cities &amp; Prostorož</a></p>',
+            '<p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> Wir machen Wien, Changing Cities &amp; Prostorož</p>',
             text,
         )
         text = FEATURE_OPEN_RE.sub(lambda m: f'\n\n<div class="feature-box"><p><strong>{html.escape(m.group(1))}</strong></p>\n' if m.group(1) else '\n\n<div class="feature-box">\n', text)
