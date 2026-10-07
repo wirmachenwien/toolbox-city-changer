@@ -13,10 +13,9 @@ interface Props {
   lang?: Language;
   feedbackCorrect?: string;
   feedbackIncorrect?: string;
-  feedbackUnfinished?: string;
 }
 
-const { id, question, options, answer, lang = 'en', feedbackCorrect, feedbackIncorrect, feedbackUnfinished } = Astro.props;
+const { id, question, options, answer, lang = 'en', feedbackCorrect, feedbackIncorrect } = Astro.props;
 ---
 <form
   class="quiz"
@@ -24,7 +23,6 @@ const { id, question, options, answer, lang = 'en', feedbackCorrect, feedbackInc
   data-single="true"
   data-feedback-correct={feedbackCorrect ?? t(lang, 'questions.feedback-correct', 'Correct!')}
   data-feedback-incorrect={feedbackIncorrect ?? t(lang, 'questions.feedback-incorrect', 'Incorrect')}
-  data-feedback-unfinished={feedbackUnfinished ?? t(lang, 'questions.feedback-unfinished', "You haven't selected all the correct answers.")}
 >
   <fieldset>
     <legend>{question}</legend>

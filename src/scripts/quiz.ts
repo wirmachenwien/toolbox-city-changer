@@ -9,6 +9,9 @@ export function initQuiz(): void {
       const inputs = [...form.querySelectorAll<HTMLInputElement>('input[type="checkbox"], input[type="radio"]')];
       const checked = inputs.filter((input) => input.checked);
       const single = form.dataset.single === 'true';
+      // Single choice needs no unfinished state: with nothing selected there
+      // is nothing to grade, so leave feedback untouched.
+      if (single && checked.length === 0) return;
       let state: 'correct' | 'incorrect' | 'unfinished';
       if (checked.length === 0) {
         state = 'unfinished';
@@ -32,18 +35,20 @@ export function initQuiz(): void {
   }
 }
 
-/** Stamp proper check/cross icons onto the options: every correct option gets
- *  a check, wrongly selected options get a cross. Icons are cloned from the
- *  templates rendered with the form, so the SVG markup stays in Icon.astro
- *  (decorative only; the result is announced via the live feedback line). */
+/** Stamp check/cross icons onto selected options only: correctly selected
+ *  options get a check, wrongly selected ones get a cross. Unselected
+ *  options stay unmarked, so an unselected correct answer is never spoiled.
+ *  Icons are cloned from the templates rendered with the form, so the SVG
+ *  markup stays in Icon.astro (decorative only; the result is announced
+ *  via the live feedback line). */
 function markOptions(form: HTMLFormElement, inputs: HTMLInputElement[]): void {
   const correctTemplate = form.querySelector<HTMLTemplateElement>('[data-icon-correct]');
   const incorrectTemplate = form.querySelector<HTMLTemplateElement>('[data-icon-incorrect]');
   for (const input of inputs) {
     const label = input.closest('label');
     label?.querySelector('[data-mark]')?.remove();
+    if (!input.checked) continue;
     const isCorrect = input.hasAttribute('data-correct');
-    if (!isCorrect && !input.checked) continue;
     const icon = (isCorrect ? correctTemplate : incorrectTemplate)?.content.firstElementChild?.cloneNode(true);
     if (!label || !icon) continue;
     const mark = document.createElement('span');
