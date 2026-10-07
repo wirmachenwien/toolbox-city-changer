@@ -1,12 +1,5 @@
 {
-  "organisation": "Wir machen Wien",
-  "url": "https://wirmachen.wien/blog/von-berlin-und-ljubljana-lernen-drei-neue-workshops/",
-  "email": "info@wirmachen.wien",
-  "name": "Toolbox für City Changer",
-  "description": "Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož aus dem Erasmus+-Projekt Toolbox für City Changer.",
-  "logo": "logo.svg",
-  "image": "cover.jpg",
-  "credit": "Ein Handbuch von <a href=\"https://wirmachen.wien\">Wir machen Wien</a> im Rahmen der Toolbox für City Changer.",
-  "language": "de",
-  "version": "1.0.0"
+  "name": "Toolbox for City Changers",
+  "description": "A handbook by Wir machen Wien, Changing Cities and Prostorož from the Erasmus+ project Toolbox for City Changers.",
+  "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>"
 }

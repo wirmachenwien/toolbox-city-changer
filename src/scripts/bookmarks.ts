@@ -219,6 +219,10 @@ function initBookmarkGutter(): void {
   let targets = collectTargets(proseEl);
   let pendingIndex: number | null = null;
   let anchorCounter = 0;
+  /** Element highlighted by bookmark navigation (until navigating away). */
+  let flashed: HTMLElement | null = null;
+  /** Line currently highlighted by gutter hover/focus (preserved on flash). */
+  let hoverIndex: number | null = null;
   /** Gutter strip the pointer must be in for aim mode (px, article-relative). */
   let pinLeft = 0;
   let aiming = false;
@@ -228,7 +232,26 @@ function initBookmarkGutter(): void {
     readMarks().filter((mark) => (mark.page || '') === location.pathname);
 
   function setHighlight(index: number | null): void {
-    targets.forEach((target, i) => target.classList.toggle(TARGET_HIGHLIGHT, i === index));
+    hoverIndex = index;
+    targets.forEach((target, i) =>
+      target.classList.toggle(TARGET_HIGHLIGHT, i === index || target === flashed),
+    );
+  }
+
+  /** Temporarily highlight a navigated-to bookmark target. The highlight
+   *  stays until the user navigates away (another anchor or history step). */
+  function clearFlash(): void {
+    const element = flashed;
+    flashed = null;
+    if (element && element !== targets[hoverIndex ?? -1]) {
+      element.classList.remove(TARGET_HIGHLIGHT);
+    }
+  }
+
+  function flashTarget(element: HTMLElement): void {
+    clearFlash();
+    flashed = element;
+    element.classList.add(TARGET_HIGHLIGHT);
   }
 
   function placePin(pin: HTMLElement, target: HTMLElement): void {
@@ -370,10 +393,11 @@ function initBookmarkGutter(): void {
     if (pendingIndex !== null && targets[pendingIndex]) parkPin(pendingIndex);
   }
 
-  function scrollToAnchor(anchor: string): void {
+  function scrollToAnchor(anchor: string, flash = false): void {
     if (!anchor) return;
     const target = document.getElementById(anchor);
-    if (!target) return;
+    if (!(target instanceof HTMLElement)) return;
+    if (flash) flashTarget(target);
     requestAnimationFrame(() => {
       const header = document.querySelector<HTMLElement>('.site-head');
       const headerHeight = header?.getBoundingClientRect().height ?? 0;
@@ -382,8 +406,14 @@ function initBookmarkGutter(): void {
     });
   }
 
+  /** Whether an anchor belongs to a bookmark on this page. */
+  function isBookmarkAnchor(anchor: string): boolean {
+    return !!anchor && pageMarks().some((mark) => mark.anchor === anchor);
+  }
+
   function scrollToCurrentHash(): void {
-    scrollToAnchor(anchorFromUrl(location.hash));
+    const anchor = anchorFromUrl(location.hash);
+    scrollToAnchor(anchor, isBookmarkAnchor(anchor));
   }
 
   // Aim mode lives only in the gutter strip: hovering the pin — or the
@@ -523,8 +553,24 @@ function initBookmarkGutter(): void {
     if (url.pathname !== location.pathname || !url.hash) return;
     event.preventDefault();
     history.pushState(null, '', `${url.pathname}${url.hash}`);
-    scrollToAnchor(anchorFromUrl(url.hash));
+    scrollToAnchor(anchorFromUrl(url.hash), true);
   });
+
+  // The bookmark highlight is temporary: navigating to another in-page
+  // anchor or history entry clears it (or moves it to the new bookmark).
+  // pushState-based bookmark navigation above replaces the flash explicitly
+  // instead, since pushState fires neither event.
+  function refreshFlashFromHash(): void {
+    const anchor = anchorFromUrl(location.hash);
+    const target = anchor ? document.getElementById(anchor) : null;
+    if (target instanceof HTMLElement && isBookmarkAnchor(anchor)) {
+      flashTarget(target);
+    } else {
+      clearFlash();
+    }
+  }
+  window.addEventListener('hashchange', refreshFlashFromHash);
+  window.addEventListener('popstate', refreshFlashFromHash);
 }
 
 export function initBookmarks(): void {
