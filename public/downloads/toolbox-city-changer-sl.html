@@ -3,66 +3,44 @@
 <!-- pdf, sl --><style>/* Print stylesheet for the WeasyPrint PDF pipeline (scripts/build-pdf.py).
    Screen styles live in global.css; this file only ships to print.
    The font url() paths below are logical: build-pdf.py rewrites them to
-   file:// URIs of the self-hosted Source Serif 4 files so the PDF embeds
+   file:// URIs of the self-hosted Newsreader files so the PDF embeds
    the same body font as the website. */
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-Regular.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-Bold.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-Italic.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-Italic.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-BoldItalic.ttf") format("truetype");
 }
 
-/* Self-hosted Source Sans 3 (OFL): the PDF's sans counterpart to the
-   site's system-ui stack, embedded so headings and captions render
-   identically on every platform instead of falling back to whatever
-   sans-serif Pango happens to resolve (e.g. Verdana or DejaVu Sans). */
+/* Self-hosted Clarity City Bold (OFL): the PDF's title face, embedded so
+   headings and the cover render identically on every platform instead of
+   falling back to whatever sans-serif Pango happens to resolve. */
 @font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
+  font-family: "Clarity City";
   font-style: normal;
   font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-Italic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-BoldItalic.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/ClarityCity-Bold.ttf") format("truetype");
 }
 @page {
   size: A4;
@@ -71,12 +49,12 @@
     /* Chapter title on follow-up pages only: first-except stays empty
        on the page where the chapter heading sets the string. */
     content: string(chapter, first-except);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
     color: #555;
   }
   @bottom-center {
     content: counter(page);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
   }
 }
 
@@ -91,7 +69,7 @@
 }
 
 html {
-  font: 11pt/1.5 "Source Serif 4", Georgia, "Times New Roman", serif;
+  font: 11.5pt/1.5 "Newsreader", Georgia, "Times New Roman", serif;
   color: #111;
 }
 
@@ -100,7 +78,8 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -128,16 +107,54 @@ section.chapter {
   page-break-before: always;
 }
 
+/* Full-bleed cover: the hero photo fills the entire first page with no
+   margins or frames (the image URL is injected inline by build-pdf.py);
+   the metadata sits on top in a bottom-anchored scrim so it stays legible
+   on any photo. */
 .cover-sheet {
   page: cover;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding-top: 40mm;
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
 }
 
-.cover-sheet img {
-  max-width: 120mm;
+.cover-sheet .cover-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.45) 40%,
+    rgba(0, 0, 0, 0.05) 70%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+.cover-sheet .cover-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18mm 16mm 14mm;
+}
+
+.cover-sheet h1 {
+  font-size: 34pt;
+  line-height: 1.1;
+  color: #fff;
+  margin: 0 0 8pt;
+}
+
+.cover-sheet .cover-sub {
+  font-size: 13pt;
+  margin: 0;
 }
 
 .frontmatter-sheet {
@@ -153,7 +170,7 @@ figure img {
 }
 
 figcaption {
-  font: 8.5pt "Source Sans 3", system-ui, sans-serif;
+  font: 9pt "Clarity City", system-ui, sans-serif;
   color: #444;
   margin-top: 4pt;
 }
@@ -183,8 +200,8 @@ blockquote {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-family: "Source Sans 3", system-ui, sans-serif;
-  font-size: 9.5pt;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-size: 10pt;
 }
 
 th, td {
@@ -195,12 +212,12 @@ th, td {
 
 .footnote {
   float: footnote;
-  font-size: 8.5pt;
+  font-size: 9pt;
 }
 
 .cc-badge {
   display: block;
-  font: 9pt "Source Sans 3", system-ui, sans-serif;
+  font: 9.5pt "Clarity City", system-ui, sans-serif;
   margin: 8pt 0;
 }
 
@@ -215,7 +232,7 @@ a {
 }
 </style>
 <title>Zbirka orodij za spreminjanje mest</title></head><body>
-<section class="cover-sheet"><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/site/supergraetzel-favoriten-poller-opener.jpg" alt=""/><h1>Zbirka orodij za spreminjanje mest</h1><p>Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož</p><p>Wir machen Wien</p></section>
+<section class="cover-sheet" style="background-image: url('file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/lendplatz-graz-tactical-urbanism.jpg')"><div class="cover-scrim"></div><div class="cover-text"><h1>Zbirka orodij za spreminjanje mest</h1><p class="cover-sub">Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož</p></div></section>
 <section class="chapter frontmatter-sheet"><h1>Zbirka orodij za spreminjanje mest</h1><p>Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož</p><p>Wir machen Wien</p><p>Changing Cities; Prostorož</p><p>Wir machen Wien</p></section>
 <section class="chapter frontmatter-sheet"><h1>O nas</h1><p>Priročnik organizacij <a href="https://wirmachen.wien">Wir machen Wien</a>, <a href="https://changing-cities.org">Changing Cities</a> in <a href="https://www.prostoroz.org">Prostorož</a> iz projekta Erasmus+ Zbirka orodij za spreminjanje mest.</p>
 <p>Vsebino sta pripravila Fricka Lindemann in [nadaljnji sodelujoči], oblikovanje priročnika pa Bernhard Hayden.</p>
@@ -238,7 +255,7 @@ a {
 <li><a href="#file-0-0-cover">Naslovnica</a></li><li><a href="#file-0-1-titlepage">Naslovna stran</a></li><li><a href="#file-0-2-about">O nas</a></li><li><a href="#file-0-3-contents">Vsebina</a></li><li><a href="#file-01">1. Zakaj ta zbirka orodij?</a></li><li><a href="#file-02">2. Kako začeti s superbloki</a></li><li><a href="#file-03">3. Taktični urbanizem in oblikovanje ulic</a></li><li><a href="#file-04">4. Mobilizacija in strategije sprememb</a></li><li><a href="#file-05">5. Spremljanje: pokažimo učinek</a></li><li><a href="#file-06">6. Delovni načrt in viri</a></li>
 </ul></section>
 <section class="chapter" id="file-01">
-<h1><strong>1.</strong> Zakaj ta zbirka orodij?</h1>
+<h1>1. Zakaj ta zbirka orodij?</h1>
 <p>»Zbirka orodij za spreminjanje mest« je namenjena ljudem, ki želijo svojo sosesko narediti varnejšo, bolj zeleno, vključujočo in odpornejšo na podnebne spremembe ter za to potrebujejo konkretna orodja. Povezuje izkušnje z Dunaja, iz Berlina in Ljubljane [od x, y in z, ki prispevajo to in to].</p>
 <h2>Ta priročnik je za vse, ki se sprašujete:</h2>
 <blockquote>
@@ -266,7 +283,7 @@ a {
 <p>[Navedba podpore Erasmus]</p>
 </section>
 <section class="chapter" id="file-02">
-<h1><strong>2.</strong> Kako začeti s superbloki</h1>
+<h1>2. Kako začeti s superbloki</h1>
 <p>Superbloki zmanjšujejo tranzitni promet in ustvarjajo prostor za zadrževanje, hojo, kolesarjenje, ozelenitev in sosedsko življenje. Barcelona je koncept uveljavila mednarodno; Berlin je s Kiezblocks razvil različico, ki močno temelji na lokalnih pobudah; Dunaj ima kakovostno izvedbo v projektu Supergrätzl Favoriten in zdaj razpravlja o cenejših »soseskah z malo prometa«.</p>
 <figure><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/berlin-kiezblock-bellermann.jpg" alt="Začasna zapora in prostor za zadrževanje v Bellermannkiezblocku v Berlin-Mitte."/><figcaption>Bellermannkiezblock v Berlin-Mitte. Fotografija: BA SGA Mitte, L. Fritsche.</figcaption></figure>
 
@@ -307,7 +324,7 @@ a {
 <p>Javna stran delavnic omenja posnetke serije, vendar v pregledanem gradivu za to delavnico ni bilo preverljive povezave na YouTube. Povezavo dodajte sem, ko bo posnetek objavljen ali interno odobren za objavo.</p>
 </section>
 <section class="chapter" id="file-03">
-<h1><strong>3.</strong> Taktični urbanizem in oblikovanje ulic</h1>
+<h1>3. Taktični urbanizem in oblikovanje ulic</h1>
 <p>Taktični urbanizem pomeni poceni, začasne posege v mestni prostor, s katerimi lahko spremembe preizkusimo, jih pokažemo in politično pospešimo. Na Dunaju je to pomembno, ker mestna oblast razmišlja o taktičnem urbanizmu in »soseskah z malo prometa« kot cenejših oblikah umirjanja prometa.</p>
 <figure><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/lendplatz-graz-tactical-urbanism.jpg" alt="Pisane ulične površine na trgu Lendplatz v Gradcu."/><figcaption>Lendplatz v Gradcu kot primer prometno umirjenih območij srečevanja z barvnimi oznakami. Fotografija: mesto Gradec, Simon Gostentschnigg.</figcaption></figure>
 
@@ -369,7 +386,7 @@ a {
 </ul>
 </section>
 <section class="chapter" id="file-04">
-<h1><strong>4.</strong> Mobilizacija in strategije sprememb</h1>
+<h1>4. Mobilizacija in strategije sprememb</h1>
 <p>Mobilizacija je več kot doseg. Pobuda mora razumeti, zakaj ljudje sodelujejo, kakšno zgodbo o spremembah pripoveduje in na katerih predpostavkah temelji njena strategija.</p>
 <h2>Lastna zgodba</h2>
 <p>Zgodba o angažiranju odgovarja na štiri vprašanja:</p>
@@ -423,7 +440,7 @@ a {
 </ul>
 </section>
 <section class="chapter" id="file-05">
-<h1><strong>5.</strong> Spremljanje: pokažimo učinek</h1>
+<h1>5. Spremljanje: pokažimo učinek</h1>
 <p>Spremljanje pomeni dokumentiranje napredka in učinkov, da se lahko pobuda uči, komunicira in politično argumentira. Ni nujno zapleteno. Ključno je, da pred akcijo določimo, kaj bomo opazovali.</p>
 <figure><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/ltn-tool-czerninviertel.jpg" alt="Posnetek zaslona orodja LTN s scenarijem soseske z malo prometa na Dunaju."/><figcaption>Orodje LTN pomaga preizkusiti prometne filtre in preusmeritve v scenariju soseske. Vir: A/B Street LTN Tool.</figcaption></figure>
 
@@ -460,7 +477,7 @@ a {
 <p>Napoved delavnic za tretje srečanje navaja mobilizacijo in orodja za spremljanje. V javno dostopnem gradivu ni bilo preverljive videopovezave. Povezavo dodajte sem, ko bo posnetek objavljen ali interno odobren za objavo.</p>
 </section>
 <section class="chapter" id="file-06">
-<h1><strong>6.</strong> Delovni načrt in viri</h1>
+<h1>6. Delovni načrt in viri</h1>
 <p>To poglavje povzema zbirko orodij v obliki delovnega načrta. Uporabite ga lahko kot kontrolni seznam za novo ali obstoječo sosedsko pobudo.</p>
 <h2>30-dnevni začetni načrt</h2>
 <h3>1. teden: Problem in območje</h3>

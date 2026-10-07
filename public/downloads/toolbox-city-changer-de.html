@@ -3,66 +3,44 @@
 <!-- pdf, de --><style>/* Print stylesheet for the WeasyPrint PDF pipeline (scripts/build-pdf.py).
    Screen styles live in global.css; this file only ships to print.
    The font url() paths below are logical: build-pdf.py rewrites them to
-   file:// URIs of the self-hosted Source Serif 4 files so the PDF embeds
+   file:// URIs of the self-hosted Newsreader files so the PDF embeds
    the same body font as the website. */
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-Regular.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-Bold.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-Italic.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-Italic.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/NewsreaderText-BoldItalic.ttf") format("truetype");
 }
 
-/* Self-hosted Source Sans 3 (OFL): the PDF's sans counterpart to the
-   site's system-ui stack, embedded so headings and captions render
-   identically on every platform instead of falling back to whatever
-   sans-serif Pango happens to resolve (e.g. Verdana or DejaVu Sans). */
+/* Self-hosted Clarity City Bold (OFL): the PDF's title face, embedded so
+   headings and the cover render identically on every platform instead of
+   falling back to whatever sans-serif Pango happens to resolve. */
 @font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
+  font-family: "Clarity City";
   font-style: normal;
   font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 400;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-Italic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 700;
-  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/SourceSans3-BoldItalic.ttf") format("truetype");
+  src: url("file:///Users/nini/wmw-erasmus-handbuch/src/assets/fonts/ClarityCity-Bold.ttf") format("truetype");
 }
 @page {
   size: A4;
@@ -71,12 +49,12 @@
     /* Chapter title on follow-up pages only: first-except stays empty
        on the page where the chapter heading sets the string. */
     content: string(chapter, first-except);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
     color: #555;
   }
   @bottom-center {
     content: counter(page);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
   }
 }
 
@@ -91,7 +69,7 @@
 }
 
 html {
-  font: 11pt/1.5 "Source Serif 4", Georgia, "Times New Roman", serif;
+  font: 11.5pt/1.5 "Newsreader", Georgia, "Times New Roman", serif;
   color: #111;
 }
 
@@ -100,7 +78,8 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -128,16 +107,54 @@ section.chapter {
   page-break-before: always;
 }
 
+/* Full-bleed cover: the hero photo fills the entire first page with no
+   margins or frames (the image URL is injected inline by build-pdf.py);
+   the metadata sits on top in a bottom-anchored scrim so it stays legible
+   on any photo. */
 .cover-sheet {
   page: cover;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding-top: 40mm;
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
 }
 
-.cover-sheet img {
-  max-width: 120mm;
+.cover-sheet .cover-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.45) 40%,
+    rgba(0, 0, 0, 0.05) 70%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+.cover-sheet .cover-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18mm 16mm 14mm;
+}
+
+.cover-sheet h1 {
+  font-size: 34pt;
+  line-height: 1.1;
+  color: #fff;
+  margin: 0 0 8pt;
+}
+
+.cover-sheet .cover-sub {
+  font-size: 13pt;
+  margin: 0;
 }
 
 .frontmatter-sheet {
@@ -153,7 +170,7 @@ figure img {
 }
 
 figcaption {
-  font: 8.5pt "Source Sans 3", system-ui, sans-serif;
+  font: 9pt "Clarity City", system-ui, sans-serif;
   color: #444;
   margin-top: 4pt;
 }
@@ -183,8 +200,8 @@ blockquote {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-family: "Source Sans 3", system-ui, sans-serif;
-  font-size: 9.5pt;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-size: 10pt;
 }
 
 th, td {
@@ -195,12 +212,12 @@ th, td {
 
 .footnote {
   float: footnote;
-  font-size: 8.5pt;
+  font-size: 9pt;
 }
 
 .cc-badge {
   display: block;
-  font: 9pt "Source Sans 3", system-ui, sans-serif;
+  font: 9.5pt "Clarity City", system-ui, sans-serif;
   margin: 8pt 0;
 }
 
@@ -215,7 +232,7 @@ a {
 }
 </style>
 <title>Toolbox für City Changer</title></head><body>
-<section class="cover-sheet"><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/site/supergraetzel-favoriten-poller-opener.jpg" alt=""/><h1>Toolbox für City Changer</h1><p>Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož</p><p>Wir machen Wien</p></section>
+<section class="cover-sheet" style="background-image: url('file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/lendplatz-graz-tactical-urbanism.jpg')"><div class="cover-scrim"></div><div class="cover-text"><h1>Toolbox für City Changer</h1><p class="cover-sub">Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož</p></div></section>
 <section class="chapter frontmatter-sheet"><h1>Toolbox für City Changer</h1><p>Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož</p><p>Wir machen Wien</p><p>Changing Cities; Prostorož</p><p>Wir machen Wien</p></section>
 <section class="chapter frontmatter-sheet"><h1>Über</h1><p>Ein Handbuch von <a href="https://wirmachen.wien">Wir machen Wien</a>, <a href="https://changing-cities.org">Changing Cities</a> und <a href="https://www.prostoroz.org">Prostorož</a> aus dem Erasmus+-Projekt Toolbox für City Changer.</p>
 <p>Die Inhalte stammen von Fricka Lindemann und [weiteren Autor:innen], die Gestaltung des Handbuchs von Bernhard Hayden.</p>
@@ -238,7 +255,7 @@ a {
 <li><a href="#file-0-0-cover">Cover</a></li><li><a href="#file-0-1-titlepage">Titel</a></li><li><a href="#file-0-2-about">Über</a></li><li><a href="#file-0-3-contents">Inhalt</a></li><li><a href="#file-01">1. Wozu diese Toolbox?</a></li><li><a href="#file-02">2. Superblocks starten</a></li><li><a href="#file-03">3. Tactical Urbanism und Street Design</a></li><li><a href="#file-04">4. Mobilisierung und Strategien des Wandels</a></li><li><a href="#file-05">5. Monitoring: Wirkung sichtbar machen</a></li><li><a href="#file-06">6. Arbeitsplan und Quellen</a></li>
 </ul></section>
 <section class="chapter" id="file-01">
-<h1><strong>1.</strong> Wozu diese Toolbox?</h1>
+<h1>1. Wozu diese Toolbox?</h1>
 <p>Die "Toolbox für City Changer" richtet sich an Menschen, die ihr Grätzl sicherer, grüner, inklusiver und klimagerechter machen wollen und dafür konkrete Werkzeuge brauchen. Dazu verbindet Erfahrungen aus Wien, Berlin und Ljubljana [von x,y und z die jeweils das und das beitragen]. </p>
 <h2>Dieses Handbuch ist für alle, die sich fragen:</h2>
 <blockquote>
@@ -274,7 +291,7 @@ a {
 <p>[Credits für Erasmus]</p>
 </section>
 <section class="chapter" id="file-02">
-<h1><strong>2.</strong> Superblocks starten</h1>
+<h1>2. Superblocks starten</h1>
 <p>Superblocks reduzieren Durchzugsverkehr und schaffen Raum für Aufenthalt, Gehen, Radfahren, Begrünung und Nachbarschaft. Barcelona machte das Konzept international bekannt; Berlin entwickelte mit den Kiezblocks eine stark initiativengetragene Variante; Wien hat mit dem Supergrätzl Favoriten eine hochwertige Umsetzung und diskutiert inzwischen günstigere "Low-Traffic-Grätzl".</p>
 <figure><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/berlin-kiezblock-bellermann.jpg" alt="Temporäre Sperre und Aufenthaltsraum im Bellermannkiezblock in Berlin-Mitte."/><figcaption>Bellermannkiezblock in Berlin-Mitte. Foto: BA SGA Mitte, L. Fritsche.</figcaption></figure>
 
@@ -349,7 +366,7 @@ a {
 <p>Die öffentliche Workshopseite verweist auf Aufzeichnungen der Reihe, aber im recherchierten Material war für diesen Workshop kein verifizierbarer YouTube-Link sichtbar. Fügt den Link hier ein, sobald die Aufnahme veröffentlicht oder intern freigegeben ist.</p>
 </section>
 <section class="chapter" id="file-03">
-<h1><strong>3.</strong> Tactical Urbanism und Street Design</h1>
+<h1>3. Tactical Urbanism und Street Design</h1>
 <p>Tactical Urbanism meint kostengünstige, temporäre Eingriffe im Stadtraum, mit denen Veränderungen getestet, sichtbar gemacht und politisch beschleunigt werden können. In Wien ist das relevant, weil die Stadtregierung Tactical Urbanism und "Low-Traffic-Grätzl" als günstigere Formen der Verkehrsberuhigung in den Blick nimmt.</p>
 <figure><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/lendplatz-graz-tactical-urbanism.jpg" alt="Bunte Straßenflächen am Lendplatz in Graz."/><figcaption>Lendplatz Graz als Beispiel für verkehrsberuhigte und farblich markierte Begegnungszonen. Foto: Stadt Graz, Simon Gostentschnigg.</figcaption></figure>
 
@@ -418,7 +435,7 @@ a {
 <section class="endnotes"><ol><li id="note-ma46">Zuständigkeiten können sich je nach Maßnahme unterscheiden. Frühzeitige Abstimmung mit Bezirk und Verwaltung verhindert, dass eine gute Idee an formalen Fragen scheitert.</li></ol></section>
 </section>
 <section class="chapter" id="file-04">
-<h1><strong>4.</strong> Mobilisierung und Strategien des Wandels</h1>
+<h1>4. Mobilisierung und Strategien des Wandels</h1>
 <p>Mobilisierung ist mehr als Reichweite. Eine Initiative muss verstehen, warum Menschen mitmachen, welche Geschichte sie über Veränderung erzählt und welche Annahmen hinter ihrer Strategie stehen.</p>
 <blockquote class="pullquote">
 
@@ -506,7 +523,7 @@ a {
 </ul>
 </section>
 <section class="chapter" id="file-05">
-<h1><strong>5.</strong> Monitoring: Wirkung sichtbar machen</h1>
+<h1>5. Monitoring: Wirkung sichtbar machen</h1>
 <p>Monitoring bedeutet, Fortschritt und Wirkung so zu dokumentieren, dass eine Initiative lernen, kommunizieren und politisch argumentieren kann. Es muss nicht kompliziert sein. Entscheidend ist, vor einer Aktion festzulegen, was beobachtet wird.</p>
 <figure><img src="file:///Users/nini/wmw-erasmus-handbuch/src/assets/book/ltn-tool-czerninviertel.jpg" alt="Screenshot des LTN-Tools mit einem Low-Traffic-Neighbourhood-Szenario für Wien."/><figcaption>Das LTN-Tool hilft, Verkehrsfilter und Umleitungen in einem Grätzl-Szenario zu testen. Quelle: A/B Street LTN Tool.</figcaption></figure>
 
@@ -580,7 +597,7 @@ a {
 <p>Die Workshopankündigung nennt für den dritten Termin Mobilisierung und Monitoring-Tools. Im öffentlich recherchierbaren Material war kein verifizierbarer Videolink sichtbar. Fügt den Link hier ein, sobald die Aufnahme veröffentlicht oder intern freigegeben ist.</p>
 </section>
 <section class="chapter" id="file-06">
-<h1><strong>6.</strong> Arbeitsplan und Quellen</h1>
+<h1>6. Arbeitsplan und Quellen</h1>
 <p>Dieses Kapitel Fasst die Toolbox als Arbeitsplan zusammen. Es kann als Checkliste für eine neue oder bestehende Grätzlinitiative dienen.</p>
 <h2>30-Tage-Startplan</h2>
 <h3>Woche 1: Problem und Gebiet</h3>
