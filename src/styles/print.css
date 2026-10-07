@@ -105,16 +105,54 @@ section.chapter {
   page-break-before: always;
 }
 
+/* Full-bleed cover: the hero photo fills the entire first page with no
+   margins or frames (the image URL is injected inline by build-pdf.py);
+   the metadata sits on top in a bottom-anchored scrim so it stays legible
+   on any photo. */
 .cover-sheet {
   page: cover;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding-top: 40mm;
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
 }
 
-.cover-sheet img {
-  max-width: 120mm;
+.cover-sheet .cover-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.45) 40%,
+    rgba(0, 0, 0, 0.05) 70%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+.cover-sheet .cover-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18mm 16mm 14mm;
+}
+
+.cover-sheet h1 {
+  font-size: 34pt;
+  line-height: 1.1;
+  color: #fff;
+  margin: 0 0 8pt;
+}
+
+.cover-sheet .cover-sub {
+  font-size: 13pt;
+  margin: 0;
 }
 
 .frontmatter-sheet {

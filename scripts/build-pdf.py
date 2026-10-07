@@ -190,7 +190,9 @@ def build_document(lang: str) -> str:
     toc: list[dict] = works["products"]["pdf"]["toc"]
     title = works["title"]
     # The cover is generated from the start-page hero image + metadata.
-    cover_uri = image_uri(front_opener(lang) or works.get("image") or "cover.jpg")
+    cover_file = front_opener(lang) or works.get("image") or ""
+    cover_uri = image_uri(cover_file) if cover_file else ""
+    cover_style = f"background-image: url('{cover_uri}')" if cover_uri else ""
 
     parts = [
         "<!doctype html>",
@@ -204,11 +206,13 @@ def build_document(lang: str) -> str:
             continue
         md_text = path.read_text(encoding="utf-8")
         if slug == "0-0-cover":
+            style_attr = f' style="{cover_style}"' if cover_style else ""
             parts.append(
-                '<section class="cover-sheet">'
-                f'<img src="{cover_uri}" alt=""/>'
-                f"<h1>{title}</h1><p>{works.get('subtitle', '')}</p>"
-                f"<p>{works.get('creator', '')}</p></section>"
+                f'<section class="cover-sheet"{style_attr}>'
+                '<div class="cover-scrim"></div>'
+                '<div class="cover-text">'
+                f"<h1>{title}</h1><p class=\"cover-sub\">{works.get('subtitle', '')}</p>"
+                "</div></section>"
             )
         elif slug == "0-1-titlepage":
             parts.append(

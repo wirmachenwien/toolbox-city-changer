@@ -41,6 +41,16 @@ COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
 TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
 CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
 OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
+
+# Body and title faces embedded in every EPUB so covers and chapters render
+# in Newsreader/Clarity City on any reader.
+EPUB_FONTS = (
+    "NewsreaderText-Regular.ttf",
+    "NewsreaderText-Italic.ttf",
+    "NewsreaderText-Bold.ttf",
+    "NewsreaderText-BoldItalic.ttf",
+    "ClarityCity-Bold.ttf",
+)
 FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
 FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
 PULL_OPEN_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>')
@@ -129,6 +139,7 @@ class EpubBook:
         self.out_path = out_path
         self.uid = works.get("identifier") or f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, f'toolbox-city-changer-{lang}')}"
         self.images: dict[str, str] = {}
+        self.fonts: dict[str, str] = {}
         self.chapters: list[dict[str, str]] = []
         self.cover_image: str | None = None
 
@@ -141,6 +152,16 @@ class EpubBook:
         if key not in self.images:
             self.images[key] = f"images/{source.name}"
         return self.images[key]
+
+    def add_font(self, filename: str) -> str:
+        source = ASSETS / "fonts" / filename
+        if not source.exists():
+            print(f"warning: font not found: {filename}")
+            return filename
+        key = source.resolve().as_posix()
+        if key not in self.fonts:
+            self.fonts[key] = f"fonts/{source.name}"
+        return self.fonts[key]
 
     def convert_mdx(self, text: str) -> str:
         text = FRONTMATTER_RE.sub("", text, count=1)
@@ -190,7 +211,11 @@ class EpubBook:
         toc: list[dict] = self.works["products"]["pdf"]["toc"]
         labels = {entry["file"]: entry["label"] for entry in toc}
 
-        cover_name = front_opener(self.lang) or self.works.get("image") or "cover.jpg"
+        for filename in EPUB_FONTS:
+            self.add_font(filename)
+
+        cover_name = front_opener(self.lang) or self.works.get("image") or ""
+        self.cover_image = self.add_image(cover_name) if cover_name else ""
         self.cover_image = self.add_image(cover_name)
 
         for slug in files:
@@ -201,11 +226,19 @@ class EpubBook:
                 continue
             md_text = path.read_text(encoding="utf-8")
             if slug == "0-0-cover":
+                cover_img = (
+                    f'<img class="cover-bg" src="{html.escape(self.cover_image, quote=True)}" alt="" />'
+                    if self.cover_image
+                    else ""
+                )
                 body = (
-                    f'<section class="cover"><img src="{html.escape(self.cover_image, quote=True)}" alt="" />'
-                    f'<h1>{html.escape(self.works["title"])}</h1>'
-                    f'<p>{html.escape(self.works.get("subtitle", ""))}</p>'
-                    f'<p>{html.escape(self.works.get("creator", ""))}</p></section>'
+                    '<section class="cover-full">'
+                    f"{cover_img}"
+                    '<div class="cover-scrim"></div>'
+                    '<div class="cover-text">'
+                    f"<h1>{html.escape(self.works['title'])}</h1>"
+                    f"<p class=\"cover-sub\">{html.escape(self.works.get('subtitle', ''))}</p>"
+                    "</div></section>"
                 )
             elif slug == "0-1-titlepage":
                 body = (
@@ -274,6 +307,10 @@ class EpubBook:
             f'<item id="chapter-{index}" href="{xml_escape(chapter["filename"])}" media-type="application/xhtml+xml"/>'
             for index, chapter in enumerate(self.chapters, start=1)
         )
+        font_items = "\n".join(
+            f'<item id="font-{index}" href="{xml_escape(href)}" media-type="font/ttf"/>'
+            for index, href in enumerate(self.fonts.values(), start=1)
+        )
         spine_items = "\n".join(
             f'<itemref idref="chapter-{index}"/>' for index, _ in enumerate(self.chapters, start=1)
         )
@@ -303,6 +340,7 @@ class EpubBook:
                 '<item id="style" href="styles/epub.css" media-type="text/css"/>',
                 chapter_items,
                 "\n".join(image_items),
+                font_items,
                 "</manifest>",
                 "<spine>",
                 spine_items,
@@ -319,6 +357,7 @@ class EpubBook:
             meta_inf = base / "META-INF"
             (oebps / "styles").mkdir(parents=True)
             (oebps / "images").mkdir(parents=True)
+            (oebps / "fonts").mkdir(parents=True)
             meta_inf.mkdir()
 
             (base / "mimetype").write_text("application/epub+zip", encoding="ascii")
@@ -339,6 +378,8 @@ class EpubBook:
                 )
             for source_key, href in self.images.items():
                 shutil.copyfile(source_key, oebps / href)
+            for source_key, href in self.fonts.items():
+                shutil.copyfile(source_key, oebps / href)
 
             self.out_path.parent.mkdir(parents=True, exist_ok=True)
             with zipfile.ZipFile(self.out_path, "w") as epub:
@@ -348,11 +389,43 @@ class EpubBook:
                         epub.write(path, path.relative_to(base).as_posix(), compress_type=zipfile.ZIP_DEFLATED)
 
 
-EPUB_CSS = """body {
-  font-family: serif;
+EPUB_CSS = """@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/NewsreaderText-Regular.ttf");
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/NewsreaderText-Bold.ttf");
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 400;
+  src: url("../fonts/NewsreaderText-Italic.ttf");
+}
+@font-face {
+  font-family: "Newsreader";
+  font-style: italic;
+  font-weight: 700;
+  src: url("../fonts/NewsreaderText-BoldItalic.ttf");
+}
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/ClarityCity-Bold.ttf");
+}
+body {
+  font-family: "Newsreader", Georgia, serif;
   line-height: 1.45;
 }
 h1, h2, h3 {
+  font-family: "Clarity City", Helvetica, sans-serif;
+  font-weight: 700;
   line-height: 1.15;
 }
 img {
@@ -367,11 +440,46 @@ figcaption {
   font-size: 0.9em;
   margin-top: 0.5em;
 }
-.cover {
-  text-align: center;
+/* Full-bleed cover: the hero photo fills the whole page with no margins or
+   frames; the metadata sits on top in a bottom-anchored scrim. */
+.cover-full {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  height: 100vh;
+  color: #fff;
 }
-.cover img {
-  margin: 0 auto 2em;
+.cover-full img.cover-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cover-full .cover-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.05) 70%, rgba(0, 0, 0, 0.25) 100%);
+}
+.cover-full .cover-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 8% 6%;
+}
+.cover-full h1 {
+  font-size: 2em;
+  color: #fff;
+  margin: 0 0 0.3em;
+}
+.cover-full .cover-sub {
+  font-size: 1.1em;
+  margin: 0;
 }
 """
 
