@@ -1,38 +1,49 @@
 /* Toolbox for City Changers — global stylesheet.
    Modern CSS, logical properties throughout so RTL locales mirror for free. */
 
-/* Self-hosted Source Serif 4 (OFL) so body copy renders identically
-   online and in the WeasyPrint PDF, which embeds the same files. */
+/* Self-hosted Newsreader Text (OFL, see OFL-Newsreader.txt) so body copy
+   renders identically online and in the WeasyPrint PDF, which embeds the
+   same files. Static instances at the text optical size (opsz 16). */
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-Regular.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-Regular.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-Bold.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-Bold.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-Italic.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-Italic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 700;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-BoldItalic.woff2") format("woff2");
+}
+
+/* Self-hosted Clarity City Bold (OFL, see OFL-ClarityCity.txt): the title
+   face, always set in bold. */
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/ClarityCity-Bold.woff2") format("woff2");
 }
 
 :root {
@@ -48,7 +59,8 @@
   --warn-soft: #fbf0dc;
   --radius: 0.6rem;
   --measure: 44rem;
-  --font-text: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-text: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-title: "Clarity City", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
 }
@@ -141,7 +153,7 @@ a:hover {
   gap: 0.6rem;
   color: var(--ink);
   text-decoration: none;
-  font-family: var(--font-ui);
+  font-family: var(--font-title);
   font-weight: 700;
   font-size: 1rem;
   margin-inline-end: auto;
@@ -429,7 +441,8 @@ a:hover {
 .prose h2,
 .prose h3,
 .prose h4 {
-  font-family: var(--font-ui);
+  font-family: var(--font-title);
+  font-weight: 700;
   line-height: 1.25;
   text-wrap: balance;
 }
@@ -1314,6 +1327,8 @@ a:hover {
 .sheet h1,
 .sheet h2,
 .sheet h3 {
+  font-family: var(--font-title);
+  font-weight: 700;
   line-height: 1.25;
   text-wrap: balance;
 }

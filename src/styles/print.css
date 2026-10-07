@@ -1,66 +1,44 @@
 /* Print stylesheet for the WeasyPrint PDF pipeline (scripts/build-pdf.py).
    Screen styles live in global.css; this file only ships to print.
    The font url() paths below are logical: build-pdf.py rewrites them to
-   file:// URIs of the self-hosted Source Serif 4 files so the PDF embeds
+   file:// URIs of the self-hosted Newsreader files so the PDF embeds
    the same body font as the website. */
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
-  src: url("fonts/SourceSerif4-Regular.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 700;
-  src: url("fonts/SourceSerif4-Bold.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 400;
-  src: url("fonts/SourceSerif4-Italic.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-Italic.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 700;
-  src: url("fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-BoldItalic.ttf") format("truetype");
 }
 
-/* Self-hosted Source Sans 3 (OFL): the PDF's sans counterpart to the
-   site's system-ui stack, embedded so headings and captions render
-   identically on every platform instead of falling back to whatever
-   sans-serif Pango happens to resolve (e.g. Verdana or DejaVu Sans). */
+/* Self-hosted Clarity City Bold (OFL): the PDF's title face, embedded so
+   headings and the cover render identically on every platform instead of
+   falling back to whatever sans-serif Pango happens to resolve. */
 @font-face {
-  font-family: "Source Sans 3";
-  font-style: normal;
-  font-weight: 400;
-  src: url("fonts/SourceSans3-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
+  font-family: "Clarity City";
   font-style: normal;
   font-weight: 700;
-  src: url("fonts/SourceSans3-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 400;
-  src: url("fonts/SourceSans3-Italic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 700;
-  src: url("fonts/SourceSans3-BoldItalic.ttf") format("truetype");
+  src: url("fonts/ClarityCity-Bold.ttf") format("truetype");
 }
 @page {
   size: A4;
@@ -69,12 +47,12 @@
     /* Chapter title on follow-up pages only: first-except stays empty
        on the page where the chapter heading sets the string. */
     content: string(chapter, first-except);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
     color: #555;
   }
   @bottom-center {
     content: counter(page);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
   }
 }
 
@@ -98,7 +76,8 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.25;
 }
 
