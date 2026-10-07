@@ -703,23 +703,27 @@ a:hover {
   transform: rotate(90deg);
 }
 
-/* Smooth open/close for any content height: the body collapses as a grid
-   row while the inner content clips. Pure CSS, so it works without
-   JavaScript and keeps native details semantics for assistive tech. */
-.accordion-body {
+.accordion-content {
+  padding: 0 1rem 1rem;
+}
+
+/* No-JS fallback fold for any content height: the body collapses as a grid
+   row while the inner content clips. When JavaScript drives the fold
+   (html.js-fold), these rules step aside so the two animations never fight.
+   Native details semantics hold in both cases for assistive tech. */
+html:not(.js-fold) .accordion-body {
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows 0.28s ease-out;
 }
 
-.accordion[open] > .accordion-body {
+html:not(.js-fold) .accordion[open] > .accordion-body {
   grid-template-rows: 1fr;
 }
 
-.accordion-content {
+html:not(.js-fold) .accordion-content {
   overflow: hidden;
   min-height: 0;
-  padding: 0 1rem 1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
