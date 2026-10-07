@@ -4,7 +4,7 @@
 // - math.enabled / math.source ("cdn" | "local")
 // - web.pagination / web.paginationType
 
-// - web.accordion / web.accordionLevel / web.accordionAutoClose
+// - web.accordion / web.accordionLevel
 // - web.svgInject, web.lazyload
 // - web.bookmarks.enabled / web.bookmarks.noteMaxLength
 // - web.nav.expandBooks / web.nav.projectNavPosition ("before" | "after")
@@ -31,7 +31,6 @@ const toggleSchema = z.object({
         .default('title-arrows'),
       accordion: z.boolean().default(false),
       accordionLevel: z.enum(['h2', 'h3']).default('h3'),
-      accordionAutoClose: z.boolean().default(false),
       svgInject: z.boolean().default(true),
       lazyload: z.boolean().default(true),
       bookmarks: z
@@ -65,7 +64,6 @@ const toggleSchema = z.object({
       paginationType: 'title-arrows',
       accordion: false,
       accordionLevel: 'h3',
-      accordionAutoClose: false,
       svgInject: true,
       lazyload: true,
       bookmarks: { enabled: true, noteMaxLength: 5000 },
@@ -100,7 +98,6 @@ export const settings: Settings = toggleSchema.parse({
       paginationType: 'title-arrows',
       accordion: false,
     accordionLevel: 'h3',
-    accordionAutoClose: false,
     svgInject: true,
     lazyload: true,
     bookmarks: { enabled: true, noteMaxLength: 5000 },

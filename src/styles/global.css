@@ -671,18 +671,16 @@ a:hover {
   font-style: italic;
 }
 
-/* ---------- Accordion / expandable (native details) ---------- */
+/* ---------- Accordion (native details, also used by ExpandableBox) ---------- */
 
-.accordion,
-.expandable {
+.accordion {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   margin-block: 1rem;
   background: #fff;
 }
 
-.accordion summary,
-.expandable summary {
+.accordion summary {
   cursor: pointer;
   font-family: var(--font-ui);
   font-weight: 600;
@@ -690,8 +688,7 @@ a:hover {
   list-style-position: inside;
 }
 
-.accordion .accordion-body,
-.expandable .expandable-body {
+.accordion .accordion-body {
   padding: 0 1rem 1rem;
 }
 
