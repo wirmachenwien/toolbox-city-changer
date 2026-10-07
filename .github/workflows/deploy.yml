@@ -1,5 +1,7 @@
 name: Deploy to GitHub Pages
 
+# Main branch (and manual dispatch) only: build, check and publish.
+# Pull-request validation lives in ci.yml.
 on:
   push:
     branches: [main]
@@ -22,35 +24,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install PDF system libraries
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libpango-1.0-0 libharfbuzz-subset0 libjpeg-dev libopenjp2-7-dev libffi-dev
-
-      - name: Install PDF dependencies
-        run: pip install -r requirements.txt
+      - name: Set up toolchain
+        uses: ./.github/actions/setup
 
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Build static site, PDFs, etc.
+      - name: Build static site, PDFs, EPUBs and search index
         run: npm run build
 
-      - name: Check translations and links
+      - name: Check translations, links, sitemap and search index
         run: npm run check:i18n
 
       - name: Upload Pages artifact
