@@ -14,7 +14,6 @@ const rows: [string, string][] = [
   ['Creator', work.creator],
   ['Contributor', work.contributor],
   ['Publisher', work.publisher],
-  ['Rights holder', work.rightsholder],
   ['Language', work.language],
   ['Identifier', work.identifier],
 ].filter((row): row is [string, string] => Boolean(row[1]));

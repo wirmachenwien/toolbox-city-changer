@@ -1,13 +1,13 @@
 ---
-// German project pages: /contact.html (and / via index).
+// English project pages (default language, no prefix): / via index.
 import { getCollection } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
 import MdxContent from '../components/MdxContent.astro';
 import { pageUrl } from '../lib/site';
 
 export async function getStaticPaths() {
-  return ['index', 'contact'].map((name) => ({ params: { slug: name === 'index' ? undefined : name } }));
-  // NOTE: collection ids strip the "/index" suffix (id "de" == de/index.mdx).
+  return ['index'].map((name) => ({ params: { slug: name === 'index' ? undefined : name } }));
+  // NOTE: collection ids strip the "/index" suffix (id "en" == en/index.mdx).
 }
 
 const { slug } = Astro.params;

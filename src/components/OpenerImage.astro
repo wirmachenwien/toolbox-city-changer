@@ -14,7 +14,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
-const match = Object.entries(images).find(([path]) => path.endsWith(`/${file}`));
+const match = Object.entries(images).find(([path]) =>
+  path.endsWith(`/${file.split('/').pop()}`),
+);
 if (!match) {
   throw new Error(`OpenerImage: unknown image "${file}"`);
 }

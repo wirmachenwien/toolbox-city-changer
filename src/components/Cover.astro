@@ -22,7 +22,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 const cover = file
-  ? Object.entries(images).find(([path]) => path.endsWith(`/${file}`))?.[1].default
+  ? Object.entries(images).find(([path]) => path.endsWith(`/${file.split('/').pop()}`))?.[1].default
   : undefined;
 ---
 <div class="sheet cover-sheet">

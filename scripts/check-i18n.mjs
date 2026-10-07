@@ -15,7 +15,7 @@ const LANGS = ['de', 'en', 'sl'];
 // Cover/title sheets are print-only; the web book starts at the copyright
 // page and the "index" entry is a redirect to the contents page.
 const BOOK_FILES = ['0-2-about', '0-3-contents', '01', '02', '03', '04', '05', '06', 'index'];
-const PAGE_FILES = ['index', 'contact', 'search'];
+const PAGE_FILES = ['index', 'search'];
 const SEARCH_TERMS = { de: 'Superblocks', en: 'superblocks', sl: 'superbloki' };
 
 let failures = 0;
@@ -26,11 +26,11 @@ function fail(message) {
 
 function pagePath(lang, kind, file) {
   if (kind === 'book') {
-    const folder = lang === 'de' ? 'book' : `book/${lang}`;
+    const folder = lang === 'en' ? 'book' : `book/${lang}`;
     return file === 'index' ? `${folder}/index.html` : `${folder}/${file}.html`;
   }
-  if (file === 'index') return lang === 'de' ? 'index.html' : `${lang}/index.html`;
-  return lang === 'de' ? `${file}.html` : `${lang}/${file}.html`;
+  if (file === 'index') return lang === 'en' ? 'index.html' : `${lang}/index.html`;
+  return lang === 'en' ? `${file}.html` : `${lang}/${file}.html`;
 }
 
 function readPage(rel) {
@@ -88,7 +88,7 @@ for (const lang of LANGS) {
 
     // Search form routes to the language-local search page.
     if (!isRedirect) {
-      const expectedSearch = `${BASE}/${lang === 'de' ? '' : `${lang}/`}search.html`.replace(/\/+/g, '/');
+      const expectedSearch = `${BASE}/${lang === 'en' ? '' : `${lang}/`}search.html`.replace(/\/+/g, '/');
       const action = searchFormAction(html);
       if (!action) {
         fail(`${rel}: no search form found`);
@@ -100,8 +100,8 @@ for (const lang of LANGS) {
     // Language switcher: links to the same page in the other languages.
     const expectedAlt = (other) => {
       if (file === 'index') {
-        if (kind === 'book') return `${BASE}/${other === 'de' ? 'book/' : `book/${other}/`}`;
-        return `${BASE}/${other === 'de' ? '' : `${other}/`}`;
+        if (kind === 'book') return `${BASE}/${other === 'en' ? 'book/' : `book/${other}/`}`;
+        return `${BASE}/${other === 'en' ? '' : `${other}/`}`;
       }
       const target = kind === 'book' ? pagePath(other, kind, file) : pagePath(other, kind, file);
       return `${BASE}/${target}`;
@@ -129,7 +129,7 @@ for (const lang of LANGS) {
 
     if (file === '0-3-contents') {
       for (let chapter = 1; chapter <= 6; chapter += 1) {
-        const target = `${BASE}/${lang === 'de' ? 'book' : `book/${lang}`}/${String(chapter).padStart(2, '0')}.html`;
+        const target = `${BASE}/${lang === 'en' ? 'book' : `book/${lang}`}/${String(chapter).padStart(2, '0')}.html`;
         if (!hrefs.includes(target)) fail(`${rel}: contents missing chapter link ${target}`);
       }
     }

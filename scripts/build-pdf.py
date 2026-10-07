@@ -63,8 +63,10 @@ def front_opener(lang: str) -> str:
 
 
 def image_uri(filename: str) -> str:
+    # The CMS image picker may store a repo-relative path; match by basename.
+    name = filename.rsplit("/", 1)[-1]
     for folder in ("book", "site"):
-        candidate = ASSETS / folder / filename
+        candidate = ASSETS / folder / name
         if candidate.exists():
             return candidate.as_uri()
     # Site chrome lives in public/ (e.g. the official CC badge PNG, which

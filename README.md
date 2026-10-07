@@ -39,14 +39,14 @@ npm run build:pdf   # one PDF per language (de/en/sl) into dist/downloads/ (serv
 ## Project layout
 
 - `src/content/book/{de,en,sl}/` — handbook chapters (MDX content collections)
-- `src/content/pages/{de,en,sl}/` — home, about, contact, search pages
+- `src/content/pages/{de,en,sl}/` — home and search pages
 - `src/components/` — content components (Figure, Video, Quiz, …)
 - `src/layouts/` — `BaseLayout`, `BookLayout`, `PageLayout`
 - `src/data/` — typed settings, project/nav/locale metadata, book catalogue
 - `src/lib/` — URL, i18n and navigation helpers
 - `src/scripts/` — progressive-enhancement client islands
 - `src/assets/` — bundled images (optimised at build time)
-- `public/` — favicon, logo, robots.txt, `.nojekyll`
+- `public/` — favicon, logo, app icons, webmanifest, robots.txt, `.nojekyll`
 - `scripts/build-pdf.py` — WeasyPrint PDF pipeline
 - `.pages.yml` — PagesCMS configuration for the paths above
 - `legacy/` — frozen pre-migration reference (not built or deployed)

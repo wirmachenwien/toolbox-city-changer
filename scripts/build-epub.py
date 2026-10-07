@@ -106,11 +106,13 @@ def front_opener(lang: str) -> str:
 
 
 def source_image(filename: str) -> Path | None:
+    # The CMS image picker may store a repo-relative path; match by basename.
+    name = filename.rsplit("/", 1)[-1]
     for folder in ("book", "site"):
-        candidate = ASSETS / folder / filename
+        candidate = ASSETS / folder / name
         if candidate.exists():
             return candidate
-    candidate = ROOT / "public" / "images" / filename
+    candidate = ROOT / "public" / "images" / name
     if candidate.exists():
         return candidate
     return None

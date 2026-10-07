@@ -211,9 +211,11 @@ content:
           - name: template
             component: page_template
           - name: openerImage
-            label: Opener image filename
-            type: string
-            description: "Filename from src/assets/site, for example supergraetzel-favoriten-poller-opener.jpg."
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
           - name: openerImageAlt
             label: Opener image alt text
             type: text
@@ -241,8 +243,11 @@ content:
           - name: template
             component: page_template
           - name: openerImage
-            label: Opener image filename
-            type: string
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
           - name: openerImageAlt
             label: Opener image alt text
             type: text
@@ -270,68 +275,14 @@ content:
           - name: template
             component: page_template
           - name: openerImage
-            label: Opener image filename
-            type: string
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
           - name: openerImageAlt
             label: Opener image alt text
             type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
-
-      - name: contact_de
-        label: Contact Page (German)
-        type: file
-        path: src/content/pages/de/contact.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
-
-      - name: contact_en
-        label: Contact Page (English)
-        type: file
-        path: src/content/pages/en/contact.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
-
-      - name: contact_sl
-        label: Contact Page (Slovene)
-        type: file
-        path: src/content/pages/sl/contact.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
           - name: body
             component: markdown_body
             options:
@@ -352,31 +303,14 @@ content:
           create: false
           delete: false
         fields:
-          - name: organisation
-            type: string
-          - name: url
-            label: Organisation URL
-            type: string
-          - name: email
-            type: string
           - name: name
             label: Project name
             type: string
             required: true
           - name: description
             type: text
-          - name: logo
-            label: Logo filename
-            type: string
-          - name: image
-            label: Project image filename
-            type: string
           - name: credit
             type: text
-          - name: language
-            type: string
-          - name: version
-            type: string
 
       - name: book_metadata
         label: Book Metadata

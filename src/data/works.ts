@@ -20,8 +20,6 @@ const workSchema = z.object({
   description: z.string().optional().default(''),
   image: z.string().optional().default(''),
   publisher: z.string().optional().default(''),
-  publisherUrl: z.string().optional().default(''),
-  rightsholder: z.string().optional().default(''),
   rights: z.string().optional().default(''),
   language: z.string(),
   date: z.string().optional().default(''),
@@ -29,8 +27,6 @@ const workSchema = z.object({
   type: z.string().optional().default(''),
   subject: z.string().optional().default(''),
   identifier: z.string().optional().default(''),
-  coverage: z.string().optional().default(''),
-  keywords: z.string().optional().default(''),
   products: z.object({
     pdf: z.object({ files: z.array(z.string()), toc: z.array(tocEntrySchema) }),
     web: z.object({ files: z.array(z.string()), nav: z.array(tocEntrySchema) }),
@@ -40,23 +36,9 @@ const workSchema = z.object({
 export type Work = z.infer<typeof workSchema>;
 export type TocEntry = z.infer<typeof tocEntrySchema>;
 
-// Normalise legacy hyphenated keys (publisher-url) to camelCase once.
-function normalise(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(normalise);
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([k, v]) => [
-        k === 'publisher-url' ? 'publisherUrl' : k,
-        normalise(v),
-      ]),
-    );
-  }
-  return value;
-}
-
 const works = z
   .object({ de: workSchema, en: workSchema, sl: workSchema })
-  .parse(normalise(raw) as Record<Language, unknown>);
+  .parse(raw as Record<Language, unknown>);
 
 // Chapter counters must consistently include a trailing dot, e.g. "2. Title".
 // This keeps generated navigation, pagination, TOCs and any future metadata
