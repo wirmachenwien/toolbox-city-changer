@@ -55,9 +55,10 @@ export function getWork(lang: Language): Work {
   return works[lang];
 }
 
-/** Front-matter files that exist for print/PDF but have no web page
- *  (the web version starts at the copyright/contents sheets). */
-export const WEB_EXCLUDED_FILES = ['0-0-cover', '0-1-titlepage', 'index'];
+/** Slugs with no MDX source file and no web page: the cover/title sheets are
+ *  virtual (generated for PDF/EPUB from works.json). The book landings
+ *  (/book/, /book/de/, /book/sl/) are redirect stubs, not content pages. */
+export const WEB_EXCLUDED_FILES = ['0-0-cover', '0-1-titlepage'];
 
 /** Ordered chapter slugs for the web navigation of a language. */
 export function bookOrder(lang: Language): string[] {
@@ -72,6 +73,12 @@ export function bookToc(lang: Language): TocEntry[] {
 /** Web table of contents without the print-only front matter entries. */
 export function webBookToc(lang: Language): TocEntry[] {
   return bookToc(lang).filter((entry) => !WEB_EXCLUDED_FILES.includes(entry.file));
+}
+
+/** Label of the contents page. The contents sheet has no MDX source file;
+ *  its title comes from the book catalogue (single source of truth). */
+export function contentsLabel(lang: Language): string {
+  return bookToc(lang).find((entry) => entry.file === 'contents')?.label ?? 'Contents';
 }
 
 /** Previous/next chapter slugs around the given file, or null at the ends. */

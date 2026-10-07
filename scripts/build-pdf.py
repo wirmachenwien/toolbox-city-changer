@@ -159,7 +159,7 @@ def print_css() -> str:
     return FONT_RE.sub(lambda m: f'url("{font_uri(m.group(1))}")', css)
 
 
-def convert_mdx(text: str) -> str:
+def convert_mdx(text: str, lang: str = "de") -> str:
     text = FRONTMATTER_RE.sub("", text, count=1)
 
     def figure(match: re.Match[str]) -> str:
@@ -187,7 +187,7 @@ def convert_mdx(text: str) -> str:
     text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{m.group(1)}">{m.group(2)}</sup>', text)
     text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
-    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2)), text)
+    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang), text)
     return text.strip() + "\n"
 
 
@@ -213,20 +213,24 @@ def endnotes_html(source: str) -> str:
     return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
 
 
-def quiz_html(question: str, source: str) -> str:
+QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
+
+
+def quiz_html(question: str, source: str, lang: str = "de") -> str:
     options = ''.join(f'<li>{label}</li>' for label, _ in option_entries(source))
     correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(option_entries(source)) if is_correct)
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
     return (
         f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
         f'<ol>{options}</ol>'
-        f'<p style="transform: rotate(180deg);">Richtige Antworten: {correct}</p></div>\n'
+        f'<p style="transform: rotate(180deg);">{label}: {correct}</p></div>\n'
     )
 
 
-def chapter_html(slug: str, md_text: str) -> str:
+def chapter_html(slug: str, md_text: str, lang: str = "de") -> str:
     import markdown  # pip: markdown
 
-    body = markdown.markdown(convert_mdx(md_text), extensions=["extra"])
+    body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
     return f'<section class="chapter" id="file-{slug}">\n{body}\n</section>'
 
 
@@ -257,12 +261,10 @@ def build_document(lang: str) -> str:
         f'<html lang="{lang}"><head><meta charset="utf-8">',
         f"<title>{title}</title></head><body>",
     ]
+    # The cover and title sheets are virtual: they have no MDX source file
+    # (see src/content/book/<lang>/) and are generated here from the book
+    # metadata in works.json plus the start-page hero image.
     for slug in files:
-        path = CONTENT / lang / f"{slug}.mdx"
-        if not path.exists():
-            print(f"warning: missing chapter {path}", file=sys.stderr)
-            continue
-        md_text = path.read_text(encoding="utf-8")
         if slug == "0-0-cover":
             style_attr = f' style="{cover_style}"' if cover_style else ""
             parts.append(
@@ -272,7 +274,8 @@ def build_document(lang: str) -> str:
                 f"<h1>{title}</h1><p class=\"cover-sub\">{works.get('subtitle', '')}</p>"
                 "</div></section>"
             )
-        elif slug == "0-1-titlepage":
+            continue
+        if slug == "0-1-titlepage":
             parts.append(
                 '<section class="chapter frontmatter-sheet">'
                 f"<h1>{title}</h1><p>{works.get('subtitle', '')}</p>"
@@ -280,10 +283,28 @@ def build_document(lang: str) -> str:
                 f"<p>{works.get('contributor', '')}</p>"
                 f"<p>{works.get('publisher', '')}</p></section>"
             )
-        elif slug == "0-2-about":
-            body = markdown.markdown(convert_mdx(md_text), extensions=["extra"])
+            continue
+        # The contents sheet is virtual too: generated from the catalogue.
+        if slug == "contents":
+            contents_title = next(
+                (entry["label"] for entry in toc if entry["file"] == "contents"),
+                "Contents",
+            )
+            parts.append(
+                '<section class="chapter frontmatter-sheet">'
+                f"<h1>{contents_title}</h1>"
+                f"{toc_html(toc)}</section>"
+            )
+            continue
+        path = CONTENT / lang / f"{slug}.mdx"
+        if not path.exists():
+            print(f"warning: missing chapter {path}", file=sys.stderr)
+            continue
+        md_text = path.read_text(encoding="utf-8")
+        if slug == "about":
+            body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
             about_label = next(
-                (entry["label"] for entry in toc if entry["file"] == "0-2-about"),
+                (entry["label"] for entry in toc if entry["file"] == "about"),
                 "About",
             )
             # The CC BY badge is print-only (absent from the web page): place
@@ -294,14 +315,8 @@ def build_document(lang: str) -> str:
                 '<section class="chapter frontmatter-sheet">'
                 f"<h1>{about_label}</h1>{body}</section>"
             )
-        elif slug == "0-3-contents":
-            parts.append(
-                '<section class="chapter frontmatter-sheet">'
-                f"<h1>{works['products']['pdf']['toc'][3]['label']}</h1>"
-                f"{toc_html(toc)}</section>"
-            )
         else:
-            parts.append(chapter_html(slug, md_text))
+            parts.append(chapter_html(slug, md_text, lang))
     parts.append("</body></html>")
     parts.insert(
         2,

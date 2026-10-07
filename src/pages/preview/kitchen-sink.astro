@@ -11,7 +11,7 @@ import VisualToc from '../../components/VisualToc.astro';
 import MetadataTable from '../../components/MetadataTable.astro';
 import Cover from '../../components/Cover.astro';
 import TitlePage from '../../components/TitlePage.astro';
-import CopyrightPage from '../../components/CopyrightPage.astro';
+import AboutPage from '../../components/AboutPage.astro';
 import ContentsPage from '../../components/ContentsPage.astro';
 import Figure from '../../components/Figure.astro';
 import OpenerImage from '../../components/OpenerImage.astro';
@@ -76,8 +76,8 @@ const url = withBase('/preview/kitchen-sink.html');
     <h2 class="sink-label">TitlePage</h2>
     <div class="sink-demo"><TitlePage lang="de" /></div>
 
-    <h2 class="sink-label">CopyrightPage</h2>
-    <div class="sink-demo"><CopyrightPage lang="de" /></div>
+    <h2 class="sink-label">AboutPage</h2>
+    <div class="sink-demo"><AboutPage title="Über" /></div>
 
     <h2 class="sink-label">ContentsPage</h2>
     <div class="sink-demo"><ContentsPage lang="de" title="Inhalt" /></div>
@@ -103,7 +103,7 @@ const url = withBase('/preview/kitchen-sink.html');
     </div>
 
     <h2 class="sink-label">ButtonLink</h2>
-    <div class="sink-demo"><ButtonLink href={withBase('/book/0-3-contents.html')}>Handbuch öffnen</ButtonLink></div>
+    <div class="sink-demo"><ButtonLink href={withBase('/book/contents.html')}>Handbuch öffnen</ButtonLink></div>
 
     <h2 class="sink-label">CopyText</h2>
     <div class="sink-demo">info@wirmachen.wien <CopyText value="info@wirmachen.wien" lang="de" /></div>

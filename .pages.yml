@@ -41,8 +41,8 @@ components:
           label: Cover
         - name: title
           label: Title page
-        - name: copyright
-          label: Copyright page
+        - name: about
+          label: About page
         - name: contents
           label: Contents page
   page_template:

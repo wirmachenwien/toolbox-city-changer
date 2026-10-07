@@ -88,13 +88,17 @@ def endnotes_html(source: str) -> str:
     return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
 
 
-def quiz_html(question: str, source: str) -> str:
+QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
+
+
+def quiz_html(question: str, source: str, lang: str = "de") -> str:
     options = ''.join(f'<li>{label}</li>' for label, _ in option_entries(source))
     correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(option_entries(source)) if is_correct)
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
     return (
         f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
         f'<ol>{options}</ol>'
-        f'<p style="transform: rotate(180deg);">Richtige Antworten: {correct}</p></div>\n'
+        f'<p style="transform: rotate(180deg);">{label}: {correct}</p></div>\n'
     )
 
 def front_opener(lang: str) -> str:
@@ -196,7 +200,7 @@ class EpubBook:
         text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{html.escape(m.group(1), quote=True)}">{m.group(2)}</sup>', text)
         text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
         text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
-        text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2)), text)
+        text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), self.lang), text)
         return text.strip() + "\n"
 
     def render_markdown(self, md_text: str) -> str:
@@ -218,15 +222,12 @@ class EpubBook:
 
         cover_name = front_opener(self.lang) or self.works.get("image") or ""
         self.cover_image = self.add_image(cover_name) if cover_name else ""
-        self.cover_image = self.add_image(cover_name)
 
         for slug in files:
-            path = CONTENT / self.lang / f"{slug}.mdx"
             title = labels.get(slug, self.works["title"])
-            if not path.exists():
-                print(f"warning: missing chapter {path}")
-                continue
-            md_text = path.read_text(encoding="utf-8")
+            # The cover and title sheets are virtual: they have no MDX
+            # source file (see src/content/book/<lang>/) and are generated
+            # here from the works.json metadata plus the hero image.
             if slug == "0-0-cover":
                 cover_img = (
                     f'<img class="cover-bg" src="{html.escape(self.cover_image, quote=True)}" alt="" />'
@@ -242,7 +243,9 @@ class EpubBook:
                     f"<p class=\"cover-sub\">{html.escape(self.works.get('subtitle', ''))}</p>"
                     "</div></section>"
                 )
-            elif slug == "0-1-titlepage":
+                self.add_chapter(slug, title, body)
+                continue
+            if slug == "0-1-titlepage":
                 body = (
                     f'<section><h1>{html.escape(self.works["title"])}</h1>'
                     f'<p>{html.escape(self.works.get("subtitle", ""))}</p>'
@@ -250,15 +253,24 @@ class EpubBook:
                     f'<p>{html.escape(self.works.get("contributor", ""))}</p>'
                     f'<p>{html.escape(self.works.get("publisher", ""))}</p></section>'
                 )
-            elif slug == "0-3-contents":
+                self.add_chapter(slug, title, body)
+                continue
+            # The contents sheet is virtual too: generated from the catalogue.
+            if slug == "contents":
                 items = "".join(
                     f'<li><a href="{entry["file"]}.xhtml">{html.escape(entry["label"])}</a></li>'
                     for entry in toc
                     if entry["file"] != "0-0-cover"
                 )
                 body = f'<section><h1>{html.escape(title)}</h1><ol>{items}</ol></section>'
-            else:
-                body = f'<section>{self.render_markdown(md_text)}</section>'
+                self.add_chapter(slug, title, body)
+                continue
+            path = CONTENT / self.lang / f"{slug}.mdx"
+            if not path.exists():
+                print(f"warning: missing chapter {path}")
+                continue
+            md_text = path.read_text(encoding="utf-8")
+            body = f'<section>{self.render_markdown(md_text)}</section>'
             self.add_chapter(slug, title, body)
 
     def xhtml_document(self, title: str, body: str) -> str:

@@ -1,0 +1,11 @@
+---
+// Über/About sheet: heading only (the page title, same string as the
+// document title). The CC BY badge lives in the print/PDF pipeline.
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<div class="sheet about-sheet">
+  <h1>{title}</h1>
+</div>

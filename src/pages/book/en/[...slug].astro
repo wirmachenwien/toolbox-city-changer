@@ -7,11 +7,12 @@ import { alternates, bookUrl, canonical } from '../../../lib/site';
 
 export async function getStaticPaths() {
   const entries = await getCollection('book');
-  return entries
+  const slugs = entries
     .filter((entry) => entry.id.startsWith('en/'))
     .map((entry) => entry.id.slice(3))
     .filter((slug) => !WEB_EXCLUDED_FILES.includes(slug))
     .map((slug) => ({ params: { slug } }));
+  return [...slugs, { params: { slug: 'contents' } }];
 }
 
 const { slug } = Astro.params;

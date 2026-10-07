@@ -8,7 +8,7 @@ import BookmarkAdd from '../components/BookmarkAdd.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import Cover from '../components/Cover.astro';
 import TitlePage from '../components/TitlePage.astro';
-import CopyrightPage from '../components/CopyrightPage.astro';
+import AboutPage from '../components/AboutPage.astro';
 import ContentsPage from '../components/ContentsPage.astro';
 import { settings } from '../data/settings';
 import { bookCrumbs } from '../lib/nav';
@@ -19,7 +19,7 @@ interface Props {
   file: string;
   title: string;
   description?: string;
-  layout: 'chapter' | 'cover' | 'title' | 'copyright' | 'contents';
+  layout: 'chapter' | 'cover' | 'title' | 'about' | 'contents';
   currentUrl: string;
 }
 
@@ -39,7 +39,7 @@ const isChapter = layout === 'chapter';
   {isChapter && <Breadcrumbs items={crumbs} />}
   {layout === 'cover' && <Cover lang={lang} />}
   {layout === 'title' && <TitlePage lang={lang} />}
-  {layout === 'copyright' && <CopyrightPage lang={lang} />}
+  {layout === 'about' && <AboutPage title={title} />}
   {layout === 'contents' && <ContentsPage lang={lang} title={title} />}
   {isChapter && <BookmarkAdd lang={lang} />}
   <div class="prose" data-prose>

@@ -19,8 +19,8 @@
         "files": [
           "0-0-cover",
           "0-1-titlepage",
-          "0-2-about",
-          "0-3-contents",
+          "about",
+          "contents",
           "01",
           "02",
           "03",
@@ -41,12 +41,12 @@
           },
           {
             "label": "Über",
-            "file": "0-2-about",
+            "file": "about",
             "class": "frontmatter-entry"
           },
           {
             "label": "Inhalt",
-            "file": "0-3-contents",
+            "file": "contents",
             "class": "frontmatter-entry"
           },
           {
@@ -77,8 +77,8 @@
       },
       "web": {
         "files": [
-          "0-2-about",
-          "0-3-contents",
+          "about",
+          "contents",
           "01",
           "02",
           "03",
@@ -89,12 +89,12 @@
         "nav": [
           {
             "label": "Über",
-            "file": "0-2-about",
+            "file": "about",
             "class": "frontmatter-entry"
           },
           {
             "label": "Inhalt",
-            "file": "0-3-contents",
+            "file": "contents",
             "class": "frontmatter-entry"
           },
           {
@@ -145,8 +145,8 @@
         "files": [
           "0-0-cover",
           "0-1-titlepage",
-          "0-2-about",
-          "0-3-contents",
+          "about",
+          "contents",
           "01",
           "02",
           "03",
@@ -167,12 +167,12 @@
           },
           {
             "label": "About",
-            "file": "0-2-about",
+            "file": "about",
             "class": "frontmatter-entry"
           },
           {
             "label": "Contents",
-            "file": "0-3-contents",
+            "file": "contents",
             "class": "frontmatter-entry"
           },
           {
@@ -203,8 +203,8 @@
       },
       "web": {
         "files": [
-          "0-2-about",
-          "0-3-contents",
+          "about",
+          "contents",
           "01",
           "02",
           "03",
@@ -215,12 +215,12 @@
         "nav": [
           {
             "label": "About",
-            "file": "0-2-about",
+            "file": "about",
             "class": "frontmatter-entry"
           },
           {
             "label": "Contents",
-            "file": "0-3-contents",
+            "file": "contents",
             "class": "frontmatter-entry"
           },
           {
@@ -271,8 +271,8 @@
         "files": [
           "0-0-cover",
           "0-1-titlepage",
-          "0-2-about",
-          "0-3-contents",
+          "about",
+          "contents",
           "01",
           "02",
           "03",
@@ -293,12 +293,12 @@
           },
           {
             "label": "O nas",
-            "file": "0-2-about",
+            "file": "about",
             "class": "frontmatter-entry"
           },
           {
             "label": "Vsebina",
-            "file": "0-3-contents",
+            "file": "contents",
             "class": "frontmatter-entry"
           },
           {
@@ -329,8 +329,8 @@
       },
       "web": {
         "files": [
-          "0-2-about",
-          "0-3-contents",
+          "about",
+          "contents",
           "01",
           "02",
           "03",
@@ -341,12 +341,12 @@
         "nav": [
           {
             "label": "O nas",
-            "file": "0-2-about",
+            "file": "about",
             "class": "frontmatter-entry"
           },
           {
             "label": "Vsebina",
-            "file": "0-3-contents",
+            "file": "contents",
             "class": "frontmatter-entry"
           },
           {

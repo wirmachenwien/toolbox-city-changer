@@ -1,6 +1,6 @@
 // Navigation model: project nav + expandable book nav + breadcrumbs.
 import { nav } from '../data/nav';
-import { webBookToc } from '../data/works';
+import { contentsLabel, webBookToc } from '../data/works';
 import type { Language } from '../data/locales';
 import { bookUrl, navFileUrl } from './site';
 import { settings } from '../data/settings';
@@ -47,11 +47,10 @@ export function combinedNav(
 /** Breadcrumb trail for a book page: home > contents > chapter. */
 export function bookCrumbs(lang: Language, title: string): NavLink[] {
   const homeLabel = nav[lang][0]?.label ?? '';
-  const contentsLabel =
-    webBookToc(lang).find((entry) => entry.file === '0-3-contents')?.label ?? title;
+  const label = contentsLabel(lang);
   return [
     { label: homeLabel, url: navFileUrl(lang, 'index', lang), current: false },
-    { label: contentsLabel, url: bookUrl(lang, '0-3-contents'), current: false },
+    { label, url: bookUrl(lang, 'contents'), current: false },
     { label: title, url: '', current: true },
   ];
 }

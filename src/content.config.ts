@@ -12,7 +12,7 @@ const book = defineCollection({
     // layouts; regular chapters use "chapter".
     // (Named "template": Astro reserves frontmatter `layout` for MDX layouts.)
     template: z
-      .enum(['chapter', 'cover', 'title', 'copyright', 'contents'])
+      .enum(['chapter', 'cover', 'title', 'about', 'contents'])
       .default('chapter'),
     description: z.string().optional(),
   }),

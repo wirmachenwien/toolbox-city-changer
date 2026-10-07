@@ -12,9 +12,9 @@ import { join, posix } from 'node:path';
 const DIST = 'dist';
 const BASE = '/toolbox-city-changer';
 const LANGS = ['de', 'en', 'sl'];
-// Cover/title sheets are print-only; the web book starts at the copyright
+// Cover/title sheets are print-only; the web book starts at the about
 // page and the "index" entry is a redirect to the contents page.
-const BOOK_FILES = ['0-2-about', '0-3-contents', '01', '02', '03', '04', '05', '06', 'index'];
+const BOOK_FILES = ['about', 'contents', '01', '02', '03', '04', '05', '06', 'index'];
 const PAGE_FILES = ['index', 'search'];
 const SEARCH_TERMS = { de: 'Superblocks', en: 'superblocks', sl: 'superbloki' };
 
@@ -127,7 +127,7 @@ for (const lang of LANGS) {
       }
     }
 
-    if (file === '0-3-contents') {
+    if (file === 'contents') {
       for (let chapter = 1; chapter <= 6; chapter += 1) {
         const target = `${BASE}/${lang === 'en' ? 'book' : `book/${lang}`}/${String(chapter).padStart(2, '0')}.html`;
         if (!hrefs.includes(target)) fail(`${rel}: contents missing chapter link ${target}`);
