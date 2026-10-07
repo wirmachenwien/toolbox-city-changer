@@ -19,29 +19,34 @@ const text = projectText(lang);
 ---
 <header class="site-head">
   <div class="site-head-inner">
-    <a class="brand" href={withBase(lang === DEFAULT_LANG ? '/' : `/${lang}/`)}>
-      <img src={withBase('/logo.svg')} alt="" width="32" height="32" loading="eager" decoding="async" />
-      <span>{text.name || project.name}</span>
-    </a>
-    <form class="search-form search-form--mini" role="search" action={withBase(lang === DEFAULT_LANG ? '/search.html' : `/${lang}/search.html`)} method="get" data-search-form>
-      <label class="visually-hidden" for="head-search">
-        {t(lang, 'search.search-title', 'Search')}
-      </label>
-      <span class="search-box">
-        <Icon name="search" />
-        <input
-          id="head-search"
-          type="search"
-          name="query"
-          placeholder={t(lang, 'search.search-title', 'Search')}
-          autocomplete="off"
-        />
-      </span>
-    </form>
-    <LanguageMenu lang={lang} kind={kind} file={file} />
-    <button type="button" class="menu-toggle" data-open-drawer aria-label={t(lang, 'nav.menu', 'Menu')}>
-      <Icon name="menu" />
-      <span class="menu-label">{t(lang, 'nav.menu', 'Menu')}</span>
-    </button>
+    <div class="site-head-main">
+      <a class="brand" href={withBase(lang === DEFAULT_LANG ? '/' : `/${lang}/`)}>
+        <img src={withBase('/logo.svg')} alt="" width="32" height="32" loading="eager" decoding="async" />
+        <span>{text.name || project.name}</span>
+      </a>
+      <button type="button" class="menu-toggle" data-drawer-toggle aria-expanded="false" aria-label={t(lang, 'nav.menu', 'Menu')}>
+        <span class="menu-icon"><Icon name="menu" /></span>
+        <span class="menu-icon menu-icon--close"><Icon name="x" /></span>
+        <span class="menu-label">{t(lang, 'nav.menu', 'Menu')}</span>
+      </button>
+    </div>
+    <div class="site-head-tools">
+      <form class="search-form search-form--mini" role="search" action={withBase(lang === DEFAULT_LANG ? '/search.html' : `/${lang}/search.html`)} method="get" data-search-form>
+        <label class="visually-hidden" for="head-search">
+          {t(lang, 'search.search-title', 'Search')}
+        </label>
+        <span class="search-box">
+          <Icon name="search" />
+          <input
+            id="head-search"
+            type="search"
+            name="query"
+            placeholder={t(lang, 'search.placeholder', 'Search…')}
+            autocomplete="off"
+          />
+        </span>
+      </form>
+      <LanguageMenu lang={lang} kind={kind} file={file} />
+    </div>
   </div>
 </header>

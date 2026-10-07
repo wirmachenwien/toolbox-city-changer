@@ -15,6 +15,9 @@ export function initScrollOffset(): void {
   function update(): void {
     const height = Math.ceil(headerEl.getBoundingClientRect().height);
     root.style.setProperty('--scroll-offset', `${height + EXTRA}px`);
+    // Exact height for the modeless nav drawer, whose full-height sheet
+    // covers the sticky masthead (only the toggle floats above it).
+    root.style.setProperty('--site-head-height', `${height}px`);
   }
 
   update();
