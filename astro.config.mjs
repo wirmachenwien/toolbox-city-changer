@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import { downloads } from './src/integrations/downloads';
 
 export default defineConfig({
   site: 'https://wirmachenwien.github.io',
@@ -12,6 +13,7 @@ export default defineConfig({
     format: 'file',
   },
   // The sitemap is generated from content by src/pages/sitemap.xml.ts,
-  // not by an integration.
-  integrations: [mdx()],
+  // not by an integration. The downloads integration only runs the dev
+  // server hook (it never touches `astro build`).
+  integrations: [mdx(), downloads()],
 });

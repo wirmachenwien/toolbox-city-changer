@@ -20,8 +20,8 @@ npm ci
 npm run dev
 ```
 
-Run `npm run build` once first so the generated PDF/EPUB downloads
-exist for the dev server.
+The dev server builds any missing PDF/EPUB downloads on startup and
+rebuilds them in the background whenever handbook content changes.
 
 ## Build & preview
 
