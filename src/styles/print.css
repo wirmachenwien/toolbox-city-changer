@@ -105,6 +105,22 @@ section.chapter {
   page-break-before: always;
 }
 
+/* Pagination hygiene: no stranded lines and no headings or
+   boxes split across page breaks. WeasyPrint honors orphans, widows and
+   break-*: avoid; every box below always fits on a single A4 page. */
+p, li, dd, blockquote, figcaption {
+  orphans: 3;
+  widows: 3;
+}
+
+h1, h2, h3 {
+  break-after: avoid;
+}
+
+figure, table, blockquote, .feature-box, .quiz, dl.glossary {
+  break-inside: avoid;
+}
+
 /* Full-bleed cover: the hero photo fills the entire first page with no
    margins or frames (the image URL is injected inline by build-pdf.py);
    the metadata sits on top in a bottom-anchored scrim so it stays legible

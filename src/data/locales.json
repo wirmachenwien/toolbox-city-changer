@@ -1,35 +1,20 @@
 {
   "de": {
     "direction": "ltr",
-    "iso-name": "German",
     "local-name": "Deutsch",
     "project": {
       "name": "Toolbox für City Changer",
       "description": "Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož aus dem Erasmus+-Projekt Toolbox für City Changer.",
-      "credit": "Ein Handbuch von <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>"
-    },
-    "footer": {
-      "reuse": "Code auf <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">GitHub</a> — nutze ihn für dein eigenes Handbuch (siehe <a href=\"{about}\">Über</a>)."
-    },
-    "features": {
-      "copyright-page": "Über"
+      "credit": "Ein Handbuch von <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
     },
     "nav": {
-      "home": "Start",
       "menu": "Menü",
       "next": "Weiter",
       "previous": "Zurück",
-      "back": "&larr;",
-      "toc": "Inhalt",
-      "read": "Lesen",
-      "login": "Anmelden",
-      "logout": "Abmelden"
+      "toc": "Inhalt"
     },
     "input": {
       "submit": "Absenden",
-      "send": "Senden",
-      "show": "Anzeigen",
-      "hide": "Ausblenden",
       "close": "Schließen"
     },
     "search": {
@@ -39,76 +24,36 @@
       "search-results": "Suchergebnisse",
       "results-for-singular": "Ergebnis gefunden für",
       "results-for-plural": "Ergebnisse gefunden für",
-      "results-for-none": "Keine Ergebnisse gefunden für",
-      "jump-to-first": "Zum ersten Ergebnis springen ↓",
-      "notice": ""
+      "results-for-none": "Keine Ergebnisse gefunden für"
     },
     "questions": {
       "check-answers-button": "Antworten prüfen",
       "feedback-correct": "Richtig!",
       "feedback-incorrect": "Falsch",
-      "feedback-unfinished": "Nicht alle richtigen Antworten ausgewählt.",
-      "mark-correct": "&#10003;",
-      "mark-incorrect": "&#10007;"
-    },
-    "quiz": {
-      "total": "Gesamt"
+      "feedback-unfinished": "Nicht alle richtigen Antworten ausgewählt."
     },
     "cross-references": {
       "pre-page-number": "(Seite ",
       "post-page-number": ")"
     },
-    "account": {
-      "login": "Anmelden",
-      "my-account": "Mein Konto"
-    },
-    "annotator": {
-      "show-sidebar-tooltip-title": "Annotationen öffnen",
-      "show-sidebar-tooltip-description": "Hier tippen, um die Annotationen-Seitenleiste anzuzeigen. Text auswählen, um hervorzuheben und Notizen auf dieser Seite zu erstellen.",
-      "show-annotated-text-tooltip-title": "Annotationen hervorheben",
-      "show-annotated-text-tooltip-description": "Hier tippen, um die Hervorhebungen von Annotationen auf dieser Seite anzuzeigen oder auszublenden."
-    },
     "bookmarks": {
-      "bookmark": "Lesezeichen",
       "set-bookmark": "Lesezeichen setzen",
       "remove-bookmark": "Lesezeichen entfernen",
       "bookmarks": "Lesezeichen",
-      "bookmarks-tip": "Tippen oder Text auswählen, dann auf das Lesezeichen-Symbol tippen, um ein Lesezeichen zu speichern. Lesezeichen werden im Browser-Cache gespeichert. Das Leeren des Caches ohne vorheriges Anmelden entfernt sie dauerhaft.",
-      "last-location": "Ihr letzter Besuch",
-      "last-locations-tip": "Bei Ihrem letzten Besuch haben Sie hier aufgehört zu lesen.",
       "last-location-prompt": "Weiterlesen?",
-      "save-bookmark-note": "Speichern",
-      "bookmark-note-placeholder": "Notiz für dieses Lesezeichen hinzufügen...",
-      "bookmark-note-login": "Anmelden, um Notizen für Ihre Lesezeichen hinzuzusehen",
-      "delete-bookmark": "Löschen",
-      "delete-all": "Alle löschen",
-      "delete-bookmark-confirm": "Sind Sie sicher, dass Sie dieses Lesezeichen löschen möchten?",
-      "delete-all-bookmarks-confirm": "Sind Sie sicher, dass Sie alle Lesezeichen löschen möchten?",
-      "bookmarks-shifted-warning": "Ein Lesezeichen scheint nicht genau mit seinem ursprünglichen Ort übereinzustimmen. Der Inhalt auf dieser Seite wurde möglicherweise geändert."
-    },
-    "accordion": {
-      "show-all": "Alle aufklappen",
-      "close-all": "Alle zuklappen"
+      "delete-bookmark": "Löschen"
     },
     "controls": {
       "language-select": "Sprache auswählen",
       "show-hide": "Anzeigen/Ausblenden"
     },
     "video": {
-      "options-button": "Weitere Videooptionen",
       "play-video": "Video abspielen"
     },
     "copy": {
       "copy": "Kopieren",
       "copied": "Kopiert",
       "copy-failed": "Entschuldigung, versuchen Sie es erneut"
-    },
-    "footnotes": {
-      "close-footnote": "Fußnote schließen",
-      "reversefootnote-alt": "Zurück zum Text"
-    },
-    "pdf": {
-      "cover": "Deckblatt"
     },
     "share": {
       "share": "Teilen",
@@ -124,44 +69,26 @@
     "expandable-box": {
       "read-more": "Aufklappen"
     },
-    "feature-box": {
-      "link-to-feature-assistive-text": "Link zur entsprechenden Funktion"
-    },
     "visual-toc": {
       "link-to-page-assistive-text": "Link zur Seite"
     }
   },
   "en": {
     "direction": "ltr",
-    "iso-name": "English",
     "local-name": "English",
     "project": {
       "name": "Toolbox for City Changers",
       "description": "A handbook by Wir machen Wien, Changing Cities and Prostorož from the Erasmus+ project Toolbox for City Changers.",
-      "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>"
-    },
-    "footer": {
-      "reuse": "Code on <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">GitHub</a> — reuse it for your own handbook (see <a href=\"{about}\">About</a>)."
-    },
-    "features": {
-      "copyright-page": "About"
+      "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
     },
     "nav": {
-      "home": "Home",
       "menu": "Menu",
       "next": "Next",
       "previous": "Previous",
-      "back": "&larr;",
-      "toc": "Contents",
-      "read": "Read",
-      "login": "Log in",
-      "logout": "Log out"
+      "toc": "Contents"
     },
     "input": {
       "submit": "Submit",
-      "send": "Send",
-      "show": "Show",
-      "hide": "Hide",
       "close": "Close"
     },
     "search": {
@@ -171,76 +98,36 @@
       "search-results": "Search results",
       "results-for-singular": "result found for",
       "results-for-plural": "results found for",
-      "results-for-none": "No results found for",
-      "jump-to-first": "Jump to first result ↓",
-      "notice": ""
+      "results-for-none": "No results found for"
     },
     "questions": {
       "check-answers-button": "Check my answers",
       "feedback-correct": "Correct!",
       "feedback-incorrect": "Incorrect",
-      "feedback-unfinished": "You haven't selected all the correct answers.",
-      "mark-correct": "&#10003;",
-      "mark-incorrect": "&#10007;"
-    },
-    "quiz": {
-      "total": "Total"
+      "feedback-unfinished": "You haven't selected all the correct answers."
     },
     "cross-references": {
       "pre-page-number": "(page ",
       "post-page-number": ")"
     },
-    "account": {
-      "login": "Log in",
-      "my-account": "My account"
-    },
-    "annotator": {
-      "show-sidebar-tooltip-title": "Open annotations",
-      "show-sidebar-tooltip-description": "Tap here to show the annotations sidebar. Select text to highlight and create notes on this page.",
-      "show-annotated-text-tooltip-title": "Highlight annotations",
-      "show-annotated-text-tooltip-description": "Tap here to show or hide the annotation highlights on this page."
-    },
     "bookmarks": {
-      "bookmark": "Bookmark",
       "set-bookmark": "Set bookmark",
       "remove-bookmark": "Remove bookmark",
       "bookmarks": "Bookmarks",
-      "bookmarks-tip": "Tap or select text, and then tap the bookmark icon to save a bookmark. Bookmarks are saved in your browser cache when you are logged out. Clearing your cache without logging in first will remove them permanently.",
-      "last-location": "Your last visit",
-      "last-locations-tip": "The last time you visited, you stopped reading here.",
       "last-location-prompt": "Continue from your last visit?",
-      "save-bookmark-note": "Save note",
-      "bookmark-note-placeholder": "Add a note for this bookmark...",
-      "bookmark-note-login": "Log in to add and view notes for your bookmarks",
-      "delete-bookmark": "Delete",
-      "delete-all": "Delete all",
-      "delete-bookmark-confirm": "Are you sure you want to delete this bookmark?",
-      "delete-all-bookmarks-confirm": "Are you sure you want to delete all bookmarks?",
-      "bookmarks-shifted-warning": "A bookmark doesn't seem to match its original place exactly. The content on this page may have changed."
-    },
-    "accordion": {
-      "show-all": "Expand all",
-      "close-all": "Close all"
+      "delete-bookmark": "Delete"
     },
     "controls": {
       "language-select": "Select language",
       "show-hide": "Show/Hide"
     },
     "video": {
-      "options-button": "Other video options",
       "play-video": "Play video"
     },
     "copy": {
       "copy": "Copy",
       "copied": "Copied",
       "copy-failed": "Sorry, try again"
-    },
-    "footnotes": {
-      "close-footnote": "Close footnote",
-      "reversefootnote-alt": "Back to text"
-    },
-    "pdf": {
-      "cover": "Cover"
     },
     "share": {
       "share": "Share",
@@ -256,36 +143,21 @@
     "expandable-box": {
       "read-more": "Expand"
     },
-    "feature-box": {
-      "link-to-feature-assistive-text": "A link for the relevant feature"
-    },
     "visual-toc": {
       "link-to-page-assistive-text": "Link to page"
     }
   },
   "sl": {
     "direction": "ltr",
-    "iso-name": "Slovene",
     "local-name": "Slovenščina",
-    "features": {
-      "copyright-page": "O nas"
-    },
     "nav": {
-      "home": "Domov",
       "menu": "Meni",
       "next": "Naprej",
       "previous": "Nazaj",
-      "back": "&larr;",
-      "toc": "Vsebina",
-      "read": "Beri",
-      "login": "Prijava",
-      "logout": "Odjava"
+      "toc": "Vsebina"
     },
     "input": {
       "submit": "Oddaj",
-      "send": "Pošlji",
-      "show": "Prikaži",
-      "hide": "Skrij",
       "close": "Zapri"
     },
     "search": {
@@ -295,76 +167,36 @@
       "search-results": "Rezultati iskanja",
       "results-for-singular": "rezultat za",
       "results-for-plural": "rezultati za",
-      "results-for-none": "Ni rezultatov za",
-      "jump-to-first": "Skoči na prvi rezultat ↓",
-      "notice": ""
+      "results-for-none": "Ni rezultatov za"
     },
     "questions": {
       "check-answers-button": "Preveri odgovore",
       "feedback-correct": "Pravilno!",
       "feedback-incorrect": "Napačno",
-      "feedback-unfinished": "Nisi izbral vseh pravilnih odgovorov.",
-      "mark-correct": "&#10003;",
-      "mark-incorrect": "&#10007;"
-    },
-    "quiz": {
-      "total": "Skupaj"
+      "feedback-unfinished": "Nisi izbral vseh pravilnih odgovorov."
     },
     "cross-references": {
       "pre-page-number": "(stran ",
       "post-page-number": ")"
     },
-    "account": {
-      "login": "Prijava",
-      "my-account": "Moj račun"
-    },
-    "annotator": {
-      "show-sidebar-tooltip-title": "Odpri opombe",
-      "show-sidebar-tooltip-description": "Tapni tukaj, da prikažeš stransko vrstico z opombami. Izberi besedilo, da ga označiš in dodaš opombe na tej strani.",
-      "show-annotated-text-tooltip-title": "Označi opombe",
-      "show-annotated-text-tooltip-description": "Tapni tukaj, da prikažeš ali skriješ označene opombe na tej strani."
-    },
     "bookmarks": {
-      "bookmark": "Zaznamek",
       "set-bookmark": "Nastavi zaznamek",
       "remove-bookmark": "Odstrani zaznamek",
       "bookmarks": "Zaznamki",
-      "bookmarks-tip": "Tapni ali izberi besedilo, nato tapni ikono zaznamka, da ga shraniš. Zaznamki so shranjeni v predpomnilniku brskalnika. Če ga izprazniš, ne da bi se prej prijavil, bodo trajno odstranjeni.",
-      "last-location": "Tvoj zadnji obisk",
-      "last-locations-tip": "Ob zadnjem obisku si tukaj prenehal brati.",
       "last-location-prompt": "Želiš nadaljevati branje od zadnjega obiska?",
-      "save-bookmark-note": "Shrani",
-      "bookmark-note-placeholder": "Dodaj opombo k temu zaznamku...",
-      "bookmark-note-login": "Prijavi se, da dodaš in vidiš opombe k svojim zaznamkom",
-      "delete-bookmark": "Izbriši",
-      "delete-all": "Izbriši vse",
-      "delete-bookmark-confirm": "Ali res želiš izbrisati ta zaznamek?",
-      "delete-all-bookmarks-confirm": "Ali res želiš izbrisati vse zaznamke?",
-      "bookmarks-shifted-warning": "Zdi se, da se zaznamek ne ujema povsem s prvotnim mestom. Vsebina te strani se je morda spremenila."
-    },
-    "accordion": {
-      "show-all": "Razpri vse",
-      "close-all": "Zapri vse"
+      "delete-bookmark": "Izbriši"
     },
     "controls": {
       "language-select": "Izberi jezik",
       "show-hide": "Prikaži/Skrij"
     },
     "video": {
-      "options-button": "Druge možnosti videa",
       "play-video": "Predvajaj video"
     },
     "copy": {
       "copy": "Kopiraj",
       "copied": "Kopirano",
       "copy-failed": "Poskusi znova"
-    },
-    "footnotes": {
-      "close-footnote": "Zapri opombo",
-      "reversefootnote-alt": "Nazaj na besedilo"
-    },
-    "pdf": {
-      "cover": "Naslovnica"
     },
     "share": {
       "share": "Deli",
@@ -380,19 +212,13 @@
     "expandable-box": {
       "read-more": "Razpri"
     },
-    "feature-box": {
-      "link-to-feature-assistive-text": "Povezava do ustrezne funkcije"
-    },
     "visual-toc": {
       "link-to-page-assistive-text": "Povezava do strani"
     },
     "project": {
       "name": "Zbirka orodij za spreminjanje mest",
       "description": "Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož iz projekta Erasmus+ Zbirka orodij za spreminjanje mest.",
-      "credit": "Priročnik organizacij <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> in <a href=\"https://www.prostoroz.org\">Prostorož</a>"
-    },
-    "footer": {
-      "reuse": "Koda na <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">GitHubu</a> — uporabi jo za svoj priročnik (glej <a href=\"{about}\">O nas</a>)."
+      "credit": "Priročnik organizacij <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> in <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
     }
   }
 }

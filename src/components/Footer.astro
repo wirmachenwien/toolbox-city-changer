@@ -1,8 +1,6 @@
 ---
-// Site footer: credit line, Impressum link, reuse note, language dropdown.
-import { project } from '../data/project';
-import { projectText, t } from '../lib/i18n';
-import { bookUrl } from '../lib/site';
+// Site footer: credit line and language dropdown.
+import { projectText } from '../lib/i18n';
 import type { Language } from '../data/locales';
 import LanguageMenu from './LanguageMenu.astro';
 
@@ -13,15 +11,14 @@ interface Props {
 }
 
 const { lang, kind, file } = Astro.props;
-const text = projectText(lang);
-const credit = `${text.credit || project.credit} <a href="https://wirmachen.wien/impressum/">Impressum</a>`;
-const reuse = t(lang, 'footer.reuse', '').replace('{about}', bookUrl(lang, '0-2-about'));
+// The entire footer line is a single HTML string (project credit per
+// language, falling back to the default project metadata).
+const credit = projectText(lang).credit;
 ---
 <footer class="site-footer">
   <div class="shell">
     <div class="footer-text">
       <p set:html={credit} />
-      {reuse && <p set:html={reuse} />}
     </div>
     <LanguageMenu lang={lang} kind={kind} file={file} id="foot-language" />
   </div>
