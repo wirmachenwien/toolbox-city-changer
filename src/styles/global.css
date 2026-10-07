@@ -513,10 +513,20 @@ a:hover {
 .crumbs ol {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: 0.4rem;
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+/* Neutralize prose list spacing wherever crumbs render inside content. */
+.prose .crumbs ol {
+  margin-block: 0;
+}
+
+.prose .crumbs li + li {
+  margin-block-start: 0;
 }
 
 .crumbs li + li::before {
@@ -1496,6 +1506,8 @@ html:not(.js-fold) .accordion-content {
 
 .cc-badge {
   display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
   color: var(--ink);
 }
 
