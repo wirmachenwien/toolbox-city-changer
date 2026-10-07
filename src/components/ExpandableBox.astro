@@ -13,6 +13,8 @@ const { title, lang = 'en' } = Astro.props;
 <details class="accordion">
   <summary>{title ?? t(lang, 'expandable-box.read-more', 'Expand')}</summary>
   <div class="accordion-body">
-    <slot />
+    <div class="accordion-content">
+      <slot />
+    </div>
   </div>
 </details>

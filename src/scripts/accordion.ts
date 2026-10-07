@@ -1,7 +1,7 @@
-// Exclusive collapsibles: opening any details in the content closes the
-// other open ones. Always wired, no feature flag. When enabled via
-// settings, sections under the configured heading level additionally
-// collapse into <details> elements.
+// Exclusive collapsibles: opening one closes its siblings in the same
+// group (same parent); accordions elsewhere on the page stay untouched.
+// Always wired, no feature flag. When enabled via settings, sections under
+// the configured heading level additionally collapse into <details> elements.
 export function initAccordion(): void {
   const prose = document.querySelector('[data-prose]');
   if (!prose) return;
@@ -19,11 +19,14 @@ export function initAccordion(): void {
       let node: Node | null = heading.nextSibling;
       const body = document.createElement('div');
       body.className = 'accordion-body';
+      const content = document.createElement('div');
+      content.className = 'accordion-content';
       while (node && !(node instanceof Element && node.tagName === level)) {
         const next: Node | null = node.nextSibling;
-        body.append(node);
+        content.append(node);
         node = next;
       }
+      body.append(content);
       details.append(body);
       heading.replaceWith(details);
     }
@@ -31,7 +34,11 @@ export function initAccordion(): void {
   prose.addEventListener('toggle', (event) => {
     const opened = event.target;
     if (!(opened instanceof HTMLDetailsElement) || !opened.open) return;
-    for (const details of prose.querySelectorAll<HTMLDetailsElement>('details.accordion')) {
+    const siblings = [...(opened.parentElement?.children ?? [])].filter(
+      (el): el is HTMLDetailsElement =>
+        el instanceof HTMLDetailsElement && el.classList.contains('accordion'),
+    );
+    for (const details of siblings) {
       if (details !== opened) details.open = false;
     }
   }, true);

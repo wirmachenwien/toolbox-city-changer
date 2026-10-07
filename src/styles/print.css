@@ -121,6 +121,20 @@ figure, table, blockquote, .feature-box, .quiz, dl.glossary {
   break-inside: avoid;
 }
 
+/* Accordions print fully expanded: the screen collapse animation has no
+   meaning on paper, so flatten the grid and let every box break freely. */
+.accordion-body {
+  display: block;
+}
+
+.accordion-content {
+  overflow: visible;
+}
+
+.accordion {
+  break-inside: auto;
+}
+
 /* Full-bleed cover: the hero photo fills the entire first page with no
    margins or frames (the image URL is injected inline by build-pdf.py);
    the metadata sits on top in a bottom-anchored scrim so it stays legible
