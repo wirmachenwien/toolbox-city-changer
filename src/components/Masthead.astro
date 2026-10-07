@@ -39,9 +39,9 @@ const text = projectText(lang);
       </span>
     </form>
     <LanguageMenu lang={lang} kind={kind} file={file} />
-    <button type="button" class="menu-toggle" data-open-drawer>
+    <button type="button" class="menu-toggle" data-open-drawer aria-label={t(lang, 'nav.menu', 'Menu')}>
       <Icon name="menu" />
-      <span>{t(lang, 'nav.menu', 'Menu')}</span>
+      <span class="menu-label">{t(lang, 'nav.menu', 'Menu')}</span>
     </button>
   </div>
 </header>
