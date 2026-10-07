@@ -16,13 +16,11 @@
     "build:downloads": "npm run build:pdf && npm run build:epub",
     "preview": "astro preview",
     "astro": "astro",
-    "check:i18n": "node scripts/check-i18n.mjs",
-    "check:baggage": "node scripts/check-baggage.mjs"
+    "check:i18n": "node scripts/check-i18n.mjs"
   },
   "dependencies": {
     "astro": "^7.3.6",
     "qrcode": "^1.5.4",
-    "yaml": "^2.9.1",
     "zod": "^4.6.5"
   },
   "allowScripts": {

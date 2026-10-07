@@ -26,7 +26,6 @@ npm run dev
 npm run build    # astro build + index fixups + Pagefind search index
 npm run preview
 npm run check:i18n    # translation, link, search-index and sitemap checks on dist/
-npm run check:baggage # fail on legacy template/system names in delivered code
 ```
 
 ## PDFs
@@ -47,8 +46,9 @@ npm run build:pdf   # one PDF per language (de/en/sl) into dist/downloads/ (serv
 - `src/scripts/` — progressive-enhancement client islands
 - `src/assets/` — bundled images (optimised at build time)
 - `public/` — favicon, logo, app icons, webmanifest, robots.txt, `.nojekyll`
-- `scripts/build-pdf.py` — WeasyPrint PDF pipeline
+- `scripts/` — WeasyPrint PDF and EPUB pipelines, build checks
 - `.pages.yml` — PagesCMS configuration for the paths above
-- `legacy/` — frozen pre-migration reference (not built or deployed)
 
-See `docs/MIGRATION.md` for the old→new mapping.
+English is the default language at the root (`/`, `/book/…`); German and
+Slovene live under `/de/`, `/sl/`, `/book/de/…`, `/book/sl/…` (legacy `/en/`
+URLs redirect to the canonical locations).
