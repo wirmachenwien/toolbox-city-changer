@@ -5,6 +5,7 @@ Toolbox for City Changers project. Built with Astro 7 as pure static files
 and hosted on GitHub Pages.
 
 The code for this site is inspired by [Electric Book Works](https://electricbookworks.com)
+and its [Electric Book workflow](https://github.com/electricbookworks/electric-book)
 — shout out, and thank you! — and is licensed under the
 [AGPL-3.0](LICENSE) (see `LICENSE`).
 
