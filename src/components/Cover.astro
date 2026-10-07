@@ -14,7 +14,7 @@ const work = getWork(lang);
 
 const pages = await getCollection('pages');
 const home = pages.find((entry) => entry.id === lang);
-const file = home?.data.openerImage ?? work.image;
+const file = home?.data.openerImage || work.image || '';
 const alt = home?.data.openerImageAlt ?? '';
 
 const images = import.meta.glob<{ default: ImageMetadata }>(

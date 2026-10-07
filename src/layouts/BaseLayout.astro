@@ -12,6 +12,7 @@ import NavDrawer from '../components/NavDrawer.astro';
 import SideNav from '../components/SideNav.astro';
 import Footer from '../components/Footer.astro';
 import AlternateLinks from '../components/AlternateLinks.astro';
+import ogImage from '../assets/book/lendplatz-graz-tactical-urbanism.jpg';
 
 interface Props {
   lang: Language;
@@ -45,8 +46,10 @@ const hideFromIndex = noindex || settings.web.indexing.live === 'noindex';
     <meta property="og:type" content="article" />
     <meta property="og:url" content={canonical(currentUrl)} />
     <meta property="og:locale" content={lang} />
-    <meta property="og:image" content={canonical(withBase('/images/cover.jpg'))} />
+    <meta property="og:image" content={canonical(ogImage.src)} />
     <link rel="icon" href={withBase('/favicon.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('/site.webmanifest')} />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} type="application/xml" title="Sitemap" />
   </head>
   <body
