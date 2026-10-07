@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -62,20 +63,72 @@ def front_opener(lang: str) -> str:
     return match.group(1) if match else ""
 
 
-def image_uri(filename: str) -> str:
+def find_asset(filename: str) -> Path | None:
+    """Repo file backing a content image name (book, site, then public)."""
     # The CMS image picker may store a repo-relative path; match by basename.
     name = filename.rsplit("/", 1)[-1]
     for folder in ("book", "site"):
         candidate = ASSETS / folder / name
         if candidate.exists():
-            return candidate.as_uri()
+            return candidate
     # Site chrome lives in public/ (e.g. the official CC badge PNG, which
     # WeasyPrint can embed; SVG is not a supported image format for print).
-    candidate = ROOT / "public" / "images" / filename
+    candidate = ROOT / "public" / "images" / name
     if candidate.exists():
-        return candidate.as_uri()
+        return candidate
+    return None
+
+
+def image_uri(filename: str) -> str:
+    source = find_asset(filename)
+    if source is not None:
+        return source.as_uri()
     print(f"warning: image not found: {filename}", file=sys.stderr)
     return filename
+
+
+# The print cover shows the hero photo full-bleed on an A4 page. Below this
+# effective resolution it starts to look soft in print; still build, but say
+# so (non-breaking) so a low-resolution hero photo gets noticed.
+A4_WIDTH_IN = 210 / 25.4
+A4_HEIGHT_IN = 297 / 25.4
+MIN_COVER_DPI = 150
+
+
+def cover_resolution_warning(filename: str) -> str | None:
+    """Warn when the cover photo prints below MIN_COVER_DPI on full-bleed A4.
+
+    With `background-size: cover` the effective DPI is limited by the
+    tighter axis, i.e. min(width / page-width, height / page-height).
+    Returns a warning string, or None when the resolution is fine (or the
+    file cannot be measured, e.g. vectors or missing Pillow).
+    """
+    if not filename:
+        return None
+    source = find_asset(filename)
+    if source is None:
+        return None
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    try:
+        with Image.open(source) as image:
+            width, height = image.size
+    except Exception:
+        return None
+    dpi = min(width / A4_WIDTH_IN, height / A4_HEIGHT_IN)
+    if dpi >= MIN_COVER_DPI:
+        return None
+    need_width = math.ceil(MIN_COVER_DPI * A4_WIDTH_IN)
+    need_height = math.ceil(MIN_COVER_DPI * A4_HEIGHT_IN)
+    name = filename.rsplit("/", 1)[-1]
+    return (
+        f"warning: cover image {name} is {width}x{height} px "
+        f"(~{dpi:.0f} DPI on full-bleed A4); "
+        f"use at least {need_width}x{need_height} px "
+        f"({MIN_COVER_DPI} DPI) for crisp print"
+    )
 
 
 def cc_badge_html() -> str:
@@ -195,6 +248,9 @@ def build_document(lang: str) -> str:
     cover_file = front_opener(lang) or works.get("image") or ""
     cover_uri = image_uri(cover_file) if cover_file else ""
     cover_style = f"background-image: url('{cover_uri}')" if cover_uri else ""
+    cover_warning = cover_resolution_warning(cover_file)
+    if cover_warning:
+        print(cover_warning, file=sys.stderr)
 
     parts = [
         "<!doctype html>",
