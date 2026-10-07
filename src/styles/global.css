@@ -83,7 +83,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-text);
-  font-size: 1.075rem;
+  font-size: 1.15rem;
   line-height: 1.65;
 }
 
@@ -169,7 +169,7 @@ a:hover {
   align-items: center;
   gap: 0.4rem;
   font-family: var(--font-ui);
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
@@ -272,7 +272,7 @@ a:hover {
   align-items: center;
   gap: 0.3rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .lang-menu > .icon {
@@ -415,7 +415,7 @@ a:hover {
 
 .side-nav {
   font-family: var(--font-ui);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
 }
 
 @media (max-width: 59.99rem) {
@@ -491,13 +491,13 @@ a:hover {
 
 .crumbs {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   margin-block-end: 1rem;
 }
 
 /* Breadcrumbs sit directly above the article heading as an eyebrow. */
 .article > .crumbs {
-  font-size: 0.78rem;
+  font-size: 0.83rem;
   letter-spacing: 0.02em;
   margin-block-end: 0.35rem;
 }
@@ -544,7 +544,7 @@ a:hover {
 
 .figure figcaption {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--ink-soft);
   margin-block-start: 0.4rem;
 }
@@ -618,7 +618,7 @@ a:hover {
   background: #111 center / cover no-repeat;
   color: #fff;
   font-family: var(--font-ui);
-  font-size: 1rem;
+  font-size: 1.07rem;
 }
 
 .video-facade .play {
@@ -639,7 +639,7 @@ a:hover {
 
 .video-caption {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--ink-soft);
   padding: 0.5rem 0.75rem;
   background: var(--paper);
@@ -663,7 +663,7 @@ a:hover {
 }
 
 .pullquote {
-  font-size: 1.35rem;
+  font-size: 1.44rem;
   line-height: 1.5;
   border-inline-start: 6px solid var(--accent);
   padding-inline-start: 1rem;
@@ -700,7 +700,7 @@ a:hover {
   gap: 0.5rem;
   margin-block-end: 0.75rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .accordion-controls button {
@@ -791,7 +791,7 @@ a:hover {
   border-collapse: collapse;
   inline-size: 100%;
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
 }
 
 .table-scroll th,
@@ -820,7 +820,7 @@ a:hover {
   background: var(--ink);
   color: #fff;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   padding: 0.6rem 0.8rem;
   border-radius: var(--radius);
 }
@@ -836,7 +836,7 @@ a:hover {
 }
 
 .endnotes {
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   border-block-start: 1px solid var(--line);
   margin-block-start: 2rem;
   padding-block-start: 1rem;
@@ -887,7 +887,7 @@ a:hover {
 .copy-btn,
 .share-btn {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
@@ -927,7 +927,7 @@ a:hover {
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   line-height: 1.5;
   padding: 0.2rem 0.6rem;
   border: 1px solid var(--ink);
@@ -980,7 +980,7 @@ a:hover {
 .qr {
   margin-block: 1.5rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .qr svg {
@@ -992,7 +992,7 @@ a:hover {
 /* ---------- Bibliography ---------- */
 
 .bibliography {
-  font-size: 0.92rem;
+  font-size: 0.98rem;
 }
 
 .bibliography li {
@@ -1168,7 +1168,7 @@ a:hover {
 
 .bookmark-list .bookmark-page {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--ink-soft);
 }
 
@@ -1215,7 +1215,7 @@ a:hover {
   border-radius: var(--radius);
   padding: 0.8rem 1rem;
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   line-height: 1.4;
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.3);
 }
@@ -1297,7 +1297,7 @@ a:hover {
 .search-form--mini input[type="search"] {
   padding: 0.3rem 0.6rem;
   padding-inline-start: 2rem;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .search-results {
@@ -1348,14 +1348,14 @@ a:hover {
 }
 
 .copyright-sheet {
-  font-size: 0.95rem;
+  font-size: 1.02rem;
 }
 
 .metadata-table {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.3rem 1rem;
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   margin-block: 1.5rem;
 }
 
@@ -1386,7 +1386,7 @@ a:hover {
   padding-block: 0.6rem;
   color: var(--ink);
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1.18rem;
 }
 
 .contents-list a:hover {
@@ -1394,7 +1394,7 @@ a:hover {
 }
 
 .contents-list .frontmatter-entry {
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   color: var(--ink-soft);
 }
 
@@ -1421,7 +1421,7 @@ a:hover {
   margin-block-start: 2rem;
   padding-block: 1.5rem 2.5rem;
   font-family: var(--font-ui);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   color: var(--ink-soft);
 }
 
@@ -1431,6 +1431,10 @@ a:hover {
   gap: 1rem 2rem;
   align-items: center;
   justify-content: space-between;
+}
+
+.footer-text p {
+  margin-block: 0.25rem;
 }
 
 .site-footer a {
@@ -1479,7 +1483,7 @@ a:hover {
   margin: 0;
   padding: 0;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .language-switcher a {
@@ -1542,7 +1546,7 @@ a:hover {
 /* ---------- Annotation (opt-in only) ---------- */
 
 .annotation-note {
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--ink-soft);
   border-inline-start: 3px solid var(--warn);
   padding-inline-start: 0.75rem;

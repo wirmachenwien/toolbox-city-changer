@@ -67,7 +67,7 @@
 }
 
 html {
-  font: 11pt/1.5 "Source Serif 4", Georgia, "Times New Roman", serif;
+  font: 11.5pt/1.5 "Newsreader", Georgia, "Times New Roman", serif;
   color: #111;
 }
 
@@ -168,7 +168,7 @@ figure img {
 }
 
 figcaption {
-  font: 8.5pt "Source Sans 3", system-ui, sans-serif;
+  font: 9pt "Clarity City", system-ui, sans-serif;
   color: #444;
   margin-top: 4pt;
 }
@@ -198,8 +198,8 @@ blockquote {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-family: "Source Sans 3", system-ui, sans-serif;
-  font-size: 9.5pt;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-size: 10pt;
 }
 
 th, td {
@@ -210,12 +210,12 @@ th, td {
 
 .footnote {
   float: footnote;
-  font-size: 8.5pt;
+  font-size: 9pt;
 }
 
 .cc-badge {
   display: block;
-  font: 9pt "Source Sans 3", system-ui, sans-serif;
+  font: 9.5pt "Clarity City", system-ui, sans-serif;
   margin: 8pt 0;
 }
 
