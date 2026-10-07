@@ -137,7 +137,11 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
 
     <h2 class="sink-label">Icon</h2>
     <div class="sink-demo">
-      <p>{iconNames.map((name) => (<span><Icon name={name} /> {name}</span>) )}</p>
+      <ul class="sink-icons">
+        {iconNames.map((name) => (
+          <li><Icon name={name} /><span class="sink-icon-name">{name}</span></li>
+        ))}
+      </ul>
     </div>
 
     <h2 class="sink-label">LanguageMenu</h2>
