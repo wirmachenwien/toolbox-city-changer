@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://wirmachenwien.github.io',
@@ -12,11 +11,7 @@ export default defineConfig({
     // book/01 -> book/01.html (no trailing-slash directories).
     format: 'file',
   },
-  integrations: [
-    mdx(),
-    sitemap({
-      filter: (page) =>
-        !page.includes('/preview/') && !page.includes('404'),
-    }),
-  ],
+  // The sitemap is generated from content by src/pages/sitemap.xml.ts,
+  // not by an integration.
+  integrations: [mdx()],
 });

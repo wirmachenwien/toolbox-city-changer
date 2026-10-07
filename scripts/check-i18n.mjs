@@ -169,6 +169,34 @@ if (!existsSync(entryFile)) {
   }
 }
 
+// Content-generated sitemap must list every expected page exactly once,
+// with canonical absolute URLs and no redirect/legacy entries.
+const sitemapFile = join(DIST, 'sitemap.xml');
+if (!existsSync(sitemapFile)) {
+  fail('sitemap.xml missing (src/pages/sitemap.xml.ts)');
+} else {
+  const xml = readFileSync(sitemapFile, 'utf8');
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  const expected = [];
+  const canonical = (rel) => {
+    const clean = rel.replace(/(^|\/)index\.html$/, '/').replace(/^\/+/, '');
+    return `https://wirmachenwien.github.io${BASE}/${clean}`;
+  };
+  for (const lang of LANGS) {
+    for (const file of PAGE_FILES) expected.push(canonical(pagePath(lang, 'page', file)));
+    for (const file of BOOK_FILES.filter((file) => file !== 'index')) {
+      expected.push(canonical(pagePath(lang, 'book', file)));
+    }
+  }
+  for (const url of expected) {
+    if (!locs.includes(url)) fail(`sitemap: missing ${url}`);
+  }
+  for (const url of locs) {
+    if (!expected.includes(url)) fail(`sitemap: unexpected entry ${url}`);
+  }
+  console.log(`sitemap: ${locs.length} entries, all expected pages covered`);
+}
+
 console.log(`Checked ${checked} pages: language, switching, navigation, search routing, images and local links.`);
 if (failures > 0) {
   console.error(`${failures} check(s) failed`);
