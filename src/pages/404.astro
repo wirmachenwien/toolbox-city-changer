@@ -3,13 +3,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { withBase } from '../lib/site';
 ---
-<BaseLayout lang="de" title="Seite nicht gefunden" kind="page" file="index" currentUrl={withBase('/404.html')} noindex hreflang={false}>
+<BaseLayout lang="en" title="Page not found" kind="page" file="index" currentUrl={withBase('/404.html')} noindex hreflang={false}>
   <div class="prose">
-    <h1>Seite nicht gefunden</h1>
+    <h1>Page not found</h1>
     <p>
-      <a href={withBase('/')}>Start</a>
+      <a href={withBase('/')}>Home</a>
       {' · '}
-      <a href={withBase('/en/')}>Home</a>
+      <a href={withBase('/de/')}>Start</a>
       {' · '}
       <a href={withBase('/sl/')}>Domov</a>
     </p>

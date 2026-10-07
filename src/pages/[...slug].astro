@@ -13,12 +13,12 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const name = slug ?? 'index';
 const entries = await getCollection('pages');
-const entry = entries.find((item) => item.id === (name === 'index' ? 'de' : `de/${name}`));
-if (!entry) throw new Error(`Missing German page: ${name}`);
-const url = pageUrl('de', name);
+const entry = entries.find((item) => item.id === (name === 'index' ? 'en' : `en/${name}`));
+if (!entry) throw new Error(`Missing English page: ${name}`);
+const url = pageUrl('en', name);
 ---
 <PageLayout
-  lang="de"
+  lang="en"
   file={name}
   title={entry.data.title}
   description={entry.data.description}

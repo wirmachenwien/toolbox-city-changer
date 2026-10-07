@@ -7,7 +7,7 @@ interface Props {
   title?: string;
   lang?: Language;
 }
-const { title, lang = 'de' } = Astro.props;
+const { title, lang = 'en' } = Astro.props;
 ---
 <details class="expandable">
   <summary>{title ?? t(lang, 'expandable-box.read-more', 'Expand')}</summary>

@@ -1,6 +1,6 @@
 ---
- // English book landing: /book/en/ redirects to the contents page since the
- // print-only cover/title sheets have no web version.
+ // Legacy English book landing (/book/en/): the English book now lives at
+ // /book/, so redirect to the contents page there.
 import { alternates, bookUrl, canonical } from '../../../lib/site';
 
 const target = bookUrl('en', '0-3-contents');
@@ -13,7 +13,7 @@ const alternateLinks = alternates('book', 'index');
     <meta http-equiv="refresh" content={`0; url=${target}`} />
     <link rel="canonical" href={canonical(target)} />
     {alternateLinks.map((entry) => (
-      <link rel="alternate" hreflang={entry.lang} href={entry.url} />
+      <link rel="alternate" hreflang={entry.lang} href={canonical(entry.url)} />
     ))}
     <title>Contents</title>
   </head>

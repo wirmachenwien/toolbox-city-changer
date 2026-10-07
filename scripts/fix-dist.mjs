@@ -10,9 +10,11 @@ import path from 'node:path';
 const DIST = 'dist';
 
 const INDEX_MOVES = [
+  ['de.html', 'de/index.html'],
   ['en.html', 'en/index.html'],
   ['sl.html', 'sl/index.html'],
   ['book.html', 'book/index.html'],
+  ['book/de.html', 'book/de/index.html'],
   ['book/en.html', 'book/en/index.html'],
   ['book/sl.html', 'book/sl/index.html'],
 ];

@@ -16,7 +16,7 @@ interface Props {
   lang?: Language;
 }
 
-const { id, label, options, lang = 'de' } = Astro.props;
+const { id, label, options, lang = 'en' } = Astro.props;
 const prompt = label ?? t(lang, 'controls.show-hide', 'Show/Hide');
 ---
 <div class="select-list" data-select-list>

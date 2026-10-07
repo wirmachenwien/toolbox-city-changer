@@ -250,7 +250,7 @@ def build_document(lang: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build handbook PDFs with WeasyPrint.")
-    parser.add_argument("--lang", choices=["de", "en", "sl"], default="de")
+    parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
     parser.add_argument(
         "--out",
         default="public/downloads",
@@ -260,7 +260,7 @@ def main() -> int:
     parser.add_argument("--html-only", action="store_true", help="skip WeasyPrint, emit HTML")
     args = parser.parse_args()
 
-    jobs = ("de", "en", "sl") if args.all else (args.lang,)
+    jobs = ("en", "de", "sl") if args.all else (args.lang,)
     out_dir = ROOT / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
 

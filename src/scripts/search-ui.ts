@@ -3,6 +3,7 @@
 // locale-aware result counts. Results are filtered to the active language
 // by URL prefix (de: no prefix, en: /en/, sl: /sl/).
 import { t } from '../lib/i18n';
+import { DEFAULT_LANG } from '../lib/site';
 import type { Language } from '../data/locales';
 
 interface PagefindResult {
@@ -28,15 +29,15 @@ function basePath(): string {
 }
 
 function langPrefix(lang: Language): string {
-  return lang === 'de' ? '/' : `/${lang}/`;
+  return lang === DEFAULT_LANG ? '/' : `/${lang}/`;
 }
 
 function inLanguage(url: string, lang: Language): boolean {
   const prefix = langPrefix(lang);
   if (!url.startsWith(prefix)) return false;
-  if (lang !== 'de') return true;
+  if (lang !== DEFAULT_LANG) return true;
   const rest = url.slice(prefix.length);
-  return !rest.startsWith('en/') && !rest.startsWith('sl/');
+  return !rest.startsWith('de/') && !rest.startsWith('sl/');
 }
 
 /** Pagefind records site-root-relative URLs; rebase them under the subpath. */

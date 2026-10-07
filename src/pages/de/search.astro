@@ -1,0 +1,23 @@
+---
+// German search: /de/search.html
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import SearchForm from '../../components/SearchForm.astro';
+import MdxContent from '../../components/MdxContent.astro';
+import { pageUrl } from '../../lib/site';
+
+const entries = await getCollection('pages');
+const entry = entries.find((item) => item.id === 'de/search');
+if (!entry) throw new Error('Missing German search page');
+const url = pageUrl('de', 'search');
+---
+<PageLayout lang="de" file="search" title={entry.data.title} layout="search" currentUrl={url}>
+  <MdxContent entry={entry} />
+  <SearchForm lang="de" />
+  <p data-search-status aria-live="polite" />
+  <ol class="search-results" data-search-results />
+</PageLayout>
+<script>
+  import { initSearchUI } from '../../scripts/search-ui';
+  void initSearchUI('de');
+</script>

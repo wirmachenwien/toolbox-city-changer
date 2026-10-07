@@ -378,7 +378,7 @@ figcaption {
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build handbook EPUBs.")
-    parser.add_argument("--lang", choices=["de", "en", "sl"], default="de")
+    parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
     parser.add_argument(
         "--out",
         default="public/downloads",
@@ -388,7 +388,7 @@ def main() -> int:
     args = parser.parse_args()
 
     works_data = json.loads(DATA.read_text(encoding="utf-8"))
-    jobs = ("de", "en", "sl") if args.all else (args.lang,)
+    jobs = ("en", "de", "sl") if args.all else (args.lang,)
     out_dir = ROOT / args.out
     for lang in jobs:
         stem = f"toolbox-city-changer-{lang}"

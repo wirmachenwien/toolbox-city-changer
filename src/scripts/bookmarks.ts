@@ -54,12 +54,12 @@ function writeMarks(marks: StoredMark[]): void {
   }
 }
 
-/** Language of a stored URL by path segment (de has no language prefix). */
+/** Language of a stored URL by path segment (en has no language prefix). */
 function markLang(url: string): string {
   const segments = url.split(/[?#]/)[0].split('/');
   if (segments.includes('sl')) return 'sl';
-  if (segments.includes('en')) return 'en';
-  return 'de';
+  if (segments.includes('de')) return 'de';
+  return 'en';
 }
 
 function collapseText(value: string): string {
@@ -72,7 +72,7 @@ function formatChapterTitle(title: string): string {
 
 function isChapterUrl(url: string): boolean {
   const pathname = withoutTextFragment(url).split(/[?#]/)[0];
-  return /\/book\/(?:en\/|sl\/)?\d+\.html$/.test(pathname);
+  return /\/book\/(?:de\/|sl\/)?\d+\.html$/.test(pathname);
 }
 
 /** Drop browser text-fragment directives (`#:~:text=...`) to avoid the
@@ -554,7 +554,7 @@ export function initBookmarks(): void {
   const text = toast?.querySelector('[data-last-visit-text]');
   const link = toast?.querySelector<HTMLAnchorElement>('[data-last-visit-link]');
   const close = toast?.querySelector<HTMLButtonElement>('[data-last-visit-close]');
-  const currentLang = document.documentElement.lang || 'de';
+  const currentLang = document.documentElement.lang || 'en';
   if (
     toast &&
     link &&

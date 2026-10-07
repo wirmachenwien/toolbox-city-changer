@@ -63,7 +63,10 @@ Authors now write MDX instead of template tags:
 
 ## Behavioural notes
 
-- URL scheme is unchanged (`about.html`, `book/01.html`, `/en/`, `/book/en/…`).
+- URL scheme: English is the default language at the root (`search.html`,
+  `book/01.html`); German and Slovene live under `/de/`, `/sl/`, `/book/de/…`,
+  `/book/sl/…`. The legacy `/en/` and `/book/en/…` URLs redirect to the
+  canonical prefix-less locations.
 - The `eb-`/`bookworks` component and class names are gone; see the
   kitchen-sink fixture at `/preview/kitchen-sink/` (excluded from sitemap).
 - Unused locales (French, Spanish) and dead toggles (app builds,
