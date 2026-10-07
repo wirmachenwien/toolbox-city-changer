@@ -8,10 +8,11 @@ import { pageUrl } from '../../lib/site';
 
 const title = t('de', 'search.search-title', 'Search');
 const url = pageUrl('de', 'search');
+const query = Astro.url.searchParams.get('query') ?? '';
 ---
 <PageLayout lang="de" file="search" title={title} layout="search" currentUrl={url}>
   <h1>{title}</h1>
-  <SearchForm lang="de" />
+  <SearchForm lang="de" query={query} />
   <p data-search-status aria-live="polite" />
   <ol class="search-results" data-search-results />
 </PageLayout>

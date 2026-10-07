@@ -36,8 +36,16 @@
   src: url("../assets/fonts/NewsreaderText-BoldItalic.woff2") format("woff2");
 }
 
-/* Self-hosted Clarity City Bold (OFL, see OFL-ClarityCity.txt): the title
-   face, always set in bold. */
+/* Self-hosted Clarity City (OFL, see OFL-ClarityCity.txt): the title
+   face, in Regular and Bold (both from the @cds/city 1.1.0 release). */
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/ClarityCity-Regular.woff2") format("woff2");
+}
+
 @font-face {
   font-family: "Clarity City";
   font-style: normal;
@@ -61,8 +69,7 @@
   --measure: 44rem;
   --font-text: "Newsreader", Georgia, "Times New Roman", serif;
   --font-title: "Clarity City", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  --font-ui: "Clarity City", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 *,
@@ -182,6 +189,45 @@ a:hover {
   color: #fff;
 }
 
+/* Row wrappers only take effect on narrow screens (see below); on desktop
+   they dissolve so brand, search, language picker and toggle lay out
+   exactly as before. */
+.site-head-main,
+.site-head-tools {
+  display: contents;
+}
+
+/* Hamburger icon morph (menu <-> close), driven by aria-expanded which
+   src/scripts/drawer.ts keeps in sync with the sheet. */
+.menu-toggle {
+  position: relative;
+}
+
+.menu-toggle .menu-icon {
+  display: inline-flex;
+  transition: opacity 0.18s ease-in, transform 0.18s ease-in;
+}
+
+.menu-toggle .menu-icon--close {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon--close {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
 /* The drawer toggle is redundant once the side navigation is visible. */
 @media (min-width: 60rem) {
   .menu-toggle {
@@ -189,21 +235,37 @@ a:hover {
   }
 }
 
-/* Narrow screens: the brand and the icon-only menu button share the top row
-   (aligned with the logo and title); search takes a full-width second row. */
+/* Narrow screens: two stacked rows. Row one holds logo, title and the
+   borderless hamburger; row two holds the language picker and search. */
 @media (max-width: 59.99rem) {
+  .site-head-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .site-head-main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
   .brand {
     flex: 1 1 auto;
     margin-inline-end: 0;
   }
 
   .menu-toggle {
-    order: 2;
-    margin-inline-start: auto;
-    padding: 0.45rem 0.6rem;
+    border: 0;
+    padding: 0.45rem;
     min-inline-size: 2.75rem;
     min-block-size: 2.75rem;
     justify-content: center;
+  }
+
+  .menu-toggle:hover {
+    background: transparent;
+    color: inherit;
   }
 
   .menu-toggle .menu-label {
@@ -215,13 +277,22 @@ a:hover {
     white-space: nowrap;
   }
 
-  .lang-menu {
-    order: 3;
+  .site-head-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .site-head-tools .lang-menu {
+    order: -1;
+    flex: none;
   }
 
   .search-form--mini {
-    order: 4;
-    flex: 1 1 100%;
+    flex: 0 1 18rem;
+    min-inline-size: 0;
     max-inline-size: none;
   }
 
@@ -298,13 +369,22 @@ a:hover {
   margin: 0;
   max-block-size: 100dvb;
   inline-size: min(24rem, 90dvw);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.drawer[hidden] {
+  display: none;
 }
 
 /* On narrow screens the drawer docks to the inline-end side — the same side
-   the menu button sits on (mirrored automatically for RTL). */
+   the menu button sits on (mirrored automatically for RTL) — as a
+   full-height sheet covering the sticky masthead. The in-sheet
+   .drawer-toggle-float sits at the hamburger's exact spot (see below). */
 @media (max-width: 59.99rem) {
   .drawer {
     position: fixed;
+    z-index: 30;
     inset-block: 0;
     inset-inline-start: auto;
     inset-inline-end: 0;
@@ -316,12 +396,48 @@ a:hover {
     inline-size: min(22rem, 85dvw);
   }
 
-  .drawer[open] {
+  .drawer:not([hidden]) {
     animation: drawer-in 0.2s ease-out;
   }
 
-  [dir="rtl"] .drawer[open] {
+  [dir="rtl"] .drawer:not([hidden]) {
     animation-name: drawer-in-rtl;
+  }
+
+  /* Floating close toggle: hidden until the drawer opens, then pinned with
+     position: fixed at the header hamburger's exact spot (matching
+     .site-head-inner's 0.6rem block / 1rem inline padding and the toggle's
+     2.75rem touch target). Fixed at body level it never joins the sheet's
+     slide-in — the panel glides underneath while the icon morphs in place,
+     preserving the same-button illusion. Borderless like the header toggle
+     on mobile. */
+  .drawer-toggle-float {
+    display: none;
+  }
+
+  body.drawer-open .drawer-toggle-float {
+    display: inline-flex;
+    position: fixed;
+    z-index: 60;
+    inset-block-start: 0.6rem;
+    inset-inline-end: 1rem;
+    border: 0;
+    padding: 0.45rem;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    justify-content: center;
+    animation: float-in 0.18s ease-out;
+  }
+
+  body.drawer-open .drawer-toggle-float:hover {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
   }
 }
 
@@ -337,24 +453,38 @@ a:hover {
   }
 }
 
-.drawer::backdrop {
+/* Open drawer: the full-height sheet covers the sticky masthead. The header
+   toggle cannot float above the sheet with z-index — the sticky header
+   forms its own stacking context, trapping all descendants behind the
+   sheet. Instead the body-level .drawer-toggle-float pins at the
+   hamburger's exact spot and serves as the close control. */
+body.drawer-open .site-head {
+  z-index: auto;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
   background: rgb(0 0 0 / 0.45);
+}
+
+.drawer-backdrop[hidden] {
+  display: none;
+}
+
+body.drawer-open {
+  overflow: hidden;
 }
 
 .drawer-inner {
   padding: 1.25rem;
+  /* Live masthead height: first links start below the toggle row, since
+     the sheet covers the sticky bar while open. */
+  padding-block-start: var(--site-head-height, 5rem);
   font-family: var(--font-ui);
   max-block-size: 100dvb;
   overflow: auto;
-}
-
-.drawer-close {
-  float: inline-end;
-  background: transparent;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
-  padding: 0.25rem 0.6rem;
-  cursor: pointer;
 }
 
 .nav-section + .nav-section {
@@ -480,7 +610,7 @@ a:hover {
 }
 
 .prose code {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.85em;
   background: var(--panel);
   padding: 0.1em 0.3em;
@@ -826,17 +956,30 @@ html:not(.js-fold) .accordion-content {
 }
 
 /* ---------- Select list ---------- */
+/* Same look as the language dropdown (.lang-menu): inline label plus a
+   bordered native select. Block-level here so it holds its own line in
+   content and wraps on narrow screens. */
 
 .select-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
   font-family: var(--font-ui);
+  font-size: 0.91rem;
   margin-block: 1rem;
+  max-inline-size: 100%;
 }
 
 .select-list select {
   font: inherit;
-  padding: 0.4rem 0.6rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  max-inline-size: 100%;
+  padding: 0.3rem 0.4rem;
+  max-inline-size: 8.5rem;
+  cursor: pointer;
 }
 
 /* ---------- Tables ---------- */
@@ -1006,6 +1149,15 @@ html:not(.js-fold) .accordion-content {
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
+}
+
+/* Neutralize prose list spacing wherever share buttons render in content. */
+.prose .share ul {
+  margin-block: 0;
+}
+
+.prose .share li + li {
+  margin-block-start: 0;
 }
 
 /* ---------- Slideshow ---------- */
@@ -1428,12 +1580,14 @@ html:not(.js-fold) .accordion-content {
 }
 
 .metadata-table dt {
-  font-family: var(--font-ui);
+  font-family: var(--font-title);
   font-weight: 700;
 }
 
 .metadata-table dd {
   margin: 0;
+  font-family: var(--font-title);
+  font-weight: 400;
 }
 
 /* ---------- Contents ---------- */
@@ -1523,6 +1677,13 @@ html:not(.js-fold) .accordion-content {
   inline-size: auto;
 }
 
+/* Badge + trailing text on one vertically centred line. */
+.cc-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .license-box {
   border: 1px solid var(--line);
   border-inline-start: 6px solid var(--ink);
@@ -1578,6 +1739,16 @@ html:not(.js-fold) .accordion-content {
   border-color: var(--ink);
 }
 
+/* Neutralize prose list spacing wherever the switcher renders inside content. */
+.prose .language-switcher-wrap,
+.prose .language-switcher {
+  margin-block: 0;
+}
+
+.prose .language-switcher li + li {
+  margin-block-start: 0;
+}
+
 /* ---------- Kitchen sink ---------- */
 
 .sink-demo {
@@ -1588,7 +1759,7 @@ html:not(.js-fold) .accordion-content {
 }
 
 .sink-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.8rem;
   color: var(--ink-soft);
   margin-block: 2rem 0.25rem;
@@ -1625,29 +1796,62 @@ html:not(.js-fold) .accordion-content {
 }
 
 .sink-icon-name {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.75rem;
   color: var(--ink-soft);
   overflow-wrap: anywhere;
 }
 
-/* ---------- Redaction ---------- */
+/* ---------- Spoiler (click to reveal) ---------- */
 
-.redacted {
+.spoiler {
+  display: inline;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.spoiler-text {
   background: var(--ink);
   color: transparent;
   border-radius: 0.2em;
+  padding-inline: 0.3em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
   user-select: none;
+  transition: background-color 0.15s ease-in, color 0.15s ease-in;
+}
+
+.spoiler:hover .spoiler-text {
+  background: var(--ink-soft);
+}
+
+.spoiler[aria-expanded="true"] .spoiler-text {
+  background: transparent;
+  color: inherit;
+  user-select: auto;
 }
 
 /* ---------- Rotate ---------- */
+/* A bare transform keeps the unrotated layout box, so 90°/270° content
+   would paint outside its container. vertical-rl gives the sideways
+   angles a layout box that actually fits the text (single line reads
+   exactly like the equivalent rotation); 180° keeps its box, so a plain
+   transform is fine there. */
 
 .rotated {
   display: inline-block;
 }
 
 .rotated[data-angle="90"] {
-  transform: rotate(90deg);
+  writing-mode: vertical-rl;
 }
 
 .rotated[data-angle="180"] {
@@ -1655,7 +1859,8 @@ html:not(.js-fold) .accordion-content {
 }
 
 .rotated[data-angle="270"] {
-  transform: rotate(270deg);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
 /* ---------- Annotation (opt-in only) ---------- */
@@ -1688,6 +1893,14 @@ html:not(.js-fold) .accordion-content {
   }
 
   [data-heading-anchor] {
+    transition: none;
+  }
+
+  .menu-toggle .menu-icon {
+    transition: none;
+  }
+
+  .spoiler-text {
     transition: none;
   }
 }

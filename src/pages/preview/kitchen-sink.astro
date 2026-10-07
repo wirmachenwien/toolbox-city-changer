@@ -36,12 +36,12 @@ import PullQuote from '../../components/PullQuote.astro';
 import QrCode from '../../components/QrCode.astro';
 import Question from '../../components/Question.astro';
 import Quiz from '../../components/Quiz.astro';
-import Redacted from '../../components/Redacted.astro';
 import Rotate from '../../components/Rotate.astro';
 import SearchForm from '../../components/SearchForm.astro';
 import SelectList from '../../components/SelectList.astro';
 import Share from '../../components/Share.astro';
 import Slideshow from '../../components/Slideshow.astro';
+import Spoiler from '../../components/Spoiler.astro';
 import TableWrap from '../../components/TableWrap.astro';
 import TitlePage from '../../components/TitlePage.astro';
 import Toc from '../../components/Toc.astro';
@@ -86,7 +86,7 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
     <div class="sink-demo"><ButtonLink href={withBase('/book/contents.html')}>Handbuch öffnen</ButtonLink></div>
 
     <h2 class="sink-label">CcBadge</h2>
-    <div class="sink-demo"><p><CcBadge /> Dieses Handbuch steht unter der Lizenz CC BY 4.0.</p></div>
+    <div class="sink-demo"><p class="cc-line"><CcBadge /> Dieses Handbuch steht unter der Lizenz CC BY 4.0.</p></div>
 
     <h2 class="sink-label">ColorPanel</h2>
     <div class="sink-demo"><ColorPanel tone="warm">Eine farbige Markierung für wichtige Inhalte.</ColorPanel></div>
@@ -194,9 +194,6 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
       />
     </div>
 
-    <h2 class="sink-label">Redacted</h2>
-    <div class="sink-demo"><Redacted>Interner Vermerk</Redacted></div>
-
     <h2 class="sink-label">Rotate</h2>
     <div class="sink-demo"><Rotate angle={90}>Seitliche Notiz</Rotate></div>
 
@@ -218,10 +215,13 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
     <h2 class="sink-label">Slideshow</h2>
     <div class="sink-demo">
       <Slideshow label="Beispielbilder">
-        <Figure src="lendplatz-graz-tactical-urbanism.jpg" alt="Lendplatz Graz" />
-        <Figure src="galileigasse-tactical-urbanism.jpg" alt="Galileigasse Wien" />
+        <Figure src="lendplatz-graz-tactical-urbanism.jpg" alt="Lendplatz Graz">Lendplatz in Graz.</Figure>
+        <Figure src="galileigasse-tactical-urbanism.jpg" alt="Galileigasse Wien">Galileigasse in Wien.</Figure>
       </Slideshow>
     </div>
+
+    <h2 class="sink-label">Spoiler</h2>
+    <div class="sink-demo"><p>Der Schatz liegt <Spoiler lang="de">unter der alten Eiche</Spoiler> vergraben.</p></div>
 
     <h2 class="sink-label">TableWrap</h2>
     <div class="sink-demo">

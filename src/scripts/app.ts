@@ -19,6 +19,7 @@ import { initReadingProgress } from './reading-progress';
 import { initHeadings } from './headings';
 import { initSearchHighlight } from './search-highlight';
 import { initImageTitles } from './image-titles';
+import { initSpoiler } from './spoiler';
 
 initScrollOffset();
 initDrawer();
@@ -38,3 +39,4 @@ initReadingProgress();
 initHeadings();
 initSearchHighlight();
 initImageTitles();
+initSpoiler();

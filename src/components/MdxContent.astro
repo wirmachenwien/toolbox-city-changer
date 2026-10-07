@@ -17,6 +17,7 @@ import Quiz from './Quiz.astro';
 import Question from './Question.astro';
 import FootnoteRef from './FootnoteRef.astro';
 import Endnotes from './Endnotes.astro';
+import Spoiler from './Spoiler.astro';
 
 interface Props {
   entry: CollectionEntry<'book'> | CollectionEntry<'pages'>;
@@ -25,4 +26,4 @@ interface Props {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
-<Content components={{ Figure, Video, ButtonLink, DownloadLink, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, FootnoteRef, Endnotes }} />
+<Content components={{ Figure, Video, ButtonLink, DownloadLink, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, FootnoteRef, Endnotes, Spoiler }} />

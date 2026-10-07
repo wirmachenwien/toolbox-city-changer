@@ -13,7 +13,6 @@
 // - web.indexing.development / web.indexing.live ("index" | "noindex")
 // - pdf.notes ("endnotes" | "footnotes")
 // - pdf.page.size / pdf.page.margin
-// - redact (hides elements marked for redaction)
 import { z } from 'zod';
 
 const toggleSchema = z.object({
@@ -86,7 +85,6 @@ const toggleSchema = z.object({
       notes: 'endnotes',
       page: { size: 'A4', margin: '20mm 16mm 22mm 16mm' },
     }),
-  redact: z.boolean().default(false),
 });
 
 export type Settings = z.infer<typeof toggleSchema>;
@@ -110,5 +108,4 @@ export const settings: Settings = toggleSchema.parse({
     notes: 'endnotes',
     page: { size: 'A4', margin: '20mm 16mm 22mm 16mm' },
   },
-  redact: false,
 });

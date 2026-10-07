@@ -19,7 +19,7 @@
     },
     "search": {
       "search-title": "Suche",
-      "placeholder": "Hier suchen...",
+      "placeholder": "Suche…",
       "placeholder-searching": "Suche...",
       "search-results": "Suchergebnisse",
       "results-for-singular": "Ergebnis gefunden für",
@@ -45,7 +45,17 @@
     },
     "controls": {
       "language-select": "Sprache auswählen",
-      "show-hide": "Anzeigen/Ausblenden"
+      "choose-chapter": "Kapitel wählen…"
+    },
+    "metadata": {
+      "title": "Titel",
+      "subtitle": "Untertitel",
+      "creator": "Urheber",
+      "contributor": "Mitwirkende",
+      "publisher": "Verlag",
+      "language": "Sprache",
+      "identifier": "Identifikator",
+      "description": "Beschreibung"
     },
     "video": {
       "play-video": "Video abspielen"
@@ -68,6 +78,10 @@
     },
     "expandable-box": {
       "read-more": "Aufklappen"
+    },
+    "spoiler": {
+      "show": "Verborgenen Inhalt anzeigen",
+      "hide": "Inhalt wieder verbergen"
     },
     "visual-toc": {
       "link-to-page-assistive-text": "Link zur Seite"
@@ -93,7 +107,7 @@
     },
     "search": {
       "search-title": "Search",
-      "placeholder": "Search here...",
+      "placeholder": "Search…",
       "placeholder-searching": "Searching...",
       "search-results": "Search results",
       "results-for-singular": "result found for",
@@ -119,7 +133,17 @@
     },
     "controls": {
       "language-select": "Select language",
-      "show-hide": "Show/Hide"
+      "choose-chapter": "Choose chapter…"
+    },
+    "metadata": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "creator": "Creator",
+      "contributor": "Contributor",
+      "publisher": "Publisher",
+      "language": "Language",
+      "identifier": "Identifier",
+      "description": "Description"
     },
     "video": {
       "play-video": "Play video"
@@ -143,6 +167,10 @@
     "expandable-box": {
       "read-more": "Expand"
     },
+    "spoiler": {
+      "show": "Show hidden content",
+      "hide": "Hide content again"
+    },
     "visual-toc": {
       "link-to-page-assistive-text": "Link to page"
     }
@@ -162,7 +190,7 @@
     },
     "search": {
       "search-title": "Iskanje",
-      "placeholder": "Išči tukaj...",
+      "placeholder": "Iskanje…",
       "placeholder-searching": "Iskanje...",
       "search-results": "Rezultati iskanja",
       "results-for-singular": "rezultat za",
@@ -188,7 +216,17 @@
     },
     "controls": {
       "language-select": "Izberi jezik",
-      "show-hide": "Prikaži/Skrij"
+      "choose-chapter": "Izberi poglavje…"
+    },
+    "metadata": {
+      "title": "Naslov",
+      "subtitle": "Podnaslov",
+      "creator": "Avtor",
+      "contributor": "Sodelavci",
+      "publisher": "Založba",
+      "language": "Jezik",
+      "identifier": "Identifikator",
+      "description": "Opis"
     },
     "video": {
       "play-video": "Predvajaj video"
@@ -211,6 +249,10 @@
     },
     "expandable-box": {
       "read-more": "Razpri"
+    },
+    "spoiler": {
+      "show": "Prikaži skrito vsebino",
+      "hide": "Znova skrij vsebino"
     },
     "visual-toc": {
       "link-to-page-assistive-text": "Povezava do strani"

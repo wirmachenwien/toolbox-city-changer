@@ -31,9 +31,16 @@
   src: url("fonts/NewsreaderText-BoldItalic.ttf") format("truetype");
 }
 
-/* Self-hosted Clarity City Bold (OFL): the PDF's title face, embedded so
+/* Self-hosted Clarity City (OFL): the PDF's title face, embedded so
    headings and the cover render identically on every platform instead of
    falling back to whatever sans-serif Pango happens to resolve. */
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 400;
+  src: url("fonts/ClarityCity-Regular.ttf") format("truetype");
+}
+
 @font-face {
   font-family: "Clarity City";
   font-style: normal;
@@ -252,6 +259,17 @@ th, td {
 .cc-badge img {
   width: 24mm;
   vertical-align: middle;
+}
+
+/* Spoilers print revealed: paper has no click-to-reveal. */
+.spoiler {
+  border: 0;
+  padding: 0;
+}
+
+.spoiler .spoiler-text {
+  background: transparent;
+  color: inherit;
 }
 
 a {

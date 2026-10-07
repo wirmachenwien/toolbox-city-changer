@@ -39,6 +39,7 @@ VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>
 BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
 COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
 TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
+SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
 CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
 OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
 
@@ -49,6 +50,7 @@ EPUB_FONTS = (
     "NewsreaderText-Italic.ttf",
     "NewsreaderText-Bold.ttf",
     "NewsreaderText-BoldItalic.ttf",
+    "ClarityCity-Regular.ttf",
     "ClarityCity-Bold.ttf",
 )
 FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
@@ -203,6 +205,7 @@ class EpubBook:
         text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
         text = COPY_RE.sub("", text)
         text = TOC_RE.sub("", text)
+        text = SPOILER_RE.sub(lambda m: m.group(1), text)
         text = CCBADGE_RE.sub(
             '<p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> Wir machen Wien, Changing Cities &amp; Prostorož</p>',
             text,
@@ -443,6 +446,12 @@ EPUB_CSS = """@font-face {
   font-style: italic;
   font-weight: 700;
   src: url("../fonts/NewsreaderText-BoldItalic.ttf");
+}
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/ClarityCity-Regular.ttf");
 }
 @font-face {
   font-family: "Clarity City";

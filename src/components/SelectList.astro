@@ -17,7 +17,7 @@ interface Props {
 }
 
 const { id, label, options, lang = 'en' } = Astro.props;
-const prompt = label ?? t(lang, 'controls.show-hide', 'Show/Hide');
+const prompt = label ?? t(lang, 'controls.choose-chapter', 'Choose chapter…');
 ---
 <div class="select-list" data-select-list>
   <label for={id}>{prompt}</label>
