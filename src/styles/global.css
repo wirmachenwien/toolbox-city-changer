@@ -957,6 +957,13 @@ html:not(.js-fold) .accordion-content {
   margin-inline-start: 0.4rem;
 }
 
+/* Icon + label stay centered on one line within the button. */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .copy-btn:hover,
 .share a:hover,
 .share-btn:hover {
@@ -1505,13 +1512,13 @@ html:not(.js-fold) .accordion-content {
 /* ---------- Licence badge ---------- */
 
 .cc-badge {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   vertical-align: middle;
   color: var(--ink);
 }
 
 .cc-badge img {
+  display: block;
   block-size: 1.9375rem;
   inline-size: auto;
 }
