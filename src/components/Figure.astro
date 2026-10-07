@@ -17,7 +17,9 @@ const images = import.meta.glob<{ default: ImageMetadata }>(
   { eager: true },
 );
 
-const match = Object.entries(images).find(([path]) => path.endsWith(`/${src}`));
+const match = Object.entries(images).find(([path]) =>
+  path.endsWith(`/${src.split('/').pop()}`),
+);
 if (!match) {
   throw new Error(`Figure: unknown image "${src}"`);
 }

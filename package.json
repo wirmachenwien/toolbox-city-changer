@@ -3,12 +3,13 @@
   "type": "module",
   "version": "3.0.0",
   "description": "Toolbox for City Changers handbook site (Astro, static)",
+  "license": "AGPL-3.0-only",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run build:downloads && astro build && node scripts/fix-dist.mjs && npm run build:search",
+    "build": "astro build && npm run build:downloads && node scripts/fix-dist.mjs && npm run build:search",
     "build:search": "pagefind --site dist",
     "build:pdf": "python3 scripts/build-pdf.py --all",
     "build:epub": "python3 scripts/build-epub.py --all",
@@ -16,12 +17,12 @@
     "preview": "astro preview",
     "astro": "astro",
     "check:i18n": "node scripts/check-i18n.mjs",
-    "check:baggage": "node scripts/check-baggage.mjs"
+    "check:glossary": "node scripts/verify-glossary.mjs"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.3",
     "astro": "^7.3.6",
     "qrcode": "^1.5.4",
-    "yaml": "^2.9.1",
     "zod": "^4.6.5"
   },
   "allowScripts": {
@@ -30,7 +31,6 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/mdx": "^8.0.3",
-    "@astrojs/sitemap": "^3.7.4",
     "@types/qrcode": "^1.5.6",
     "pagefind": "^1.5.2",
     "typescript": "^6.0.3"

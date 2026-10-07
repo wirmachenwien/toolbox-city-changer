@@ -1,0 +1,37 @@
+---
+ // Spoiler: inline content masked until the reader clicks to reveal it
+ // (replaces the static Redacted span). A native <button> keeps it
+ // keyboard- and touch-operable with no extra code; src/scripts/spoiler.ts
+ // flips aria-expanded plus the tooltip and screen-reader hint. Slot
+ // content must be plain text (no links or buttons: interactive content
+ // cannot nest inside a <button>). Without JS a noscript style reveals
+ // the text so content is never trapped hidden.
+import { t } from '../lib/i18n';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+}
+
+const { lang } = Astro.props;
+const showLabel = t(lang, 'spoiler.show', 'Show hidden content');
+const hideLabel = t(lang, 'spoiler.hide', 'Hide content again');
+---
+<button
+  type="button"
+  class="spoiler"
+  data-spoiler
+  aria-expanded="false"
+  title={showLabel}
+  data-show-label={showLabel}
+  data-hide-label={hideLabel}
+>
+  <span class="spoiler-text"><slot /></span>
+  <span class="visually-hidden" data-spoiler-hint>{showLabel}</span>
+</button>
+<noscript>
+  <style>
+    .spoiler { cursor: text; }
+    .spoiler .spoiler-text { background: transparent; color: inherit; user-select: auto; }
+  </style>
+</noscript>

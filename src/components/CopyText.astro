@@ -1,7 +1,9 @@
 ---
-// Copy-to-clipboard button. Locale strings travel via data attributes;
-// src/scripts/copy.ts wires every [data-copy] button on the page.
+// Copy-to-clipboard button with copy/check icons. Locale strings travel via
+// data attributes; src/scripts/copy.ts wires every [data-copy] button on the
+// page and swaps the icon plus label while the feedback shows.
 import { t } from '../lib/i18n';
+import Icon from './Icon.astro';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -19,5 +21,7 @@ const { value, lang } = Astro.props;
   data-copied-label={t(lang, 'copy.copied', 'Copied')}
   data-failed-label={t(lang, 'copy.copy-failed', 'Sorry, try again')}
 >
-  {t(lang, 'copy.copy', 'Copy')}
+  <span data-copy-icon><Icon name="copy" /></span>
+  <span data-copied-icon hidden><Icon name="check" /></span>
+  <span data-copy-text>{t(lang, 'copy.copy', 'Copy')}</span>
 </button>

@@ -1,8 +1,10 @@
 ---
 // Self-grading multiple-choice quiz. Options are declared in markup; the
-// client script grades against data-correct and reads feedback strings
-// from data attributes (localised at render time).
+// client script grades against data-correct, reads feedback strings from
+// data attributes (localised at render time) and clones the embedded icon
+// templates as per-option marks.
 import { t } from '../lib/i18n';
+import Icon from './Icon.astro';
 import type { Language } from '../data/locales';
 
 export interface QuizOption {
@@ -15,18 +17,19 @@ interface Props {
   question: string;
   options: QuizOption[];
   lang?: Language;
+  feedbackCorrect?: string;
+  feedbackIncorrect?: string;
+  feedbackUnfinished?: string;
 }
 
-const { id, question, options, lang = 'de' } = Astro.props;
+const { id, question, options, lang = 'en', feedbackCorrect, feedbackIncorrect, feedbackUnfinished } = Astro.props;
 ---
 <form
   class="quiz"
   data-quiz={id}
-  data-feedback-correct={t(lang, 'questions.feedback-correct', 'Correct!')}
-  data-feedback-incorrect={t(lang, 'questions.feedback-incorrect', 'Incorrect')}
-  data-feedback-unfinished={t(lang, 'questions.feedback-unfinished', "You haven't selected all the correct answers.")}
-  data-mark-correct={t(lang, 'questions.mark-correct', '✓')}
-  data-mark-incorrect={t(lang, 'questions.mark-incorrect', '✗')}
+  data-feedback-correct={feedbackCorrect ?? t(lang, 'questions.feedback-correct', 'Correct!')}
+  data-feedback-incorrect={feedbackIncorrect ?? t(lang, 'questions.feedback-incorrect', 'Incorrect')}
+  data-feedback-unfinished={feedbackUnfinished ?? t(lang, 'questions.feedback-unfinished', "You haven't selected all the correct answers.")}
 >
   <fieldset>
     <legend>{question}</legend>
@@ -42,6 +45,8 @@ const { id, question, options, lang = 'de' } = Astro.props;
       </label>
     ))}
   </fieldset>
+  <template data-icon-correct><Icon name="check" /></template>
+  <template data-icon-incorrect><Icon name="x" /></template>
   <p class="quiz-feedback" data-feedback aria-live="polite" />
   <button type="submit">{t(lang, 'questions.check-answers-button', 'Check my answers')}</button>
 </form>

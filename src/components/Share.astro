@@ -41,7 +41,7 @@ const available = networks.filter((network) => t(lang, `share.${network.key}`, '
             data-failed-label={t(lang, 'copy.copy-failed', 'Sorry, try again')}
           >
             <Icon name={network.icon} />
-            {t(lang, 'share.link', 'Link')}
+            <span data-copy-text>{t(lang, 'share.link', 'Link')}</span>
           </button>
         </li>
       ) : (

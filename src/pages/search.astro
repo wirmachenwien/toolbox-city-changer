@@ -1,23 +1,22 @@
 ---
-// German search: /search.html — static form plus client-side Pagefind UI.
-import { getCollection } from 'astro:content';
+// English search (default language): /search.html — static form plus client-side Pagefind UI.
+// The page has no MDX source file; its title comes from the locale strings.
 import PageLayout from '../layouts/PageLayout.astro';
 import SearchForm from '../components/SearchForm.astro';
-import MdxContent from '../components/MdxContent.astro';
+import { t } from '../lib/i18n';
 import { pageUrl } from '../lib/site';
 
-const entries = await getCollection('pages');
-const entry = entries.find((item) => item.id === 'de/search');
-if (!entry) throw new Error('Missing German search page');
-const url = pageUrl('de', 'search');
+const title = t('en', 'search.search-title', 'Search');
+const url = pageUrl('en', 'search');
+const query = Astro.url.searchParams.get('query') ?? '';
 ---
-<PageLayout lang="de" file="search" title={entry.data.title} layout="search" currentUrl={url}>
-  <MdxContent entry={entry} />
-  <SearchForm lang="de" />
+<PageLayout lang="en" file="search" title={title} layout="search" currentUrl={url}>
+  <h1>{title}</h1>
+  <SearchForm lang="en" query={query} />
   <p data-search-status aria-live="polite" />
   <ol class="search-results" data-search-results />
 </PageLayout>
 <script>
   import { initSearchUI } from '../scripts/search-ui';
-  void initSearchUI('de');
+  void initSearchUI('en');
 </script>

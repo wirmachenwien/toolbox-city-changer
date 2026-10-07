@@ -24,7 +24,7 @@ export function htmlDir(lang: Language): 'ltr' | 'rtl' {
 }
 
 /** Project name/description/credit for the active language.
- *  Languages without their own project block fall back to the German
+ *  Languages without their own project block fall back to the English
  *  project metadata. */
 export function projectText(lang: Language): { name: string; description: string; credit: string } {
   const locale = getLocale(lang) as {

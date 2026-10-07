@@ -20,8 +20,6 @@ const workSchema = z.object({
   description: z.string().optional().default(''),
   image: z.string().optional().default(''),
   publisher: z.string().optional().default(''),
-  publisherUrl: z.string().optional().default(''),
-  rightsholder: z.string().optional().default(''),
   rights: z.string().optional().default(''),
   language: z.string(),
   date: z.string().optional().default(''),
@@ -29,8 +27,6 @@ const workSchema = z.object({
   type: z.string().optional().default(''),
   subject: z.string().optional().default(''),
   identifier: z.string().optional().default(''),
-  coverage: z.string().optional().default(''),
-  keywords: z.string().optional().default(''),
   products: z.object({
     pdf: z.object({ files: z.array(z.string()), toc: z.array(tocEntrySchema) }),
     web: z.object({ files: z.array(z.string()), nav: z.array(tocEntrySchema) }),
@@ -40,23 +36,9 @@ const workSchema = z.object({
 export type Work = z.infer<typeof workSchema>;
 export type TocEntry = z.infer<typeof tocEntrySchema>;
 
-// Normalise legacy hyphenated keys (publisher-url) to camelCase once.
-function normalise(value: unknown): unknown {
-  if (Array.isArray(value)) return value.map(normalise);
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(
-      Object.entries(value as Record<string, unknown>).map(([k, v]) => [
-        k === 'publisher-url' ? 'publisherUrl' : k,
-        normalise(v),
-      ]),
-    );
-  }
-  return value;
-}
-
 const works = z
   .object({ de: workSchema, en: workSchema, sl: workSchema })
-  .parse(normalise(raw) as Record<Language, unknown>);
+  .parse(raw as Record<Language, unknown>);
 
 // Chapter counters must consistently include a trailing dot, e.g. "2. Title".
 // This keeps generated navigation, pagination, TOCs and any future metadata
@@ -73,9 +55,10 @@ export function getWork(lang: Language): Work {
   return works[lang];
 }
 
-/** Front-matter files that exist for print/PDF but have no web page
- *  (the web version starts at the copyright/contents sheets). */
-export const WEB_EXCLUDED_FILES = ['0-0-cover', '0-1-titlepage', 'index'];
+/** Slugs with no MDX source file and no web page: the cover/title sheets are
+ *  virtual (generated for PDF/EPUB from works.json). The book landings
+ *  (/book/, /book/de/, /book/sl/) are redirect stubs, not content pages. */
+export const WEB_EXCLUDED_FILES = ['0-0-cover', '0-1-titlepage'];
 
 /** Ordered chapter slugs for the web navigation of a language. */
 export function bookOrder(lang: Language): string[] {
@@ -90,6 +73,12 @@ export function bookToc(lang: Language): TocEntry[] {
 /** Web table of contents without the print-only front matter entries. */
 export function webBookToc(lang: Language): TocEntry[] {
   return bookToc(lang).filter((entry) => !WEB_EXCLUDED_FILES.includes(entry.file));
+}
+
+/** Label of the contents page. The contents sheet has no MDX source file;
+ *  its title comes from the book catalogue (single source of truth). */
+export function contentsLabel(lang: Language): string {
+  return bookToc(lang).find((entry) => entry.file === 'contents')?.label ?? 'Contents';
 }
 
 /** Previous/next chapter slugs around the given file, or null at the ends. */

@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -24,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "src" / "content" / "book"
 ASSETS = ROOT / "src" / "assets"
 DATA = ROOT / "src" / "data" / "works.json"
+GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
 PRINT_CSS = ROOT / "src" / "styles" / "print.css"
 
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
@@ -34,6 +36,7 @@ VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>
 BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
 COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
 TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
+SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
 CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
 OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
 FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
@@ -45,8 +48,13 @@ TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
 FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
 ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
+GLOSSARY_LANG_RE = re.compile(r'<Glossary\s+lang="(de|en|sl)"\s*/>')
 QUIZ_RE = re.compile(
-    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"\s+options=\{\[(.*?)\]\}\s*/>',
+    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
+    re.DOTALL,
+)
+QUESTION_RE = re.compile(
+    r'<Question\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}[^>]*?answer=\{(\d+)\}[^>]*/?>',
     re.DOTALL,
 )
 
@@ -62,18 +70,72 @@ def front_opener(lang: str) -> str:
     return match.group(1) if match else ""
 
 
-def image_uri(filename: str) -> str:
+def find_asset(filename: str) -> Path | None:
+    """Repo file backing a content image name (book, site, then public)."""
+    # The CMS image picker may store a repo-relative path; match by basename.
+    name = filename.rsplit("/", 1)[-1]
     for folder in ("book", "site"):
-        candidate = ASSETS / folder / filename
+        candidate = ASSETS / folder / name
         if candidate.exists():
-            return candidate.as_uri()
+            return candidate
     # Site chrome lives in public/ (e.g. the official CC badge PNG, which
     # WeasyPrint can embed; SVG is not a supported image format for print).
-    candidate = ROOT / "public" / "images" / filename
+    candidate = ROOT / "public" / "images" / name
     if candidate.exists():
-        return candidate.as_uri()
+        return candidate
+    return None
+
+
+def image_uri(filename: str) -> str:
+    source = find_asset(filename)
+    if source is not None:
+        return source.as_uri()
     print(f"warning: image not found: {filename}", file=sys.stderr)
     return filename
+
+
+# The print cover shows the hero photo full-bleed on an A4 page. Below this
+# effective resolution it starts to look soft in print; still build, but say
+# so (non-breaking) so a low-resolution hero photo gets noticed.
+A4_WIDTH_IN = 210 / 25.4
+A4_HEIGHT_IN = 297 / 25.4
+MIN_COVER_DPI = 150
+
+
+def cover_resolution_warning(filename: str) -> str | None:
+    """Warn when the cover photo prints below MIN_COVER_DPI on full-bleed A4.
+
+    With `background-size: cover` the effective DPI is limited by the
+    tighter axis, i.e. min(width / page-width, height / page-height).
+    Returns a warning string, or None when the resolution is fine (or the
+    file cannot be measured, e.g. vectors or missing Pillow).
+    """
+    if not filename:
+        return None
+    source = find_asset(filename)
+    if source is None:
+        return None
+    try:
+        from PIL import Image
+    except ImportError:
+        return None
+    try:
+        with Image.open(source) as image:
+            width, height = image.size
+    except Exception:
+        return None
+    dpi = min(width / A4_WIDTH_IN, height / A4_HEIGHT_IN)
+    if dpi >= MIN_COVER_DPI:
+        return None
+    need_width = math.ceil(MIN_COVER_DPI * A4_WIDTH_IN)
+    need_height = math.ceil(MIN_COVER_DPI * A4_HEIGHT_IN)
+    name = filename.rsplit("/", 1)[-1]
+    return (
+        f"warning: cover image {name} is {width}x{height} px "
+        f"(~{dpi:.0f} DPI on full-bleed A4); "
+        f"use at least {need_width}x{need_height} px "
+        f"({MIN_COVER_DPI} DPI) for crisp print"
+    )
 
 
 def cc_badge_html() -> str:
@@ -81,8 +143,8 @@ def cc_badge_html() -> str:
     return (
         '<p class="cc-badge">'
         f'<img src="{src}" alt="CC BY 4.0" width="88" height="31"/> '
-        '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0 Wir machen Wien, '
-        'Changing Cities &amp; Prostorož</a></p>'
+        '<a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> Wir machen Wien, '
+        'Changing Cities &amp; Prostorož</p>'
     )
 
 
@@ -104,7 +166,7 @@ def print_css() -> str:
     return FONT_RE.sub(lambda m: f'url("{font_uri(m.group(1))}")', css)
 
 
-def convert_mdx(text: str) -> str:
+def convert_mdx(text: str, lang: str = "de") -> str:
     text = FRONTMATTER_RE.sub("", text, count=1)
 
     def figure(match: re.Match[str]) -> str:
@@ -122,6 +184,7 @@ def convert_mdx(text: str) -> str:
     text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
     text = COPY_RE.sub("", text)
     text = TOC_RE.sub("", text)
+    text = SPOILER_RE.sub(lambda m: m.group(1), text)
     text = CCBADGE_RE.sub(cc_badge_html(), text)
     text = FEATURE_OPEN_RE.sub(lambda m: f'\n\n<div class="feature-box"><p><strong>{m.group(1)}</strong></p>\n' if m.group(1) else '\n\n<div class="feature-box">\n', text)
     text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
@@ -132,7 +195,9 @@ def convert_mdx(text: str) -> str:
     text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{m.group(1)}">{m.group(2)}</sup>', text)
     text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
-    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2)), text)
+    text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1)), text)
+    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang), text)
+    text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), lang), text)
     return text.strip() + "\n"
 
 
@@ -153,25 +218,51 @@ def glossary_html(source: str) -> str:
     return f'\n\n<dl class="glossary">{items}</dl>\n'
 
 
+def glossary_lang_html(lang: str) -> str:
+    """Full shared glossary for a language (src/data/glossary.json)."""
+    data = json.loads(GLOSSARY_DATA.read_text(encoding="utf-8"))
+    items = ''.join(
+        f'<dt>{entry["term"]}</dt><dd>{entry["definition"]}</dd>'
+        for entry in data.get(lang, [])
+    )
+    return f'\n\n<dl class="glossary">{items}</dl>\n'
+
+
 def endnotes_html(source: str) -> str:
     items = ''.join(f'<li id="note-{note_id}">{text}</li>' for note_id, text in note_entries(source))
     return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
 
 
-def quiz_html(question: str, source: str) -> str:
+QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
+
+
+def quiz_html(question: str, source: str, lang: str = "de") -> str:
     options = ''.join(f'<li>{label}</li>' for label, _ in option_entries(source))
     correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(option_entries(source)) if is_correct)
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
     return (
         f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
         f'<ol>{options}</ol>'
-        f'<p style="transform: rotate(180deg);">Richtige Antworten: {correct}</p></div>\n'
+        f'<p style="transform: rotate(180deg);">{label}: {correct}</p></div>\n'
     )
 
 
-def chapter_html(slug: str, md_text: str) -> str:
+def question_html(question: str, source: str, answer: str, lang: str = "de") -> str:
+    """Single-choice Question: plain string options plus a 0-based answer index."""
+    options = re.findall(r'"([^"]+)"', source)
+    items = ''.join(f'<li>{label}</li>' for label in options)
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
+    return (
+        f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
+        f'<ol>{items}</ol>'
+        f'<p style="transform: rotate(180deg);">{label}: {int(answer) + 1}</p></div>\n'
+    )
+
+
+def chapter_html(slug: str, md_text: str, lang: str = "de") -> str:
     import markdown  # pip: markdown
 
-    body = markdown.markdown(convert_mdx(md_text), extensions=["extra"])
+    body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
     return f'<section class="chapter" id="file-{slug}">\n{body}\n</section>'
 
 
@@ -190,27 +281,33 @@ def build_document(lang: str) -> str:
     toc: list[dict] = works["products"]["pdf"]["toc"]
     title = works["title"]
     # The cover is generated from the start-page hero image + metadata.
-    cover_uri = image_uri(front_opener(lang) or works.get("image") or "cover.jpg")
+    cover_file = front_opener(lang) or works.get("image") or ""
+    cover_uri = image_uri(cover_file) if cover_file else ""
+    cover_style = f"background-image: url('{cover_uri}')" if cover_uri else ""
+    cover_warning = cover_resolution_warning(cover_file)
+    if cover_warning:
+        print(cover_warning, file=sys.stderr)
 
     parts = [
         "<!doctype html>",
         f'<html lang="{lang}"><head><meta charset="utf-8">',
         f"<title>{title}</title></head><body>",
     ]
+    # The cover and title sheets are virtual: they have no MDX source file
+    # (see src/content/book/<lang>/) and are generated here from the book
+    # metadata in works.json plus the start-page hero image.
     for slug in files:
-        path = CONTENT / lang / f"{slug}.mdx"
-        if not path.exists():
-            print(f"warning: missing chapter {path}", file=sys.stderr)
-            continue
-        md_text = path.read_text(encoding="utf-8")
         if slug == "0-0-cover":
+            style_attr = f' style="{cover_style}"' if cover_style else ""
             parts.append(
-                '<section class="cover-sheet">'
-                f'<img src="{cover_uri}" alt=""/>'
-                f"<h1>{title}</h1><p>{works.get('subtitle', '')}</p>"
-                f"<p>{works.get('creator', '')}</p></section>"
+                f'<section class="cover-sheet"{style_attr}>'
+                '<div class="cover-scrim"></div>'
+                '<div class="cover-text">'
+                f"<h1>{title}</h1><p class=\"cover-sub\">{works.get('subtitle', '')}</p>"
+                "</div></section>"
             )
-        elif slug == "0-1-titlepage":
+            continue
+        if slug == "0-1-titlepage":
             parts.append(
                 '<section class="chapter frontmatter-sheet">'
                 f"<h1>{title}</h1><p>{works.get('subtitle', '')}</p>"
@@ -218,10 +315,28 @@ def build_document(lang: str) -> str:
                 f"<p>{works.get('contributor', '')}</p>"
                 f"<p>{works.get('publisher', '')}</p></section>"
             )
-        elif slug == "0-2-about":
-            body = markdown.markdown(convert_mdx(md_text), extensions=["extra"])
+            continue
+        # The contents sheet is virtual too: generated from the catalogue.
+        if slug == "contents":
+            contents_title = next(
+                (entry["label"] for entry in toc if entry["file"] == "contents"),
+                "Contents",
+            )
+            parts.append(
+                '<section class="chapter frontmatter-sheet">'
+                f"<h1>{contents_title}</h1>"
+                f"{toc_html(toc)}</section>"
+            )
+            continue
+        path = CONTENT / lang / f"{slug}.mdx"
+        if not path.exists():
+            print(f"warning: missing chapter {path}", file=sys.stderr)
+            continue
+        md_text = path.read_text(encoding="utf-8")
+        if slug == "about":
+            body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
             about_label = next(
-                (entry["label"] for entry in toc if entry["file"] == "0-2-about"),
+                (entry["label"] for entry in toc if entry["file"] == "about"),
                 "About",
             )
             # The CC BY badge is print-only (absent from the web page): place
@@ -232,14 +347,8 @@ def build_document(lang: str) -> str:
                 '<section class="chapter frontmatter-sheet">'
                 f"<h1>{about_label}</h1>{body}</section>"
             )
-        elif slug == "0-3-contents":
-            parts.append(
-                '<section class="chapter frontmatter-sheet">'
-                f"<h1>{works['products']['pdf']['toc'][3]['label']}</h1>"
-                f"{toc_html(toc)}</section>"
-            )
         else:
-            parts.append(chapter_html(slug, md_text))
+            parts.append(chapter_html(slug, md_text, lang))
     parts.append("</body></html>")
     parts.insert(
         2,
@@ -250,17 +359,17 @@ def build_document(lang: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build handbook PDFs with WeasyPrint.")
-    parser.add_argument("--lang", choices=["de", "en", "sl"], default="de")
+    parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
     parser.add_argument(
         "--out",
-        default="public/downloads",
-        help="output directory (public/downloads is copied into dist/ by Astro)",
+        default="dist/downloads",
+        help="output directory (served from dist/ by the site)",
     )
     parser.add_argument("--all", action="store_true", help="build PDFs for de/en/sl")
     parser.add_argument("--html-only", action="store_true", help="skip WeasyPrint, emit HTML")
     args = parser.parse_args()
 
-    jobs = ("de", "en", "sl") if args.all else (args.lang,)
+    jobs = ("en", "de", "sl") if args.all else (args.lang,)
     out_dir = ROOT / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
 

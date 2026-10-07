@@ -1,66 +1,51 @@
 /* Print stylesheet for the WeasyPrint PDF pipeline (scripts/build-pdf.py).
    Screen styles live in global.css; this file only ships to print.
    The font url() paths below are logical: build-pdf.py rewrites them to
-   file:// URIs of the self-hosted Source Serif 4 files so the PDF embeds
+   file:// URIs of the self-hosted Newsreader files so the PDF embeds
    the same body font as the website. */
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
-  src: url("fonts/SourceSerif4-Regular.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 700;
-  src: url("fonts/SourceSerif4-Bold.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-Bold.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 400;
-  src: url("fonts/SourceSerif4-Italic.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-Italic.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 700;
-  src: url("fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+  src: url("fonts/NewsreaderText-BoldItalic.ttf") format("truetype");
 }
 
-/* Self-hosted Source Sans 3 (OFL): the PDF's sans counterpart to the
-   site's system-ui stack, embedded so headings and captions render
-   identically on every platform instead of falling back to whatever
-   sans-serif Pango happens to resolve (e.g. Verdana or DejaVu Sans). */
+/* Self-hosted Clarity City (OFL): the PDF's title face, embedded so
+   headings and the cover render identically on every platform instead of
+   falling back to whatever sans-serif Pango happens to resolve. */
 @font-face {
-  font-family: "Source Sans 3";
+  font-family: "Clarity City";
   font-style: normal;
   font-weight: 400;
-  src: url("fonts/SourceSans3-Regular.ttf") format("truetype");
+  src: url("fonts/ClarityCity-Regular.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: "Source Sans 3";
+  font-family: "Clarity City";
   font-style: normal;
   font-weight: 700;
-  src: url("fonts/SourceSans3-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 400;
-  src: url("fonts/SourceSans3-Italic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Source Sans 3";
-  font-style: italic;
-  font-weight: 700;
-  src: url("fonts/SourceSans3-BoldItalic.ttf") format("truetype");
+  src: url("fonts/ClarityCity-Bold.ttf") format("truetype");
 }
 @page {
   size: A4;
@@ -69,12 +54,12 @@
     /* Chapter title on follow-up pages only: first-except stays empty
        on the page where the chapter heading sets the string. */
     content: string(chapter, first-except);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
     color: #555;
   }
   @bottom-center {
     content: counter(page);
-    font: 8pt "Source Sans 3", system-ui, sans-serif;
+    font: 8pt "Clarity City", system-ui, sans-serif;
   }
 }
 
@@ -89,7 +74,7 @@
 }
 
 html {
-  font: 11pt/1.5 "Source Serif 4", Georgia, "Times New Roman", serif;
+  font: 11.5pt/1.5 "Newsreader", Georgia, "Times New Roman", serif;
   color: #111;
 }
 
@@ -98,7 +83,8 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-weight: 700;
   line-height: 1.25;
 }
 
@@ -126,16 +112,84 @@ section.chapter {
   page-break-before: always;
 }
 
-.cover-sheet {
-  page: cover;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding-top: 40mm;
+/* Pagination hygiene: no stranded lines and no headings or
+   boxes split across page breaks. WeasyPrint honors orphans, widows and
+   break-*: avoid; every box below always fits on a single A4 page. */
+p, li, dd, blockquote, figcaption {
+  orphans: 3;
+  widows: 3;
 }
 
-.cover-sheet img {
-  max-width: 120mm;
+h1, h2, h3 {
+  break-after: avoid;
+}
+
+figure, table, blockquote, .feature-box, .quiz, dl.glossary {
+  break-inside: avoid;
+}
+
+/* Accordions print fully expanded: the screen collapse animation has no
+   meaning on paper, so flatten the grid and let every box break freely. */
+.accordion-body {
+  display: block;
+}
+
+.accordion-content {
+  overflow: visible;
+}
+
+.accordion {
+  break-inside: auto;
+}
+
+/* Full-bleed cover: the hero photo fills the entire first page with no
+   margins or frames (the image URL is injected inline by build-pdf.py);
+   the metadata sits on top in a bottom-anchored scrim so it stays legible
+   on any photo. */
+.cover-sheet {
+  page: cover;
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: #fff;
+}
+
+.cover-sheet .cover-scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(0, 0, 0, 0.45) 40%,
+    rgba(0, 0, 0, 0.05) 70%,
+    rgba(0, 0, 0, 0.25) 100%
+  );
+}
+
+.cover-sheet .cover-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18mm 16mm 14mm;
+}
+
+.cover-sheet h1 {
+  font-size: 34pt;
+  line-height: 1.1;
+  color: #fff;
+  margin: 0 0 8pt;
+}
+
+.cover-sheet .cover-sub {
+  font-size: 13pt;
+  margin: 0;
 }
 
 .frontmatter-sheet {
@@ -151,7 +205,7 @@ figure img {
 }
 
 figcaption {
-  font: 8.5pt "Source Sans 3", system-ui, sans-serif;
+  font: 9pt "Clarity City", system-ui, sans-serif;
   color: #444;
   margin-top: 4pt;
 }
@@ -181,8 +235,8 @@ blockquote {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-family: "Source Sans 3", system-ui, sans-serif;
-  font-size: 9.5pt;
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-size: 10pt;
 }
 
 th, td {
@@ -193,18 +247,29 @@ th, td {
 
 .footnote {
   float: footnote;
-  font-size: 8.5pt;
+  font-size: 9pt;
 }
 
 .cc-badge {
   display: block;
-  font: 9pt "Source Sans 3", system-ui, sans-serif;
+  font: 9.5pt "Clarity City", system-ui, sans-serif;
   margin: 8pt 0;
 }
 
 .cc-badge img {
   width: 24mm;
   vertical-align: middle;
+}
+
+/* Spoilers print revealed: paper has no click-to-reveal. */
+.spoiler {
+  border: 0;
+  padding: 0;
+}
+
+.spoiler .spoiler-text {
+  background: transparent;
+  color: inherit;
 }
 
 a {

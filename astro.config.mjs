@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
+import { satteri } from '@astrojs/markdown-satteri';
 
 export default defineConfig({
   site: 'https://wirmachenwien.github.io',
@@ -12,11 +12,5 @@ export default defineConfig({
     // book/01 -> book/01.html (no trailing-slash directories).
     format: 'file',
   },
-  integrations: [
-    mdx(),
-    sitemap({
-      filter: (page) =>
-        !page.includes('/preview/') && !page.includes('404'),
-    }),
-  ],
+  integrations: [mdx()],
 });

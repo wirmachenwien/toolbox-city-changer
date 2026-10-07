@@ -4,7 +4,7 @@
 // - math.enabled / math.source ("cdn" | "local")
 // - web.pagination / web.paginationType
 
-// - web.accordion / web.accordionLevel / web.accordionAutoClose
+// - web.accordion / web.accordionLevel
 // - web.svgInject, web.lazyload
 // - web.bookmarks.enabled / web.bookmarks.noteMaxLength
 // - web.nav.expandBooks / web.nav.projectNavPosition ("before" | "after")
@@ -13,7 +13,6 @@
 // - web.indexing.development / web.indexing.live ("index" | "noindex")
 // - pdf.notes ("endnotes" | "footnotes")
 // - pdf.page.size / pdf.page.margin
-// - redact (hides elements marked for redaction)
 import { z } from 'zod';
 
 const toggleSchema = z.object({
@@ -31,7 +30,6 @@ const toggleSchema = z.object({
         .default('title-arrows'),
       accordion: z.boolean().default(false),
       accordionLevel: z.enum(['h2', 'h3']).default('h3'),
-      accordionAutoClose: z.boolean().default(false),
       svgInject: z.boolean().default(true),
       lazyload: z.boolean().default(true),
       bookmarks: z
@@ -65,7 +63,6 @@ const toggleSchema = z.object({
       paginationType: 'title-arrows',
       accordion: false,
       accordionLevel: 'h3',
-      accordionAutoClose: false,
       svgInject: true,
       lazyload: true,
       bookmarks: { enabled: true, noteMaxLength: 5000 },
@@ -88,7 +85,6 @@ const toggleSchema = z.object({
       notes: 'endnotes',
       page: { size: 'A4', margin: '20mm 16mm 22mm 16mm' },
     }),
-  redact: z.boolean().default(false),
 });
 
 export type Settings = z.infer<typeof toggleSchema>;
@@ -100,7 +96,6 @@ export const settings: Settings = toggleSchema.parse({
       paginationType: 'title-arrows',
       accordion: false,
     accordionLevel: 'h3',
-    accordionAutoClose: false,
     svgInject: true,
     lazyload: true,
     bookmarks: { enabled: true, noteMaxLength: 5000 },
@@ -113,5 +108,4 @@ export const settings: Settings = toggleSchema.parse({
     notes: 'endnotes',
     page: { size: 'A4', margin: '20mm 16mm 22mm 16mm' },
   },
-  redact: false,
 });

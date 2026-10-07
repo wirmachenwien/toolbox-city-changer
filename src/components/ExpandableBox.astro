@@ -1,5 +1,6 @@
 ---
-// Expandable "read more" box, also native <details>.
+// Expandable "read more" box: same visuals and exclusive behaviour as
+// Accordion (shared classes), only the default summary label differs.
 import { t } from '../lib/i18n';
 import type { Language } from '../data/locales';
 
@@ -7,11 +8,13 @@ interface Props {
   title?: string;
   lang?: Language;
 }
-const { title, lang = 'de' } = Astro.props;
+const { title, lang = 'en' } = Astro.props;
 ---
-<details class="expandable">
+<details class="accordion">
   <summary>{title ?? t(lang, 'expandable-box.read-more', 'Expand')}</summary>
-  <div class="expandable-body">
-    <slot />
+  <div class="accordion-body">
+    <div class="accordion-content">
+      <slot />
+    </div>
   </div>
 </details>

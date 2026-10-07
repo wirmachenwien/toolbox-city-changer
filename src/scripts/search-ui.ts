@@ -3,6 +3,7 @@
 // locale-aware result counts. Results are filtered to the active language
 // by URL prefix (de: no prefix, en: /en/, sl: /sl/).
 import { t } from '../lib/i18n';
+import { DEFAULT_LANG } from '../lib/site';
 import type { Language } from '../data/locales';
 
 interface PagefindResult {
@@ -28,15 +29,15 @@ function basePath(): string {
 }
 
 function langPrefix(lang: Language): string {
-  return lang === 'de' ? '/' : `/${lang}/`;
+  return lang === DEFAULT_LANG ? '/' : `/${lang}/`;
 }
 
 function inLanguage(url: string, lang: Language): boolean {
   const prefix = langPrefix(lang);
   if (!url.startsWith(prefix)) return false;
-  if (lang !== 'de') return true;
+  if (lang !== DEFAULT_LANG) return true;
   const rest = url.slice(prefix.length);
-  return !rest.startsWith('en/') && !rest.startsWith('sl/');
+  return !rest.startsWith('de/') && !rest.startsWith('sl/');
 }
 
 /** Pagefind records site-root-relative URLs; rebase them under the subpath. */
@@ -47,18 +48,29 @@ function publicUrl(url: string): string {
 export async function initSearchUI(lang: Language): Promise<void> {
   const params = new URLSearchParams(location.search);
   const query = (params.get('query') ?? '').trim();
-  const input = document.querySelector<HTMLInputElement>('[data-search-form] input[name="query"]');
+  // The page form carries id="site-search"; the navbar mini form (which
+  // comes first in the DOM) uses id="head-search" — a generic
+  // [data-search-form] selector would hit the navbar input instead.
+  const input =
+    document.querySelector<HTMLInputElement>('#site-search') ??
+    document.querySelector<HTMLInputElement>('[data-search-form] input[name="query"]');
   const status = document.querySelector('[data-search-status]');
   const list = document.querySelector('[data-search-results]');
   if (!input || !status || !list) return;
   if (query) input.value = query;
-  input.placeholder = t(lang, 'search.placeholder-searching', 'Searching...');
   if (!query) {
     status.textContent = '';
     return;
   }
   status.textContent = t(lang, 'search.placeholder-searching', 'Searching...');
   try {
+    if (import.meta.env.DEV) {
+      // The Pagefind index is generated into dist/ after the build, so it
+      // never exists under `astro dev` — skip the request (it would 404
+      // against the [...slug] catch-all) and render the empty state.
+      render(lang, query, [], status, list);
+      return;
+    }
     if (!window.pagefind) {
       const module = (await import(
         /* @vite-ignore */ `${basePath()}/pagefind/pagefind.js`

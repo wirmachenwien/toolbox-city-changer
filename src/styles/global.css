@@ -1,38 +1,57 @@
 /* Toolbox for City Changers — global stylesheet.
    Modern CSS, logical properties throughout so RTL locales mirror for free. */
 
-/* Self-hosted Source Serif 4 (OFL) so body copy renders identically
-   online and in the WeasyPrint PDF, which embeds the same files. */
+/* Self-hosted Newsreader Text (OFL, see OFL-Newsreader.txt) so body copy
+   renders identically online and in the WeasyPrint PDF, which embeds the
+   same files. Static instances at the text optical size (opsz 16). */
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-Regular.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-Regular.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-Bold.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-Bold.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 400;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-Italic.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-Italic.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "Source Serif 4";
+  font-family: "Newsreader";
   font-style: italic;
   font-weight: 700;
   font-display: swap;
-  src: url("../assets/fonts/SourceSerif4-BoldItalic.ttf") format("truetype");
+  src: url("../assets/fonts/NewsreaderText-BoldItalic.woff2") format("woff2");
+}
+
+/* Self-hosted Clarity City (OFL, see OFL-ClarityCity.txt): the title
+   face, in Regular and Bold (both from the @cds/city 1.1.0 release). */
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/ClarityCity-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Clarity City";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/ClarityCity-Bold.woff2") format("woff2");
 }
 
 :root {
@@ -48,9 +67,9 @@
   --warn-soft: #fbf0dc;
   --radius: 0.6rem;
   --measure: 44rem;
-  --font-text: "Source Serif 4", Georgia, "Times New Roman", serif;
-  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+  --font-text: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-title: "Clarity City", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-ui: "Clarity City", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 *,
@@ -61,7 +80,9 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-block-start: 5rem;
+  /* Runtime-measured sticky-header height (+ margin); falls back to a
+     desktop-sized header when JS is unavailable. */
+  scroll-padding-block-start: var(--scroll-offset, 5rem);
 }
 
 body {
@@ -69,7 +90,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-text);
-  font-size: 1.075rem;
+  font-size: 1.15rem;
   line-height: 1.65;
 }
 
@@ -139,7 +160,7 @@ a:hover {
   gap: 0.6rem;
   color: var(--ink);
   text-decoration: none;
-  font-family: var(--font-ui);
+  font-family: var(--font-title);
   font-weight: 700;
   font-size: 1rem;
   margin-inline-end: auto;
@@ -155,7 +176,7 @@ a:hover {
   align-items: center;
   gap: 0.4rem;
   font-family: var(--font-ui);
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
@@ -168,10 +189,117 @@ a:hover {
   color: #fff;
 }
 
+/* Row wrappers only take effect on narrow screens (see below); on desktop
+   they dissolve so brand, search, language picker and toggle lay out
+   exactly as before. */
+.site-head-main,
+.site-head-tools {
+  display: contents;
+}
+
+/* Hamburger icon morph (menu <-> close), driven by aria-expanded which
+   src/scripts/drawer.ts keeps in sync with the sheet. */
+.menu-toggle {
+  position: relative;
+}
+
+.menu-toggle .menu-icon {
+  display: inline-flex;
+  transition: opacity 0.18s ease-in, transform 0.18s ease-in;
+}
+
+.menu-toggle .menu-icon--close {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon {
+  opacity: 0;
+  transform: rotate(90deg);
+}
+
+.menu-toggle[aria-expanded="true"] .menu-icon--close {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
 /* The drawer toggle is redundant once the side navigation is visible. */
 @media (min-width: 60rem) {
   .menu-toggle {
     display: none;
+  }
+}
+
+/* Narrow screens: two stacked rows. Row one holds logo, title and the
+   borderless hamburger; row two holds the language picker and search. */
+@media (max-width: 59.99rem) {
+  .site-head-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+
+  .site-head-main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .brand {
+    flex: 1 1 auto;
+    margin-inline-end: 0;
+  }
+
+  .menu-toggle {
+    border: 0;
+    padding: 0.45rem;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    justify-content: center;
+  }
+
+  .menu-toggle:hover {
+    background: transparent;
+    color: inherit;
+  }
+
+  .menu-toggle .menu-label {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .site-head-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .site-head-tools .lang-menu {
+    order: -1;
+    flex: none;
+  }
+
+  .search-form--mini {
+    flex: 0 1 18rem;
+    min-inline-size: 0;
+    max-inline-size: none;
+  }
+
+  /* iOS zooms (and pans the page) when focusing inputs below 16px; keep the
+     mobile search at 16px so entering text never zooms or scrolls. */
+  .search-form--mini input[type="search"] {
+    font-size: 16px;
   }
 }
 
@@ -215,7 +343,7 @@ a:hover {
   align-items: center;
   gap: 0.3rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .lang-menu > .icon {
@@ -241,26 +369,122 @@ a:hover {
   margin: 0;
   max-block-size: 100dvb;
   inline-size: min(24rem, 90dvw);
+  background: var(--paper);
+  color: var(--ink);
 }
 
-.drawer::backdrop {
+.drawer[hidden] {
+  display: none;
+}
+
+/* On narrow screens the drawer docks to the inline-end side — the same side
+   the menu button sits on (mirrored automatically for RTL) — as a
+   full-height sheet covering the sticky masthead. The in-sheet
+   .drawer-toggle-float sits at the hamburger's exact spot (see below). */
+@media (max-width: 59.99rem) {
+  .drawer {
+    position: fixed;
+    z-index: 30;
+    inset-block: 0;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    margin-block: 0;
+    margin-inline-start: auto;
+    margin-inline-end: 0;
+    max-block-size: none;
+    block-size: 100dvb;
+    inline-size: min(22rem, 85dvw);
+  }
+
+  .drawer:not([hidden]) {
+    animation: drawer-in 0.2s ease-out;
+  }
+
+  [dir="rtl"] .drawer:not([hidden]) {
+    animation-name: drawer-in-rtl;
+  }
+
+  /* Floating close toggle: hidden until the drawer opens, then pinned with
+     position: fixed at the header hamburger's exact spot (matching
+     .site-head-inner's 0.6rem block / 1rem inline padding and the toggle's
+     2.75rem touch target). Fixed at body level it never joins the sheet's
+     slide-in — the panel glides underneath while the icon morphs in place,
+     preserving the same-button illusion. Borderless like the header toggle
+     on mobile. */
+  .drawer-toggle-float {
+    display: none;
+  }
+
+  body.drawer-open .drawer-toggle-float {
+    display: inline-flex;
+    position: fixed;
+    z-index: 60;
+    inset-block-start: 0.6rem;
+    inset-inline-end: 1rem;
+    border: 0;
+    padding: 0.45rem;
+    min-inline-size: 2.75rem;
+    min-block-size: 2.75rem;
+    justify-content: center;
+    animation: float-in 0.18s ease-out;
+  }
+
+  body.drawer-open .drawer-toggle-float:hover {
+    background: transparent;
+    color: inherit;
+  }
+}
+
+@keyframes float-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes drawer-in-rtl {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+/* Open drawer: the full-height sheet covers the sticky masthead. The header
+   toggle cannot float above the sheet with z-index — the sticky header
+   forms its own stacking context, trapping all descendants behind the
+   sheet. Instead the body-level .drawer-toggle-float pins at the
+   hamburger's exact spot and serves as the close control. */
+body.drawer-open .site-head {
+  z-index: auto;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
   background: rgb(0 0 0 / 0.45);
+}
+
+.drawer-backdrop[hidden] {
+  display: none;
+}
+
+body.drawer-open {
+  overflow: hidden;
 }
 
 .drawer-inner {
   padding: 1.25rem;
+  /* Live masthead height: first links start below the toggle row, since
+     the sheet covers the sticky bar while open. */
+  padding-block-start: var(--site-head-height, 5rem);
   font-family: var(--font-ui);
   max-block-size: 100dvb;
   overflow: auto;
-}
-
-.drawer-close {
-  float: inline-end;
-  background: transparent;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
-  padding: 0.25rem 0.6rem;
-  cursor: pointer;
 }
 
 .nav-section + .nav-section {
@@ -321,7 +545,7 @@ a:hover {
 
 .side-nav {
   font-family: var(--font-ui);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
 }
 
 @media (max-width: 59.99rem) {
@@ -347,7 +571,8 @@ a:hover {
 .prose h2,
 .prose h3,
 .prose h4 {
-  font-family: var(--font-ui);
+  font-family: var(--font-title);
+  font-weight: 700;
   line-height: 1.25;
   text-wrap: balance;
 }
@@ -385,7 +610,7 @@ a:hover {
 }
 
 .prose code {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.85em;
   background: var(--panel);
   padding: 0.1em 0.3em;
@@ -396,15 +621,15 @@ a:hover {
 
 .crumbs {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   margin-block-end: 1rem;
 }
 
 /* Breadcrumbs sit directly above the article heading as an eyebrow. */
 .article > .crumbs {
-  font-size: 0.78rem;
+  font-size: 0.83rem;
   letter-spacing: 0.02em;
-  margin-block-end: 0.35rem;
+  margin-block-end: 0.85rem;
 }
 
 .article > .crumbs a {
@@ -418,10 +643,20 @@ a:hover {
 .crumbs ol {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: 0.4rem;
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+/* Neutralize prose list spacing wherever crumbs render inside content. */
+.prose .crumbs ol {
+  margin-block: 0;
+}
+
+.prose .crumbs li + li {
+  margin-block-start: 0;
 }
 
 .crumbs li + li::before {
@@ -449,7 +684,7 @@ a:hover {
 
 .figure figcaption {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--ink-soft);
   margin-block-start: 0.4rem;
 }
@@ -523,7 +758,7 @@ a:hover {
   background: #111 center / cover no-repeat;
   color: #fff;
   font-family: var(--font-ui);
-  font-size: 1rem;
+  font-size: 1.07rem;
 }
 
 .video-facade .play {
@@ -544,7 +779,7 @@ a:hover {
 
 .video-caption {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--ink-soft);
   padding: 0.5rem 0.75rem;
   background: var(--paper);
@@ -568,7 +803,7 @@ a:hover {
 }
 
 .pullquote {
-  font-size: 1.35rem;
+  font-size: 1.44rem;
   line-height: 1.5;
   border-inline-start: 6px solid var(--accent);
   padding-inline-start: 1rem;
@@ -576,28 +811,66 @@ a:hover {
   font-style: italic;
 }
 
-/* ---------- Accordion / expandable (native details) ---------- */
+/* ---------- Accordion (native details, also used by ExpandableBox) ---------- */
 
-.accordion,
-.expandable {
+.accordion {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   margin-block: 1rem;
   background: #fff;
 }
 
-.accordion summary,
-.expandable summary {
+.accordion summary {
   cursor: pointer;
   font-family: var(--font-ui);
   font-weight: 600;
   padding: 0.7rem 1rem;
-  list-style-position: inside;
+  list-style: none;
 }
 
-.accordion .accordion-body,
-.expandable .expandable-body {
+.accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-inline-end: 0.4rem;
+  transition: transform 0.28s ease-out;
+}
+
+.accordion[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.accordion-content {
   padding: 0 1rem 1rem;
+}
+
+/* No-JS fallback fold for any content height: the body collapses as a grid
+   row while the inner content clips. When JavaScript drives the fold
+   (html.js-fold), these rules step aside so the two animations never fight.
+   Native details semantics hold in both cases for assistive tech. */
+html:not(.js-fold) .accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.28s ease-out;
+}
+
+html:not(.js-fold) .accordion[open] > .accordion-body {
+  grid-template-rows: 1fr;
+}
+
+html:not(.js-fold) .accordion-content {
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-body,
+  .accordion summary::before {
+    transition: none;
+  }
 }
 
 .accordion-controls {
@@ -605,7 +878,7 @@ a:hover {
   gap: 0.5rem;
   margin-block-end: 0.75rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .accordion-controls button {
@@ -654,6 +927,19 @@ a:hover {
   color: var(--accent);
 }
 
+.quiz .quiz-mark {
+  display: inline-flex;
+  align-self: center;
+}
+
+.quiz .quiz-mark.is-correct {
+  color: var(--accent);
+}
+
+.quiz .quiz-mark.is-incorrect {
+  color: #a31f1f;
+}
+
 .quiz .quiz-feedback[data-state="incorrect"],
 .quiz .quiz-feedback[data-state="unfinished"] {
   color: #a31f1f;
@@ -670,17 +956,30 @@ a:hover {
 }
 
 /* ---------- Select list ---------- */
+/* Same look as the language dropdown (.lang-menu): inline label plus a
+   bordered native select. Block-level here so it holds its own line in
+   content and wraps on narrow screens. */
 
 .select-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
   font-family: var(--font-ui);
+  font-size: 0.91rem;
   margin-block: 1rem;
+  max-inline-size: 100%;
 }
 
 .select-list select {
   font: inherit;
-  padding: 0.4rem 0.6rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  max-inline-size: 100%;
+  padding: 0.3rem 0.4rem;
+  max-inline-size: 8.5rem;
+  cursor: pointer;
 }
 
 /* ---------- Tables ---------- */
@@ -696,7 +995,7 @@ a:hover {
   border-collapse: collapse;
   inline-size: 100%;
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
 }
 
 .table-scroll th,
@@ -725,7 +1024,7 @@ a:hover {
   background: var(--ink);
   color: #fff;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   padding: 0.6rem 0.8rem;
   border-radius: var(--radius);
 }
@@ -741,7 +1040,7 @@ a:hover {
 }
 
 .endnotes {
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   border-block-start: 1px solid var(--line);
   margin-block-start: 2rem;
   padding-block-start: 1rem;
@@ -792,13 +1091,20 @@ a:hover {
 .copy-btn,
 .share-btn {
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
   padding: 0.2rem 0.6rem;
   cursor: pointer;
   margin-inline-start: 0.4rem;
+}
+
+/* Icon + label stay centered on one line within the button. */
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .copy-btn:hover,
@@ -832,7 +1138,7 @@ a:hover {
   align-items: center;
   gap: 0.35rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   line-height: 1.5;
   padding: 0.2rem 0.6rem;
   border: 1px solid var(--ink);
@@ -843,6 +1149,15 @@ a:hover {
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
+}
+
+/* Neutralize prose list spacing wherever share buttons render in content. */
+.prose .share ul {
+  margin-block: 0;
+}
+
+.prose .share li + li {
+  margin-block-start: 0;
 }
 
 /* ---------- Slideshow ---------- */
@@ -885,7 +1200,7 @@ a:hover {
 .qr {
   margin-block: 1.5rem;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .qr svg {
@@ -897,7 +1212,7 @@ a:hover {
 /* ---------- Bibliography ---------- */
 
 .bibliography {
-  font-size: 0.92rem;
+  font-size: 0.98rem;
 }
 
 .bibliography li {
@@ -1049,7 +1364,7 @@ a:hover {
 }
 
 [id^="bm-"] {
-  scroll-margin-block-start: 5rem;
+  scroll-margin-block-start: var(--scroll-offset, 5rem);
 }
 
 /* Personal bookmark list in the sidebar, directly after Inhalt. */
@@ -1073,7 +1388,7 @@ a:hover {
 
 .bookmark-list .bookmark-page {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: var(--ink-soft);
 }
 
@@ -1120,7 +1435,7 @@ a:hover {
   border-radius: var(--radius);
   padding: 0.8rem 1rem;
   font-family: var(--font-ui);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   line-height: 1.4;
   box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.3);
 }
@@ -1202,7 +1517,7 @@ a:hover {
 .search-form--mini input[type="search"] {
   padding: 0.3rem 0.6rem;
   padding-inline-start: 2rem;
-  font-size: 0.85rem;
+  font-size: 0.91rem;
 }
 
 .search-results {
@@ -1232,6 +1547,8 @@ a:hover {
 .sheet h1,
 .sheet h2,
 .sheet h3 {
+  font-family: var(--font-title);
+  font-weight: 700;
   line-height: 1.25;
   text-wrap: balance;
 }
@@ -1250,25 +1567,27 @@ a:hover {
   font-size: 2.5rem;
 }
 
-.copyright-sheet {
-  font-size: 0.95rem;
+.about-sheet {
+  font-size: 1.02rem;
 }
 
 .metadata-table {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.3rem 1rem;
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   margin-block: 1.5rem;
 }
 
 .metadata-table dt {
-  font-family: var(--font-ui);
+  font-family: var(--font-title);
   font-weight: 700;
 }
 
 .metadata-table dd {
   margin: 0;
+  font-family: var(--font-title);
+  font-weight: 400;
 }
 
 /* ---------- Contents ---------- */
@@ -1289,7 +1608,7 @@ a:hover {
   padding-block: 0.6rem;
   color: var(--ink);
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1.18rem;
 }
 
 .contents-list a:hover {
@@ -1297,7 +1616,7 @@ a:hover {
 }
 
 .contents-list .frontmatter-entry {
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   color: var(--ink-soft);
 }
 
@@ -1324,7 +1643,7 @@ a:hover {
   margin-block-start: 2rem;
   padding-block: 1.5rem 2.5rem;
   font-family: var(--font-ui);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
   color: var(--ink-soft);
 }
 
@@ -1336,6 +1655,10 @@ a:hover {
   justify-content: space-between;
 }
 
+.footer-text p {
+  margin-block: 0.25rem;
+}
+
 .site-footer a {
   color: var(--ink-soft);
 }
@@ -1343,13 +1666,22 @@ a:hover {
 /* ---------- Licence badge ---------- */
 
 .cc-badge {
-  display: inline-flex;
+  display: inline-block;
+  vertical-align: middle;
   color: var(--ink);
 }
 
 .cc-badge img {
+  display: block;
   block-size: 1.9375rem;
   inline-size: auto;
+}
+
+/* Badge + trailing text on one vertically centred line. */
+.cc-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .license-box {
@@ -1367,25 +1699,33 @@ a:hover {
 .language-switcher-wrap {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.45rem;
   margin: 0;
+  line-height: 1.5;
 }
 
 .language-switcher-wrap > .icon {
   opacity: 0.7;
+  block-size: 1.25em;
+  inline-size: 1.25em;
 }
 
 .language-switcher {
   display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.4rem;
   list-style: none;
   margin: 0;
   padding: 0;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.91rem;
+  line-height: 1.5;
 }
 
 .language-switcher a {
+  display: inline-block;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 0.15rem 0.55rem;
@@ -1399,6 +1739,16 @@ a:hover {
   border-color: var(--ink);
 }
 
+/* Neutralize prose list spacing wherever the switcher renders inside content. */
+.prose .language-switcher-wrap,
+.prose .language-switcher {
+  margin-block: 0;
+}
+
+.prose .language-switcher li + li {
+  margin-block-start: 0;
+}
+
 /* ---------- Kitchen sink ---------- */
 
 .sink-demo {
@@ -1409,29 +1759,99 @@ a:hover {
 }
 
 .sink-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.8rem;
   color: var(--ink-soft);
   margin-block: 2rem 0.25rem;
 }
 
-/* ---------- Redaction ---------- */
+/* Icon gallery: responsive tile grid, one tile per icon with its name. */
+.sink-icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
 
-.redacted {
+.sink-icons li + li {
+  margin-block-start: 0;
+}
+
+.sink-icons li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.sink-icons .icon {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.sink-icon-name {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Spoiler (click to reveal) ---------- */
+
+.spoiler {
+  display: inline;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.spoiler-text {
   background: var(--ink);
   color: transparent;
   border-radius: 0.2em;
+  padding-inline: 0.3em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
   user-select: none;
+  transition: background-color 0.15s ease-in, color 0.15s ease-in;
+}
+
+.spoiler:hover .spoiler-text {
+  background: var(--ink-soft);
+}
+
+.spoiler[aria-expanded="true"] .spoiler-text {
+  background: transparent;
+  color: inherit;
+  user-select: auto;
 }
 
 /* ---------- Rotate ---------- */
+/* A bare transform keeps the unrotated layout box, so 90°/270° content
+   would paint outside its container. vertical-rl gives the sideways
+   angles a layout box that actually fits the text (single line reads
+   exactly like the equivalent rotation); 180° keeps its box, so a plain
+   transform is fine there. */
 
 .rotated {
   display: inline-block;
 }
 
 .rotated[data-angle="90"] {
-  transform: rotate(90deg);
+  writing-mode: vertical-rl;
 }
 
 .rotated[data-angle="180"] {
@@ -1439,13 +1859,14 @@ a:hover {
 }
 
 .rotated[data-angle="270"] {
-  transform: rotate(270deg);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
 }
 
 /* ---------- Annotation (opt-in only) ---------- */
 
 .annotation-note {
-  font-size: 0.85rem;
+  font-size: 0.91rem;
   color: var(--ink-soft);
   border-inline-start: 3px solid var(--warn);
   padding-inline-start: 0.75rem;
@@ -1472,6 +1893,14 @@ a:hover {
   }
 
   [data-heading-anchor] {
+    transition: none;
+  }
+
+  .menu-toggle .menu-icon {
+    transition: none;
+  }
+
+  .spoiler-text {
     transition: none;
   }
 }

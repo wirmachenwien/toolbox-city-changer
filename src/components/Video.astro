@@ -11,7 +11,7 @@ interface Props {
   lang?: Language;
 }
 
-const { id, caption, provider = 'youtube', lang = 'de' } = Astro.props;
+const { id, caption, provider = 'youtube', lang = 'en' } = Astro.props;
 
 const watchUrl =
   provider === 'vimeo' ? `https://vimeo.com/${id}` : `https://www.youtube.com/watch?v=${id}`;

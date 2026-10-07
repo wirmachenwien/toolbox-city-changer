@@ -1,6 +1,7 @@
 ---
 // Book metadata table (title, creator, publisher, rights, ...).
 import { getWork } from '../data/works';
+import { t } from '../lib/i18n';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -9,14 +10,13 @@ interface Props {
 const { lang } = Astro.props;
 const work = getWork(lang);
 const rows: [string, string][] = [
-  ['Title', work.title],
-  ['Subtitle', work.subtitle],
-  ['Creator', work.creator],
-  ['Contributor', work.contributor],
-  ['Publisher', work.publisher],
-  ['Rights holder', work.rightsholder],
-  ['Language', work.language],
-  ['Identifier', work.identifier],
+  [t(lang, 'metadata.title', 'Title'), work.title],
+  [t(lang, 'metadata.subtitle', 'Subtitle'), work.subtitle],
+  [t(lang, 'metadata.creator', 'Creator'), work.creator],
+  [t(lang, 'metadata.contributor', 'Contributor'), work.contributor],
+  [t(lang, 'metadata.publisher', 'Publisher'), work.publisher],
+  [t(lang, 'metadata.language', 'Language'), work.language],
+  [t(lang, 'metadata.identifier', 'Identifier'), work.identifier],
 ].filter((row): row is [string, string] => Boolean(row[1]));
 ---
 <dl class="metadata-table">
@@ -24,6 +24,6 @@ const rows: [string, string][] = [
     <dt>{term}</dt>
     <dd>{value}</dd>
   ))}
-  <dt>Description</dt>
+  <dt>{t(lang, 'metadata.description', 'Description')}</dt>
   <dd>{work.description}</dd>
 </dl>

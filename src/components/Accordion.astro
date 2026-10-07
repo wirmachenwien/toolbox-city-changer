@@ -1,5 +1,6 @@
 ---
 // Collapsible section built on native <details> (works without JavaScript).
+// Opening one closes its siblings in the same group (see accordion.ts).
 interface Props {
   title: string;
   open?: boolean;
@@ -9,6 +10,8 @@ const { title, open = false } = Astro.props;
 <details class="accordion" open={open || undefined}>
   <summary>{title}</summary>
   <div class="accordion-body">
-    <slot />
+    <div class="accordion-content">
+      <slot />
+    </div>
   </div>
 </details>

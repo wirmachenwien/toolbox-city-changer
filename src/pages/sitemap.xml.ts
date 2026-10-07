@@ -1,0 +1,28 @@
+import type { APIRoute } from 'astro';
+import { getWork, webBookToc } from '../data/works';
+import { pageUrl, bookUrl, canonical } from '../lib/site';
+import type { Language } from '../data/locales';
+
+const LANGS: Language[] = ['en', 'de', 'sl'];
+
+// Sitemap generated from content at build time: home + search pages and
+// every web book chapter per language. Redirect landings (/book/, legacy
+// /en/ URLs), 404 and preview pages are intentionally excluded.
+export const GET: APIRoute = () => {
+  const entries: { loc: string; lastmod: string }[] = [];
+  for (const lang of LANGS) {
+    const lastmod = getWork(lang).modified || getWork(lang).date || '';
+    const push = (url: string) => entries.push({ loc: canonical(url), lastmod });
+    push(pageUrl(lang, 'index'));
+    push(pageUrl(lang, 'search'));
+    for (const entry of webBookToc(lang)) push(bookUrl(lang, entry.file));
+  }
+  const urls = entries
+    .map(
+      (entry) =>
+        `  <url><loc>${entry.loc}</loc>${entry.lastmod ? `<lastmod>${entry.lastmod}</lastmod>` : ''}</url>`,
+    )
+    .join('\n');
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return new Response(body, { headers: { 'Content-Type': 'application/xml' } });
+};
