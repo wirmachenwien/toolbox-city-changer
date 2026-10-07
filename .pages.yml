@@ -427,3 +427,67 @@ content:
               - name: file
                 type: string
                 required: true
+
+      - name: glossary
+        label: Glossary
+        type: file
+        path: src/data/glossary.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: de
+            label: German glossary
+            type: object
+            list: true
+            fields:
+              - name: term
+                label: Term
+                type: string
+                required: true
+              - name: definition
+                label: Definition
+                type: text
+                required: true
+              - name: forms
+                label: Word forms
+                description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                type: string
+                list: true
+          - name: en
+            label: English glossary
+            type: object
+            list: true
+            fields:
+              - name: term
+                label: Term
+                type: string
+                required: true
+              - name: definition
+                label: Definition
+                type: text
+                required: true
+              - name: forms
+                label: Word forms
+                description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                type: string
+                list: true
+          - name: sl
+            label: Slovene glossary
+            type: object
+            list: true
+            fields:
+              - name: term
+                label: Term
+                type: string
+                required: true
+              - name: definition
+                label: Definition
+                type: text
+                required: true
+              - name: forms
+                label: Word forms
+                description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                type: string
+                list: true

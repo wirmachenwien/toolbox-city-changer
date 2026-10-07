@@ -16,9 +16,11 @@
     "build:downloads": "npm run build:pdf && npm run build:epub",
     "preview": "astro preview",
     "astro": "astro",
-    "check:i18n": "node scripts/check-i18n.mjs"
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:glossary": "node scripts/verify-glossary.mjs"
   },
   "dependencies": {
+    "@astrojs/markdown-satteri": "^0.4.3",
     "astro": "^7.3.6",
     "qrcode": "^1.5.4",
     "zod": "^4.6.5"

@@ -1,0 +1,422 @@
+{
+  "de": [
+    {
+      "term": "Agenda Setting",
+      "definition": "Taktik, ein Thema öffentlich sichtbar zu machen, etwa durch Aktion, Petition oder Medienbild.",
+      "forms": [
+        "Agenda Setting"
+      ]
+    },
+    {
+      "term": "Durchzugsverkehr",
+      "definition": "Verkehr, der ein Gebiet nur durchquert, ohne dort Ziel oder Quelle zu haben.",
+      "forms": [
+        "Durchzugsverkehr",
+        "Durchzugsverkehrs"
+      ]
+    },
+    {
+      "term": "Framing",
+      "definition": "Ein Problem und seine Lösung so benennen und erzählen, dass sie neu verstanden werden.",
+      "forms": [
+        "Framing",
+        "Framings"
+      ]
+    },
+    {
+      "term": "Kiezblock",
+      "definition": "Berliner Variante des Superblocks, stark von lokalen Initiativen getragen.",
+      "forms": [
+        "Kiezblock",
+        "Kiezblocks"
+      ]
+    },
+    {
+      "term": "Low-Traffic-Grätzl",
+      "definition": "Günstigere Form der Verkehrsberuhigung mit wenig Durchzugsverkehr, diskutiert als Wiener Variante.",
+      "forms": [
+        "Low-Traffic-Grätzl"
+      ]
+    },
+    {
+      "term": "Meilenstein",
+      "definition": "Sichtbares Zwischenziel, das einer Kampagne Fortschritt und Orientierung gibt.",
+      "forms": [
+        "Meilenstein",
+        "Meilensteins",
+        "Meilensteine",
+        "Meilensteinen"
+      ]
+    },
+    {
+      "term": "Mobilisierung",
+      "definition": "Arbeit, durch die Menschen verstehen, warum sie mitmachen, und bereit werden, gemeinsam zu handeln.",
+      "forms": [
+        "Mobilisierung",
+        "Mobilisierungen"
+      ]
+    },
+    {
+      "term": "Modalfilter",
+      "definition": "Barriere wie Poller, Pflanzring oder Betonelement, die Durchzugsverkehr stoppt, aber Ziel- und Lieferverkehr durchlässt.",
+      "forms": [
+        "Modalfilter",
+        "Modalfilters",
+        "Modalfiltern"
+      ]
+    },
+    {
+      "term": "Monitoring",
+      "definition": "Systematisches Beobachten und Dokumentieren von Verkehr, Nutzung, Unterstützung und politischem Fortschritt.",
+      "forms": [
+        "Monitoring"
+      ]
+    },
+    {
+      "term": "Narrativ",
+      "definition": "Erzählung des Engagements, die Ziel, Zeitfenster, Bündnisse und angestrebte Veränderung klar benennt.",
+      "forms": [
+        "Narrativ",
+        "Narrativs",
+        "Narrative",
+        "Narrativen"
+      ]
+    },
+    {
+      "term": "Street Design",
+      "definition": "Gemeinsames Entwerfen von Straßen mit einfachen Modulen wie Straßenplan, Banner oder Baum-Visualisierung.",
+      "forms": [
+        "Street Design"
+      ]
+    },
+    {
+      "term": "Superblock",
+      "definition": "Gebiet, in dem Durchzugsverkehr systematisch unterbrochen wird, damit Straßen im Inneren sicherer und vielfältiger genutzt werden können.",
+      "forms": [
+        "Superblock",
+        "Superblocks",
+        "Superblöcke",
+        "Superblöcken"
+      ]
+    },
+    {
+      "term": "Tactical Urbanism",
+      "definition": "Temporäre, kostengünstige Eingriffe im Stadtraum, mit denen Veränderungen getestet und sichtbar gemacht werden.",
+      "forms": [
+        "Tactical Urbanism"
+      ]
+    },
+    {
+      "term": "Theory of Change",
+      "definition": "Annahme darüber, wie sozialer und politischer Wandel entsteht, als Hilfe für eine bewusste Taktikwahl.",
+      "forms": [
+        "Theory of Change",
+        "Theories of Change"
+      ]
+    },
+    {
+      "term": "Window of Opportunity",
+      "definition": "Günstiges Zeitfenster für Veränderung, etwa eine Wahl, Medienaufmerksamkeit oder ein politischer Entscheidungsmoment.",
+      "forms": [
+        "Window of Opportunity"
+      ]
+    }
+  ],
+  "en": [
+    {
+      "term": "Agenda setting",
+      "definition": "A tactic for making an issue publicly visible, for example through an action, a petition or a media image.",
+      "forms": [
+        "Agenda setting",
+        "Set the agenda"
+      ]
+    },
+    {
+      "term": "Framing",
+      "definition": "Naming and telling a problem and its solution so that they are understood in a new way.",
+      "forms": [
+        "Framing",
+        "Framings",
+        "Reframe",
+        "Reframes",
+        "Reframing"
+      ]
+    },
+    {
+      "term": "Kiezblock",
+      "definition": "The Berlin variant of the superblock, strongly driven by local initiatives.",
+      "forms": [
+        "Kiezblock",
+        "Kiezblocks"
+      ]
+    },
+    {
+      "term": "Low-traffic neighbourhood",
+      "definition": "A cheaper form of traffic calming with little through traffic, discussed as a Viennese variant.",
+      "forms": [
+        "Low-traffic neighbourhood",
+        "Low-traffic neighbourhoods",
+        "Low-traffic neighborhood",
+        "Low-traffic neighborhoods"
+      ]
+    },
+    {
+      "term": "Milestone",
+      "definition": "A visible intermediate goal that gives a campaign progress and orientation.",
+      "forms": [
+        "Milestone",
+        "Milestones"
+      ]
+    },
+    {
+      "term": "Mobilisation",
+      "definition": "Work through which people understand why they participate and become ready to act together.",
+      "forms": [
+        "Mobilisation",
+        "Mobilisations",
+        "Mobilization",
+        "Mobilizations"
+      ]
+    },
+    {
+      "term": "Modal filter",
+      "definition": "A barrier such as a bollard, planter ring or concrete element that stops through traffic but lets access and delivery traffic pass.",
+      "forms": [
+        "Modal filter",
+        "Modal filters"
+      ]
+    },
+    {
+      "term": "Monitoring",
+      "definition": "Systematic observation and documentation of traffic, use, support and political progress.",
+      "forms": [
+        "Monitoring"
+      ]
+    },
+    {
+      "term": "Narrative",
+      "definition": "The story of an engagement that clearly states its goal, window of opportunity, alliances and intended change.",
+      "forms": [
+        "Narrative",
+        "Narratives"
+      ]
+    },
+    {
+      "term": "Street design",
+      "definition": "Jointly designing streets with simple modules such as a street plan, banner or tree visualisation.",
+      "forms": [
+        "Street design"
+      ]
+    },
+    {
+      "term": "Superblock",
+      "definition": "An area where through traffic is systematically interrupted so streets inside can be used more safely and in more diverse ways.",
+      "forms": [
+        "Superblock",
+        "Superblocks"
+      ]
+    },
+    {
+      "term": "Tactical urbanism",
+      "definition": "Temporary, low-cost interventions in urban space that test changes and make them visible.",
+      "forms": [
+        "Tactical urbanism"
+      ]
+    },
+    {
+      "term": "Theory of change",
+      "definition": "An assumption about how social and political change happens, helping you choose tactics deliberately.",
+      "forms": [
+        "Theory of change",
+        "Theories of change"
+      ]
+    },
+    {
+      "term": "Through traffic",
+      "definition": "Traffic that only crosses an area without having a destination or origin there.",
+      "forms": [
+        "Through traffic"
+      ]
+    },
+    {
+      "term": "Window of opportunity",
+      "definition": "A favourable moment for change, such as an election, media attention or a political decision.",
+      "forms": [
+        "Window of opportunity",
+        "Window of opportunities",
+        "Windows of opportunity"
+      ]
+    }
+  ],
+  "sl": [
+    {
+      "term": "Mejnik",
+      "definition": "Viden vmesni cilj, ki daje kampanji napredek in usmeritev.",
+      "forms": [
+        "Mejnik",
+        "Mejnika",
+        "Mejniku",
+        "Mejnikom",
+        "Mejniki",
+        "Mejnikov",
+        "Mejnike",
+        "Mejnikih"
+      ]
+    },
+    {
+      "term": "Mobilizacija",
+      "definition": "Delo, s katerim ljudje razumejo, zakaj sodelujejo, in so pripravljeni skupaj ukrepati.",
+      "forms": [
+        "Mobilizacija",
+        "Mobilizacije",
+        "Mobilizaciji",
+        "Mobilizacijo",
+        "Mobilizacij"
+      ]
+    },
+    {
+      "term": "Modalni filter",
+      "definition": "Ovira, kot so stebriček, sadilni obroč ali betonski element, ki ustavi tranzitni promet, dostopnemu in dostavnemu prometu pa omogoči prehod.",
+      "forms": [
+        "Modalni filter",
+        "Modalni filtri",
+        "Modalne filtre",
+        "Modalnih filtrov",
+        "Modalnim filtrom",
+        "Modalnimi filtri",
+        "Modalnih filtrih",
+        "Modalnem filtru"
+      ]
+    },
+    {
+      "term": "Oblikovanje ulic",
+      "definition": "Skupno oblikovanje ulic s preprostimi moduli, kot so načrt ulice, transparent ali vizualizacija dreves.",
+      "forms": [
+        "Oblikovanje ulic",
+        "Oblikovanja ulic",
+        "Oblikovanju ulic",
+        "Oblikovanjem ulic"
+      ]
+    },
+    {
+      "term": "Okno priložnosti",
+      "definition": "Ugodni trenutek za spremembo, na primer volitve, medijska pozornost ali politična odločitev.",
+      "forms": [
+        "Okno priložnosti",
+        "Okna priložnosti",
+        "Oknu priložnosti",
+        "Oknom priložnosti"
+      ]
+    },
+    {
+      "term": "Postavljanje teme na dnevni red",
+      "definition": "Taktika, s katero temo naredimo javno vidno, na primer z akcijo, peticijo ali medijsko sliko.",
+      "forms": [
+        "Postavljanje teme na dnevni red",
+        "Postavljati teme na dnevni red"
+      ]
+    },
+    {
+      "term": "Kiezblock",
+      "definition": "Berlinska različica superbloka, ki močno temelji na lokalnih pobudah.",
+      "forms": [
+        "Kiezblock",
+        "Kiezblocks"
+      ]
+    },
+    {
+      "term": "Soseska z malo prometa",
+      "definition": "Cenejša oblika umirjanja prometa z malo tranzitnega prometa, o kateri razpravljajo kot o dunajski različici.",
+      "forms": [
+        "Soseska z malo prometa",
+        "Soseske z malo prometa",
+        "Soseski z malo prometa",
+        "Sosesko z malo prometa",
+        "Sosesk z malo prometa",
+        "Soseskam z malo prometa",
+        "Soseskah z malo prometa",
+        "Soseskami z malo prometa"
+      ]
+    },
+    {
+      "term": "Spremljanje",
+      "definition": "Sistematično opazovanje in dokumentiranje prometa, rabe, podpore in političnega napredka.",
+      "forms": [
+        "Spremljanje",
+        "Spremljanja",
+        "Spremljanju",
+        "Spremljanjem"
+      ]
+    },
+    {
+      "term": "Superblok",
+      "definition": "Območje, kjer je tranzitni promet sistematično prekinjen, da se ulice v notranjosti lahko uporabljajo varneje in bolj raznoliko.",
+      "forms": [
+        "Superblok",
+        "Superbloka",
+        "Superbloku",
+        "Superblokom",
+        "Superbloki",
+        "Superblokov",
+        "Superbloke",
+        "Superblokih"
+      ]
+    },
+    {
+      "term": "Taktični urbanizem",
+      "definition": "Začasni, poceni posegi v mestni prostor, s katerimi preizkušamo spremembe in jih pokažemo.",
+      "forms": [
+        "Taktični urbanizem",
+        "Taktičnega urbanizma",
+        "Taktičnemu urbanizmu",
+        "Taktičnem urbanizmu",
+        "Taktičnim urbanizmom"
+      ]
+    },
+    {
+      "term": "Teorija sprememb",
+      "definition": "Predpostavka o tem, kako nastajajo družbene in politične spremembe, ki pomaga zavestno izbirati taktike.",
+      "forms": [
+        "Teorija sprememb",
+        "Teorije sprememb",
+        "Teorijo sprememb",
+        "Teorij sprememb",
+        "Teorijam sprememb",
+        "Teorijah sprememb"
+      ]
+    },
+    {
+      "term": "Tranzitni promet",
+      "definition": "Promet, ki območje le prečka, ne da bi imel v njem cilj ali izvor.",
+      "forms": [
+        "Tranzitni promet",
+        "Tranzitnega prometa",
+        "Tranzitnemu prometu",
+        "Tranzitnem prometu",
+        "Tranzitnim prometom"
+      ]
+    },
+    {
+      "term": "Uokvirjanje",
+      "definition": "Poimenovanje in pripoved problema ter njegove rešitve tako, da ju razumemo na nov način.",
+      "forms": [
+        "Uokvirjanje",
+        "Uokvirjanja",
+        "Uokviriti"
+      ]
+    },
+    {
+      "term": "Zgodba",
+      "definition": "Zgodba angažiranja, ki jasno pove cilj, priložnost, zavezništva in želeno spremembo.",
+      "forms": [
+        "Zgodba",
+        "Zgodbe",
+        "Zgodbi",
+        "Zgodbo",
+        "Zgodb",
+        "Zgodbah",
+        "Zgodbami"
+      ]
+    }
+  ]
+}

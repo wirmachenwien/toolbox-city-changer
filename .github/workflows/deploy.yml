@@ -36,6 +36,9 @@ jobs:
       - name: Check translations, links, sitemap and search index
         run: npm run check:i18n
 
+      - name: Check glossary term coverage and dictionary sync
+        run: npm run check:glossary
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:

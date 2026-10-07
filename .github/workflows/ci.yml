@@ -29,6 +29,9 @@ jobs:
       - name: Check translations, links, sitemap and search index
         run: npm run check:i18n
 
+      - name: Check glossary term coverage and dictionary sync
+        run: npm run check:glossary
+
       - name: Upload handbook downloads
         uses: actions/upload-artifact@v4
         with:

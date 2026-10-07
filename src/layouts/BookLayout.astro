@@ -42,7 +42,7 @@ const isChapter = layout === 'chapter';
   {layout === 'about' && <AboutPage title={title} />}
   {layout === 'contents' && <ContentsPage lang={lang} title={title} />}
   {isChapter && <BookmarkAdd lang={lang} />}
-  <div class="prose" data-prose>
+  <div class="prose" data-prose data-glossary-terms>
     <slot />
   </div>
   {isChapter && <Share lang={lang} url={currentUrl} title={title} />}

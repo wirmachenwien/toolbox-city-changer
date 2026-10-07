@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "src" / "content" / "book"
 ASSETS = ROOT / "src" / "assets"
 DATA = ROOT / "src" / "data" / "works.json"
+GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
 PRINT_CSS = ROOT / "src" / "styles" / "print.css"
 
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
@@ -47,6 +48,7 @@ TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
 FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
 ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
+GLOSSARY_LANG_RE = re.compile(r'<Glossary\s+lang="(de|en|sl)"\s*/>')
 QUIZ_RE = re.compile(
     r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
     re.DOTALL,
@@ -193,6 +195,7 @@ def convert_mdx(text: str, lang: str = "de") -> str:
     text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{m.group(1)}">{m.group(2)}</sup>', text)
     text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
+    text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1)), text)
     text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang), text)
     text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), lang), text)
     return text.strip() + "\n"
@@ -212,6 +215,16 @@ def option_entries(source: str) -> list[tuple[str, bool]]:
 
 def glossary_html(source: str) -> str:
     items = ''.join(f'<dt>{term}</dt><dd>{definition}</dd>' for term, definition in object_entries(source))
+    return f'\n\n<dl class="glossary">{items}</dl>\n'
+
+
+def glossary_lang_html(lang: str) -> str:
+    """Full shared glossary for a language (src/data/glossary.json)."""
+    data = json.loads(GLOSSARY_DATA.read_text(encoding="utf-8"))
+    items = ''.join(
+        f'<dt>{entry["term"]}</dt><dd>{entry["definition"]}</dd>'
+        for entry in data.get(lang, [])
+    )
     return f'\n\n<dl class="glossary">{items}</dl>\n'
 
 

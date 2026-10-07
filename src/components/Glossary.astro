@@ -1,13 +1,26 @@
 ---
-// Glossary list (description list of terms + definitions).
+ // Glossary list (description list of terms + definitions). Either pass
+ // explicit `entries` (e.g. chapter recap boxes) or a `lang` to render the
+ // full shared glossary from src/data/glossary.json (single source of
+ // truth, editable via PagesCMS).
+import { glossaryTerms } from '../data/glossary';
+import type { Language } from '../data/locales';
+
 export interface GlossaryEntry {
   term: string;
   definition: string;
 }
 interface Props {
-  entries: GlossaryEntry[];
+  entries?: GlossaryEntry[];
+  lang?: Language;
 }
-const { entries } = Astro.props;
+const { entries: explicit, lang } = Astro.props;
+const entries: GlossaryEntry[] =
+  explicit ??
+  (lang
+    ? glossaryTerms[lang].map(({ term, definition }) => ({ term, definition }))
+    : []);
+if (entries.length === 0) throw new Error('<Glossary> needs either entries or lang');
 ---
 <dl class="glossary">
   {entries.map((entry) => (
