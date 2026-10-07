@@ -491,8 +491,8 @@ def main() -> int:
     parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
     parser.add_argument(
         "--out",
-        default="public/downloads",
-        help="output directory (public/downloads is copied into dist/ by Astro)",
+        default="dist/downloads",
+        help="output directory (served from dist/ by the site)",
     )
     parser.add_argument("--all", action="store_true", help="build EPUBs for de/en/sl")
     args = parser.parse_args()

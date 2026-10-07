@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run build:downloads && astro build && node scripts/fix-dist.mjs && npm run build:search",
+    "build": "astro build && npm run build:downloads && node scripts/fix-dist.mjs && npm run build:search",
     "build:search": "pagefind --site dist",
     "build:pdf": "python3 scripts/build-pdf.py --all",
     "build:epub": "python3 scripts/build-epub.py --all",

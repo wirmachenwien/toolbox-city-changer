@@ -20,10 +20,13 @@ npm ci
 npm run dev
 ```
 
+Run `npm run build` once first so the generated PDF/EPUB downloads
+exist for the dev server.
+
 ## Build & preview
 
 ```sh
-npm run build    # astro build + index fixups + Pagefind search index
+npm run build    # site + PDF/EPUB downloads + index fixups + Pagefind index
 npm run preview
 npm run check:i18n    # translation, link, search-index and sitemap checks on dist/
 ```
