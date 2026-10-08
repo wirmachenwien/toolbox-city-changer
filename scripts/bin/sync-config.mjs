@@ -245,6 +245,8 @@ function localeStrings(lang) {
                 fields:
                   - name: check-answers-button
                     type: string
+                  - name: correct-answers
+                    type: string
                   - name: feedback-correct
                     type: string
                   - name: feedback-incorrect
@@ -363,13 +365,17 @@ function localeStrings(lang) {
                 fields:
                   - name: link-to-section
                     type: string
-              - name: endnotes
-                label: Endnote labels
+              - name: footnotes
+                label: Footnote labels
                 type: object
                 fields:
                   - name: notes
                     type: string
                   - name: back-to-text
+                    type: string
+                  - name: open
+                    type: string
+                  - name: close
                     type: string
               - name: slideshow
                 label: Slideshow labels
@@ -505,6 +511,31 @@ ${LANGS.map((lang) => homePage(lang)).join('\n')}
           delete: false
         fields:
 ${LANGS.map((lang) => localeStrings(lang)).join('\n')}
+
+      - name: pdf_settings
+        label: PDF Settings
+        type: file
+        path: src/data/settings.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: pdf
+            label: PDF
+            type: object
+            fields:
+              - name: notes
+                label: Footnote placement
+                type: select
+                options:
+                  values:
+                    - name: footnotes
+                      label: Footnotes, bottom of page
+                    - name: chapter-footnotes
+                      label: End of chapter
+                    - name: book-footnotes
+                      label: End of book
 
       - name: book_metadata
         label: Book Metadata
