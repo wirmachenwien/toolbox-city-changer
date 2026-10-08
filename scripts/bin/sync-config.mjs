@@ -9,92 +9,342 @@
 // Run `npm run sync:config` after changing handbook.config.ts; CI runs
 // `npm run check:config` (--check) to make sure the committed files are
 // in sync.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { parseDocument } from 'yaml';
 import { site, base, languages, languageNames } from '../../handbook.config.ts';
 import { normalizeBase } from '../lib/paths.mjs';
 
 const LANGS = [...languages];
 const BASE_PATH = normalizeBase(base);
+const WORKS = JSON.parse(readFileSync('src/data/works.json', 'utf8'));
+const LOCALES = JSON.parse(readFileSync('src/data/locales.json', 'utf8'));
+const NAV = JSON.parse(readFileSync('src/data/nav.json', 'utf8'));
 
 const displayName = (lang) => languageNames[lang] ?? lang;
+const nativeName = (lang) => LOCALES[lang]?.['local-name'] ?? displayName(lang);
+const yamlString = (value) => JSON.stringify(String(value));
+const indentBlock = (text, spaces) => text.split('\n').map((line) => line ? `${' '.repeat(spaces)}${line}` : line).join('\n');
 
-function chaptersCollection(lang) {
-  const display = displayName(lang);
-  return `      - name: chapters_${lang}
-        label: Chapters (${display})
-        type: collection
-        path: src/content/book/${lang}
-        format: yaml-frontmatter
-        filename:
-          template: "{primary}.mdx"
-          field: create
-        operations:
-          create: false
-          rename: false
-          delete: false
-        fields:
-          - name: title
-            label: Chapter title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: book_template
-          - name: description
-            label: Description
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: book_images
-              path: src/assets/book
-              rename: safe
-        view:
-          fields: [title, template]
-          primary: title
-          sort: [title]
-          search: [title, body]
-          default:
-            sort: title
-            order: asc
+function bookBodyFile(lang, file, label) {
+  const path = `src/content/book/${lang}/${file}.mdx`;
+  if (!existsSync(path)) return '';
+  const name = `handbook_${lang}_${file.replace(/[^a-z0-9]+/gi, '_')}`;
+  return `          - name: ${name}
+            label: ${yamlString(label)}
+            type: file
+            path: ${path}
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
 `;
 }
 
+function handbookPages(lang) {
+  return WORKS[lang].chapters
+    .filter((chapter) => chapter.web !== false)
+    .map((chapter) => bookBodyFile(lang, chapter.file, chapter.label))
+    .filter(Boolean)
+    .join('\n');
+}
+
 function homePage(lang) {
-  const display = displayName(lang);
-  return `      - name: home_${lang}
-        label: Home Page (${display})
-        type: file
-        path: src/content/pages/${lang}/index.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: page_template
-          - name: openerImage
-            label: Opener image
-            type: image
-            options:
-              media: book_images
-              path: src/assets/book
-          - name: openerImageAlt
-            label: Opener image alt text
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
+  const label = NAV[lang]?.[0]?.label ?? 'Home';
+  return `          - name: home_${lang}
+            label: ${yamlString(label)}
+            type: file
+            path: src/content/pages/${lang}/index.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
 `;
+}
+
+function appSettings(lang) {
+  return `          - name: app_settings_${lang}
+            label: Site and PDF settings
+            type: file
+            path: src/data/settings.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: math
+                label: Math rendering
+                type: object
+                fields:
+                  - name: enabled
+                    type: boolean
+                  - name: source
+                    type: select
+                    options:
+                      values:
+                        - name: cdn
+                          label: CDN
+                        - name: local
+                          label: Local
+              - name: web
+                label: Website settings
+                type: object
+                fields:
+                  - name: pagination
+                    type: boolean
+                  - name: paginationType
+                    label: Pagination type
+                    type: select
+                    options:
+                      values:
+                        - name: title-arrows
+                          label: Title and arrows
+                        - name: arrows
+                          label: Arrows only
+                        - name: titles
+                          label: Titles only
+                  - name: accordion
+                    type: boolean
+                  - name: accordionLevel
+                    label: Accordion heading level
+                    type: select
+                    options:
+                      values:
+                        - name: h2
+                          label: H2
+                        - name: h3
+                          label: H3
+                  - name: svgInject
+                    label: Inline SVG injection
+                    type: boolean
+                  - name: lazyload
+                    label: Lazy-load media
+                    type: boolean
+                  - name: bookmarks
+                    type: object
+                    fields:
+                      - name: enabled
+                        type: boolean
+                      - name: noteMaxLength
+                        label: Maximum note length
+                        type: number
+                  - name: nav
+                    label: Navigation behavior
+                    type: object
+                    fields:
+                      - name: expandBooks
+                        type: boolean
+                      - name: projectNavPosition
+                        type: select
+                        options:
+                          values:
+                            - name: before
+                              label: Before book navigation
+                            - name: after
+                              label: After book navigation
+                  - name: search
+                    type: object
+                    fields:
+                      - name: jumpBoxLocation
+                        type: string
+                      - name: param
+                        label: Search query parameter
+                        type: string
+                  - name: titleDivider
+                    label: Title divider
+                    type: string
+                  - name: indexing
+                    label: Search engine indexing
+                    type: object
+                    fields:
+                      - name: development
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+                      - name: live
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+              - name: pdf
+                label: PDF settings
+                type: object
+                fields:
+                  - name: notes
+                    label: Note placement
+                    type: select
+                    options:
+                      values:
+                        - name: footnotes
+                          label: Footnotes, bottom of page
+                        - name: chapter-footnotes
+                          label: End of chapter
+                        - name: book-footnotes
+                          label: End of book
+                  - name: page
+                    label: Page setup
+                    type: object
+                    fields:
+                      - name: size
+                        type: string
+                      - name: margin
+                        type: string
+`;
+}
+
+function projectMetadata(lang) {
+  const display = displayName(lang);
+  return `          - name: project_metadata_${lang}
+            label: Project metadata
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: ${lang}
+                label: ${display} project text
+                type: object
+                fields:
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
+`;
+}
+
+function languageSection(lang) {
+  return `  - name: language_${lang}
+    label: ${yamlString(nativeName(lang))}
+    type: group
+    items:
+      - name: project_settings_${lang}
+        label: Project Settings
+        type: group
+        items:
+${projectMetadata(lang)}
+${bookMetadataFile(lang)}
+${navigationFile(lang)}
+${localeFile(lang)}
+${appSettings(lang)}
+${glossaryFile(lang)}
+      - name: pages_${lang}
+        label: Pages
+        type: group
+        items:
+${homePage(lang)}
+      - name: handbook_${lang}
+        label: Handbook
+        type: group
+        items:
+${handbookPages(lang)}`;
+}
+
+function bookMetadataFile(lang) {
+  return `          - name: book_metadata_${lang}
+            label: Book metadata
+            type: file
+            path: src/data/works.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+${indentBlock(bookMetadata(lang), 4)}`;
+}
+
+function navigationFile(lang) {
+  return `          - name: navigation_${lang}
+            label: Navigation
+            type: file
+            path: src/data/nav.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+${indentBlock(navigation(lang), 4)}`;
+}
+
+function localeFile(lang) {
+  return `          - name: locale_strings_${lang}
+            label: UI translations
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+${indentBlock(localeStrings(lang), 4)}`;
+}
+
+function glossaryFile(lang) {
+  return `          - name: glossary_terms_${lang}
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+${indentBlock(glossary(lang), 4)}`;
 }
 
 function bookMetadata(lang) {
@@ -179,17 +429,6 @@ function localeStrings(lang) {
               - name: local-name
                 label: Local language name
                 type: string
-              - name: project
-                label: Project text
-                type: object
-                fields:
-                  - name: name
-                    label: Project name
-                    type: string
-                  - name: description
-                    type: text
-                  - name: credit
-                    type: text
               - name: nav
                 label: Navigation labels
                 type: object
@@ -244,6 +483,8 @@ function localeStrings(lang) {
                 type: object
                 fields:
                   - name: check-answers-button
+                    type: string
+                  - name: correct-answers
                     type: string
                   - name: feedback-correct
                     type: string
@@ -363,13 +604,17 @@ function localeStrings(lang) {
                 fields:
                   - name: link-to-section
                     type: string
-              - name: endnotes
-                label: Endnote labels
+              - name: footnotes
+                label: Footnote labels
                 type: object
                 fields:
                   - name: notes
                     type: string
                   - name: back-to-text
+                    type: string
+                  - name: open
+                    type: string
+                  - name: close
                     type: string
               - name: slideshow
                 label: Slideshow labels
@@ -387,12 +632,9 @@ function localeStrings(lang) {
 }
 
 function languageOptions() {
-  return LANGS.map((lang) => {
-    const display = displayName(lang);
-    return `        - name: ${lang}
-          label: ${display}
-`;
-  }).join('');
+  return LANGS.map((lang) => `        - name: ${lang}
+          label: ${yamlString(nativeName(lang))}
+`).join('');
 }
 
 function pagesYml() {
@@ -426,10 +668,9 @@ settings:
 components:
   markdown_body:
     label: Body
-    type: rich-text
+    type: code
     options:
-      format: markdown
-      switcher: true
+      format: mdx
   book_template:
     label: Template
     type: select
@@ -463,79 +704,7 @@ components:
       values:
 ${languageOptions()}
 content:
-  - name: handbook
-    label: Handbook
-    type: group
-    items:
-${LANGS.map((lang) => chaptersCollection(lang)).join('\n')}
-  - name: site_pages
-    label: Site Pages
-    type: group
-    items:
-${LANGS.map((lang) => homePage(lang)).join('\n')}
-  - name: metadata
-    label: Metadata
-    type: group
-    items:
-      - name: project_metadata
-        label: Project Metadata
-        type: file
-        path: src/data/project.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: name
-            label: Project name
-            type: string
-            required: true
-          - name: description
-            type: text
-          - name: credit
-            type: text
-
-      - name: locale_strings
-        label: UI Translations
-        type: file
-        path: src/data/locales.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-${LANGS.map((lang) => localeStrings(lang)).join('\n')}
-
-      - name: book_metadata
-        label: Book Metadata
-        type: file
-        path: src/data/works.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-${LANGS.map((lang) => bookMetadata(lang)).join('\n')}
-      - name: navigation
-        label: Navigation
-        type: file
-        path: src/data/nav.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-${LANGS.map((lang) => navigation(lang)).join('\n')}
-      - name: glossary
-        label: Glossary
-        type: file
-        path: src/data/glossary.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-${LANGS.map((lang) => glossary(lang)).join('\n')}`;
+${LANGS.map((lang) => languageSection(lang)).join('\n')}`;
 }
 
 function robotsTxt() {
@@ -563,6 +732,79 @@ const targets = [
   { path: 'public/site.webmanifest', render: webmanifest },
 ];
 
+function fail(message) {
+  console.error(message);
+  return 1;
+}
+
+function validatePagesYml() {
+  const source = readFileSync('.pages.yml', 'utf8');
+  const doc = parseDocument(source, { prettyErrors: true, uniqueKeys: true });
+  if (doc.errors.length > 0) {
+    for (const error of doc.errors) console.error(error.message);
+    return 1;
+  }
+  const config = doc.toJSON();
+  if (!Array.isArray(config?.content)) return fail('.pages.yml: content must be a list');
+
+  const names = [];
+  const contentPaths = [];
+  let mdxFiles = 0;
+  let mdxFrontmatterEditors = 0;
+  let hasImageField = false;
+  let hasMdxCodeBody = false;
+
+  function visitFields(fields) {
+    if (!Array.isArray(fields)) return;
+    for (const field of fields) {
+      if (field?.type === 'image') hasImageField = true;
+      if (field?.name === 'body' && field?.component === 'markdown_body') hasMdxCodeBody = true;
+      visitFields(field?.fields);
+    }
+  }
+
+  function visitItems(items) {
+    for (const item of items) {
+      if (!item?.name) return fail('.pages.yml: every content item needs a name');
+      names.push(item.name);
+      if (typeof item.path === 'string') {
+        if (item.path.startsWith('src/content/') || item.path.startsWith('src/data/')) {
+          contentPaths.push(item.path);
+        }
+        if (item.path.startsWith('src/content/') && item.path.endsWith('.mdx')) {
+          mdxFiles += 1;
+          if (item.format === 'yaml-frontmatter') mdxFrontmatterEditors += 1;
+        }
+      }
+      visitFields(item.fields);
+      if (Array.isArray(item.items)) {
+        const nested = visitItems(item.items);
+        if (nested) return nested;
+      }
+    }
+    return 0;
+  }
+
+  const itemError = visitItems(config.content);
+  if (itemError) return itemError;
+
+  const duplicateNames = [...new Set(names.filter((name, index) => names.indexOf(name) !== index))];
+  if (duplicateNames.length > 0) return fail(`.pages.yml: duplicate content item name(s): ${duplicateNames.join(', ')}`);
+
+  const duplicatePaths = [...new Set(contentPaths.filter((path, index) => contentPaths.indexOf(path) !== index))];
+  if (duplicatePaths.length > 0) {
+    console.warn(`.pages.yml: repeated content/data path(s): ${duplicatePaths.join(', ')}`);
+  }
+  if (mdxFiles === 0) return fail('.pages.yml: no MDX content files configured');
+  if (mdxFiles !== mdxFrontmatterEditors) {
+    return fail(`.pages.yml: expected all ${mdxFiles} MDX files to use yaml-frontmatter, got ${mdxFrontmatterEditors}`);
+  }
+  if (!hasImageField) return fail('.pages.yml: no image field configured');
+  if (!hasMdxCodeBody) return fail('.pages.yml: no MDX body field configured');
+  console.log(`valid: .pages.yml (${names.length} content items, ${mdxFiles} MDX editors)`);
+  return 0;
+}
+
 const checkOnly = process.argv.includes('--check');
 let dirty = 0;
 for (const { path, render } of targets) {
@@ -580,4 +822,5 @@ for (const { path, render } of targets) {
     console.log(`wrote ${path}`);
   }
 }
+if (checkOnly) dirty += validatePagesYml();
 if (checkOnly && dirty > 0) process.exit(1);

@@ -1,4 +1,4 @@
-// Keeps anchored scrolling (footnotes, endnote backlinks, heading
+// Keeps anchored scrolling (footnotes, backlinks, heading
 // permalinks, bookmark targets) clear of the sticky masthead. The header
 // wraps to multiple rows on narrow screens, so its height is measured at
 // runtime and exposed as --scroll-offset, which the global

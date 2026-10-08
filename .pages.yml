@@ -28,10 +28,9 @@ settings:
 components:
   markdown_body:
     label: Body
-    type: rich-text
+    type: code
     options:
-      format: markdown
-      switcher: true
+      format: mdx
   book_template:
     label: Template
     type: select
@@ -64,1108 +63,2190 @@ components:
     options:
       values:
         - name: de
-          label: German
+          label: "Deutsch"
         - name: en
-          label: English
+          label: "English"
         - name: sl
-          label: Slovene
+          label: "Slovenščina"
 
 content:
-  - name: handbook
-    label: Handbook
+  - name: language_de
+    label: "Deutsch"
     type: group
     items:
-      - name: chapters_de
-        label: Chapters (German)
-        type: collection
-        path: src/content/book/de
-        format: yaml-frontmatter
-        filename:
-          template: "{primary}.mdx"
-          field: create
-        operations:
-          create: false
-          rename: false
-          delete: false
-        fields:
-          - name: title
-            label: Chapter title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: book_template
-          - name: description
-            label: Description
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: book_images
-              path: src/assets/book
-              rename: safe
-        view:
-          fields: [title, template]
-          primary: title
-          sort: [title]
-          search: [title, body]
-          default:
-            sort: title
-            order: asc
-
-      - name: chapters_en
-        label: Chapters (English)
-        type: collection
-        path: src/content/book/en
-        format: yaml-frontmatter
-        filename:
-          template: "{primary}.mdx"
-          field: create
-        operations:
-          create: false
-          rename: false
-          delete: false
-        fields:
-          - name: title
-            label: Chapter title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: book_template
-          - name: description
-            label: Description
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: book_images
-              path: src/assets/book
-              rename: safe
-        view:
-          fields: [title, template]
-          primary: title
-          sort: [title]
-          search: [title, body]
-          default:
-            sort: title
-            order: asc
-
-      - name: chapters_sl
-        label: Chapters (Slovene)
-        type: collection
-        path: src/content/book/sl
-        format: yaml-frontmatter
-        filename:
-          template: "{primary}.mdx"
-          field: create
-        operations:
-          create: false
-          rename: false
-          delete: false
-        fields:
-          - name: title
-            label: Chapter title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: book_template
-          - name: description
-            label: Description
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: book_images
-              path: src/assets/book
-              rename: safe
-        view:
-          fields: [title, template]
-          primary: title
-          sort: [title]
-          search: [title, body]
-          default:
-            sort: title
-            order: asc
-
-  - name: site_pages
-    label: Site Pages
-    type: group
-    items:
-      - name: home_de
-        label: Home Page (German)
-        type: file
-        path: src/content/pages/de/index.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: page_template
-          - name: openerImage
-            label: Opener image
-            type: image
-            options:
-              media: book_images
-              path: src/assets/book
-          - name: openerImageAlt
-            label: Opener image alt text
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
-
-      - name: home_en
-        label: Home Page (English)
-        type: file
-        path: src/content/pages/en/index.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: page_template
-          - name: openerImage
-            label: Opener image
-            type: image
-            options:
-              media: book_images
-              path: src/assets/book
-          - name: openerImageAlt
-            label: Opener image alt text
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
-
-      - name: home_sl
-        label: Home Page (Slovene)
-        type: file
-        path: src/content/pages/sl/index.mdx
-        format: yaml-frontmatter
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: title
-            type: string
-            required: true
-          - name: lang
-            component: language
-          - name: template
-            component: page_template
-          - name: openerImage
-            label: Opener image
-            type: image
-            options:
-              media: book_images
-              path: src/assets/book
-          - name: openerImageAlt
-            label: Opener image alt text
-            type: text
-          - name: body
-            component: markdown_body
-            options:
-              media: site_images
-              path: src/assets/site
-              rename: safe
-
-  - name: metadata
-    label: Metadata
-    type: group
-    items:
-      - name: project_metadata
-        label: Project Metadata
-        type: file
-        path: src/data/project.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: name
-            label: Project name
-            type: string
-            required: true
-          - name: description
-            type: text
-          - name: credit
-            type: text
-
-      - name: locale_strings
-        label: UI Translations
-        type: file
-        path: src/data/locales.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: de
-            label: German UI strings
-            type: object
+      - name: project_settings_de
+        label: Project Settings
+        type: group
+        items:
+          - name: project_metadata_de
+            label: Project metadata
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
             fields:
-              - name: direction
-                type: select
-                options:
-                  values:
-                    - name: ltr
-                      label: Left to right
-                    - name: rtl
-                      label: Right to left
-              - name: local-name
-                label: Local language name
-                type: string
-              - name: project
-                label: Project text
+              - name: de
+                label: German project text
                 type: object
                 fields:
-                  - name: name
-                    label: Project name
-                    type: string
-                  - name: description
-                    type: text
-                  - name: credit
-                    type: text
-              - name: nav
-                label: Navigation labels
-                type: object
-                fields:
-                  - name: breadcrumb
-                    type: string
-                  - name: menu
-                    type: string
-                  - name: next
-                    type: string
-                  - name: previous
-                    type: string
-                  - name: toc
-                    type: string
-              - name: input
-                label: Input labels
-                type: object
-                fields:
-                  - name: submit
-                    type: string
-                  - name: close
-                    type: string
-              - name: errors
-                label: Error labels
-                type: object
-                fields:
-                  - name: page-not-found
-                    type: string
-              - name: search
-                label: Search labels
-                type: object
-                fields:
-                  - name: search-title
-                    label: Search title
-                    type: string
-                  - name: placeholder
-                    type: string
-                  - name: placeholder-searching
-                    label: Searching placeholder
-                    type: string
-                  - name: search-results
-                    label: Search results heading
-                    type: string
-                  - name: results-for-singular
-                    type: string
-                  - name: results-for-plural
-                    type: string
-                  - name: results-for-none
-                    type: string
-              - name: questions
-                label: Question labels
-                type: object
-                fields:
-                  - name: check-answers-button
-                    type: string
-                  - name: feedback-correct
-                    type: string
-                  - name: feedback-incorrect
-                    type: string
-                  - name: feedback-unfinished
-                    type: text
-              - name: cross-references
-                label: Cross-reference labels
-                type: object
-                fields:
-                  - name: pre-page-number
-                    type: string
-                  - name: post-page-number
-                    type: string
-              - name: bookmarks
-                label: Bookmark labels
-                type: object
-                fields:
-                  - name: bookmark
-                    type: string
-                  - name: set-bookmark
-                    type: string
-                  - name: remove-bookmark
-                    type: string
-                  - name: bookmarks
-                    type: string
-                  - name: last-location-prompt
-                    type: string
-                  - name: delete-bookmark
-                    type: string
-              - name: controls
-                label: Control labels
-                type: object
-                fields:
-                  - name: language-select
-                    type: string
-                  - name: choose-chapter
-                    type: string
-              - name: metadata
-                label: Metadata labels
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
+
+          - name: book_metadata_de
+            label: Book metadata
+            type: file
+            path: src/data/works.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: de
+                label: German book metadata
                 type: object
                 fields:
                   - name: title
                     type: string
+                    required: true
                   - name: subtitle
                     type: string
                   - name: creator
                     type: string
                   - name: contributor
                     type: string
+                  - name: description
+                    type: text
                   - name: publisher
                     type: string
+                  - name: rights
+                    type: text
                   - name: language
                     type: string
-                  - name: identifier
+
+          - name: navigation_de
+            label: Navigation
+            type: file
+            path: src/data/nav.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: de
+                label: German navigation
+                type: object
+                list: true
+                fields:
+                  - name: label
                     type: string
-                  - name: description
+                    required: true
+                  - name: file
                     type: string
-              - name: video
-                label: Video labels
+                    required: true
+
+          - name: locale_strings_de
+            label: UI translations
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: de
+                label: German UI strings
                 type: object
                 fields:
-                  - name: video-title
+                  - name: direction
+                    type: select
+                    options:
+                      values:
+                        - name: ltr
+                          label: Left to right
+                        - name: rtl
+                          label: Right to left
+                  - name: local-name
+                    label: Local language name
                     type: string
-                  - name: play-video
-                    type: string
-              - name: copy
-                label: Copy labels
-                type: object
-                fields:
+                  - name: nav
+                    label: Navigation labels
+                    type: object
+                    fields:
+                      - name: breadcrumb
+                        type: string
+                      - name: menu
+                        type: string
+                      - name: next
+                        type: string
+                      - name: previous
+                        type: string
+                      - name: toc
+                        type: string
+                  - name: input
+                    label: Input labels
+                    type: object
+                    fields:
+                      - name: submit
+                        type: string
+                      - name: close
+                        type: string
+                  - name: errors
+                    label: Error labels
+                    type: object
+                    fields:
+                      - name: page-not-found
+                        type: string
+                  - name: search
+                    label: Search labels
+                    type: object
+                    fields:
+                      - name: search-title
+                        label: Search title
+                        type: string
+                      - name: placeholder
+                        type: string
+                      - name: placeholder-searching
+                        label: Searching placeholder
+                        type: string
+                      - name: search-results
+                        label: Search results heading
+                        type: string
+                      - name: results-for-singular
+                        type: string
+                      - name: results-for-plural
+                        type: string
+                      - name: results-for-none
+                        type: string
+                  - name: questions
+                    label: Question labels
+                    type: object
+                    fields:
+                      - name: check-answers-button
+                        type: string
+                      - name: correct-answers
+                        type: string
+                      - name: feedback-correct
+                        type: string
+                      - name: feedback-incorrect
+                        type: string
+                      - name: feedback-unfinished
+                        type: text
+                  - name: cross-references
+                    label: Cross-reference labels
+                    type: object
+                    fields:
+                      - name: pre-page-number
+                        type: string
+                      - name: post-page-number
+                        type: string
+                  - name: bookmarks
+                    label: Bookmark labels
+                    type: object
+                    fields:
+                      - name: bookmark
+                        type: string
+                      - name: set-bookmark
+                        type: string
+                      - name: remove-bookmark
+                        type: string
+                      - name: bookmarks
+                        type: string
+                      - name: last-location-prompt
+                        type: string
+                      - name: delete-bookmark
+                        type: string
+                  - name: controls
+                    label: Control labels
+                    type: object
+                    fields:
+                      - name: language-select
+                        type: string
+                      - name: choose-chapter
+                        type: string
+                  - name: metadata
+                    label: Metadata labels
+                    type: object
+                    fields:
+                      - name: title
+                        type: string
+                      - name: subtitle
+                        type: string
+                      - name: creator
+                        type: string
+                      - name: contributor
+                        type: string
+                      - name: publisher
+                        type: string
+                      - name: language
+                        type: string
+                      - name: identifier
+                        type: string
+                      - name: description
+                        type: string
+                  - name: video
+                    label: Video labels
+                    type: object
+                    fields:
+                      - name: video-title
+                        type: string
+                      - name: play-video
+                        type: string
                   - name: copy
-                    type: string
-                  - name: copied
-                    type: string
-                  - name: copy-failed
-                    type: string
-              - name: share
-                label: Share labels
-                type: object
-                fields:
+                    label: Copy labels
+                    type: object
+                    fields:
+                      - name: copy
+                        type: string
+                      - name: copied
+                        type: string
+                      - name: copy-failed
+                        type: string
                   - name: share
-                    type: string
-                  - name: link
-                    type: string
-                  - name: email
-                    type: string
-                  - name: bluesky
-                    type: string
-                  - name: facebook
-                    type: string
-                  - name: linkedin
-                    type: string
-                  - name: reddit
-                    type: string
-                  - name: twitter
-                    type: string
-                  - name: whatsapp
-                    type: string
-              - name: expandable-box
-                label: Expandable-box labels
+                    label: Share labels
+                    type: object
+                    fields:
+                      - name: share
+                        type: string
+                      - name: link
+                        type: string
+                      - name: email
+                        type: string
+                      - name: bluesky
+                        type: string
+                      - name: facebook
+                        type: string
+                      - name: linkedin
+                        type: string
+                      - name: reddit
+                        type: string
+                      - name: twitter
+                        type: string
+                      - name: whatsapp
+                        type: string
+                  - name: expandable-box
+                    label: Expandable-box labels
+                    type: object
+                    fields:
+                      - name: read-more
+                        type: string
+                  - name: spoiler
+                    label: Spoiler labels
+                    type: object
+                    fields:
+                      - name: show
+                        type: string
+                      - name: hide
+                        type: string
+                  - name: headings
+                    label: Heading labels
+                    type: object
+                    fields:
+                      - name: link-to-section
+                        type: string
+                  - name: footnotes
+                    label: Footnote labels
+                    type: object
+                    fields:
+                      - name: notes
+                        type: string
+                      - name: back-to-text
+                        type: string
+                      - name: open
+                        type: string
+                      - name: close
+                        type: string
+                  - name: slideshow
+                    label: Slideshow labels
+                    type: object
+                    fields:
+                      - name: slides
+                        type: string
+                  - name: visual-toc
+                    label: Visual table-of-contents labels
+                    type: object
+                    fields:
+                      - name: link-to-page-assistive-text
+                        type: string
+
+          - name: app_settings_de
+            label: Site and PDF settings
+            type: file
+            path: src/data/settings.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: math
+                label: Math rendering
                 type: object
                 fields:
-                  - name: read-more
-                    type: string
-              - name: spoiler
-                label: Spoiler labels
+                  - name: enabled
+                    type: boolean
+                  - name: source
+                    type: select
+                    options:
+                      values:
+                        - name: cdn
+                          label: CDN
+                        - name: local
+                          label: Local
+              - name: web
+                label: Website settings
                 type: object
                 fields:
-                  - name: show
+                  - name: pagination
+                    type: boolean
+                  - name: paginationType
+                    label: Pagination type
+                    type: select
+                    options:
+                      values:
+                        - name: title-arrows
+                          label: Title and arrows
+                        - name: arrows
+                          label: Arrows only
+                        - name: titles
+                          label: Titles only
+                  - name: accordion
+                    type: boolean
+                  - name: accordionLevel
+                    label: Accordion heading level
+                    type: select
+                    options:
+                      values:
+                        - name: h2
+                          label: H2
+                        - name: h3
+                          label: H3
+                  - name: svgInject
+                    label: Inline SVG injection
+                    type: boolean
+                  - name: lazyload
+                    label: Lazy-load media
+                    type: boolean
+                  - name: bookmarks
+                    type: object
+                    fields:
+                      - name: enabled
+                        type: boolean
+                      - name: noteMaxLength
+                        label: Maximum note length
+                        type: number
+                  - name: nav
+                    label: Navigation behavior
+                    type: object
+                    fields:
+                      - name: expandBooks
+                        type: boolean
+                      - name: projectNavPosition
+                        type: select
+                        options:
+                          values:
+                            - name: before
+                              label: Before book navigation
+                            - name: after
+                              label: After book navigation
+                  - name: search
+                    type: object
+                    fields:
+                      - name: jumpBoxLocation
+                        type: string
+                      - name: param
+                        label: Search query parameter
+                        type: string
+                  - name: titleDivider
+                    label: Title divider
                     type: string
-                  - name: hide
-                    type: string
-              - name: headings
-                label: Heading labels
-                type: object
-                fields:
-                  - name: link-to-section
-                    type: string
-              - name: endnotes
-                label: Endnote labels
+                  - name: indexing
+                    label: Search engine indexing
+                    type: object
+                    fields:
+                      - name: development
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+                      - name: live
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+              - name: pdf
+                label: PDF settings
                 type: object
                 fields:
                   - name: notes
-                    type: string
-                  - name: back-to-text
-                    type: string
-              - name: slideshow
-                label: Slideshow labels
-                type: object
-                fields:
-                  - name: slides
-                    type: string
-              - name: visual-toc
-                label: Visual table-of-contents labels
-                type: object
-                fields:
-                  - name: link-to-page-assistive-text
-                    type: string
+                    label: Note placement
+                    type: select
+                    options:
+                      values:
+                        - name: footnotes
+                          label: Footnotes, bottom of page
+                        - name: chapter-footnotes
+                          label: End of chapter
+                        - name: book-footnotes
+                          label: End of book
+                  - name: page
+                    label: Page setup
+                    type: object
+                    fields:
+                      - name: size
+                        type: string
+                      - name: margin
+                        type: string
 
-          - name: en
-            label: English UI strings
-            type: object
+          - name: glossary_terms_de
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
             fields:
-              - name: direction
-                type: select
-                options:
-                  values:
-                    - name: ltr
-                      label: Left to right
-                    - name: rtl
-                      label: Right to left
-              - name: local-name
-                label: Local language name
+              - name: de
+                label: German glossary
+                type: object
+                list: true
+                fields:
+                  - name: term
+                    label: Term
+                    type: string
+                    required: true
+                  - name: definition
+                    label: Definition
+                    type: text
+                    required: true
+                  - name: forms
+                    label: Word forms
+                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                    type: string
+                    list: true
+
+      - name: pages_de
+        label: Pages
+        type: group
+        items:
+          - name: home_de
+            label: "Start"
+            type: file
+            path: src/content/pages/de/index.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
                 type: string
-              - name: project
-                label: Project text
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
+
+      - name: handbook_de
+        label: Handbook
+        type: group
+        items:
+          - name: handbook_de_about
+            label: "Über"
+            type: file
+            path: src/content/book/de/about.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_glossary
+            label: "Glossar"
+            type: file
+            path: src/content/book/de/glossary.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_01
+            label: "1. Wozu diese Toolbox?"
+            type: file
+            path: src/content/book/de/01.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_02
+            label: "2. Superblocks starten"
+            type: file
+            path: src/content/book/de/02.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_03
+            label: "3. Tactical Urbanism und Street Design"
+            type: file
+            path: src/content/book/de/03.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_04
+            label: "4. Mobilisierung und Strategien des Wandels"
+            type: file
+            path: src/content/book/de/04.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_05
+            label: "5. Monitoring: Wirkung sichtbar machen"
+            type: file
+            path: src/content/book/de/05.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_de_06
+            label: "6. Arbeitsplan und Quellen"
+            type: file
+            path: src/content/book/de/06.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+  - name: language_en
+    label: "English"
+    type: group
+    items:
+      - name: project_settings_en
+        label: Project Settings
+        type: group
+        items:
+          - name: project_metadata_en
+            label: Project metadata
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: en
+                label: English project text
                 type: object
                 fields:
-                  - name: name
-                    label: Project name
-                    type: string
-                  - name: description
-                    type: text
-                  - name: credit
-                    type: text
-              - name: nav
-                label: Navigation labels
-                type: object
-                fields:
-                  - name: breadcrumb
-                    type: string
-                  - name: menu
-                    type: string
-                  - name: next
-                    type: string
-                  - name: previous
-                    type: string
-                  - name: toc
-                    type: string
-              - name: input
-                label: Input labels
-                type: object
-                fields:
-                  - name: submit
-                    type: string
-                  - name: close
-                    type: string
-              - name: errors
-                label: Error labels
-                type: object
-                fields:
-                  - name: page-not-found
-                    type: string
-              - name: search
-                label: Search labels
-                type: object
-                fields:
-                  - name: search-title
-                    label: Search title
-                    type: string
-                  - name: placeholder
-                    type: string
-                  - name: placeholder-searching
-                    label: Searching placeholder
-                    type: string
-                  - name: search-results
-                    label: Search results heading
-                    type: string
-                  - name: results-for-singular
-                    type: string
-                  - name: results-for-plural
-                    type: string
-                  - name: results-for-none
-                    type: string
-              - name: questions
-                label: Question labels
-                type: object
-                fields:
-                  - name: check-answers-button
-                    type: string
-                  - name: feedback-correct
-                    type: string
-                  - name: feedback-incorrect
-                    type: string
-                  - name: feedback-unfinished
-                    type: text
-              - name: cross-references
-                label: Cross-reference labels
-                type: object
-                fields:
-                  - name: pre-page-number
-                    type: string
-                  - name: post-page-number
-                    type: string
-              - name: bookmarks
-                label: Bookmark labels
-                type: object
-                fields:
-                  - name: bookmark
-                    type: string
-                  - name: set-bookmark
-                    type: string
-                  - name: remove-bookmark
-                    type: string
-                  - name: bookmarks
-                    type: string
-                  - name: last-location-prompt
-                    type: string
-                  - name: delete-bookmark
-                    type: string
-              - name: controls
-                label: Control labels
-                type: object
-                fields:
-                  - name: language-select
-                    type: string
-                  - name: choose-chapter
-                    type: string
-              - name: metadata
-                label: Metadata labels
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
+
+          - name: book_metadata_en
+            label: Book metadata
+            type: file
+            path: src/data/works.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: en
+                label: English book metadata
                 type: object
                 fields:
                   - name: title
                     type: string
+                    required: true
                   - name: subtitle
                     type: string
                   - name: creator
                     type: string
                   - name: contributor
                     type: string
+                  - name: description
+                    type: text
                   - name: publisher
                     type: string
+                  - name: rights
+                    type: text
                   - name: language
                     type: string
-                  - name: identifier
+
+          - name: navigation_en
+            label: Navigation
+            type: file
+            path: src/data/nav.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: en
+                label: English navigation
+                type: object
+                list: true
+                fields:
+                  - name: label
                     type: string
-                  - name: description
+                    required: true
+                  - name: file
                     type: string
-              - name: video
-                label: Video labels
+                    required: true
+
+          - name: locale_strings_en
+            label: UI translations
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: en
+                label: English UI strings
                 type: object
                 fields:
-                  - name: video-title
+                  - name: direction
+                    type: select
+                    options:
+                      values:
+                        - name: ltr
+                          label: Left to right
+                        - name: rtl
+                          label: Right to left
+                  - name: local-name
+                    label: Local language name
                     type: string
-                  - name: play-video
-                    type: string
-              - name: copy
-                label: Copy labels
-                type: object
-                fields:
+                  - name: nav
+                    label: Navigation labels
+                    type: object
+                    fields:
+                      - name: breadcrumb
+                        type: string
+                      - name: menu
+                        type: string
+                      - name: next
+                        type: string
+                      - name: previous
+                        type: string
+                      - name: toc
+                        type: string
+                  - name: input
+                    label: Input labels
+                    type: object
+                    fields:
+                      - name: submit
+                        type: string
+                      - name: close
+                        type: string
+                  - name: errors
+                    label: Error labels
+                    type: object
+                    fields:
+                      - name: page-not-found
+                        type: string
+                  - name: search
+                    label: Search labels
+                    type: object
+                    fields:
+                      - name: search-title
+                        label: Search title
+                        type: string
+                      - name: placeholder
+                        type: string
+                      - name: placeholder-searching
+                        label: Searching placeholder
+                        type: string
+                      - name: search-results
+                        label: Search results heading
+                        type: string
+                      - name: results-for-singular
+                        type: string
+                      - name: results-for-plural
+                        type: string
+                      - name: results-for-none
+                        type: string
+                  - name: questions
+                    label: Question labels
+                    type: object
+                    fields:
+                      - name: check-answers-button
+                        type: string
+                      - name: correct-answers
+                        type: string
+                      - name: feedback-correct
+                        type: string
+                      - name: feedback-incorrect
+                        type: string
+                      - name: feedback-unfinished
+                        type: text
+                  - name: cross-references
+                    label: Cross-reference labels
+                    type: object
+                    fields:
+                      - name: pre-page-number
+                        type: string
+                      - name: post-page-number
+                        type: string
+                  - name: bookmarks
+                    label: Bookmark labels
+                    type: object
+                    fields:
+                      - name: bookmark
+                        type: string
+                      - name: set-bookmark
+                        type: string
+                      - name: remove-bookmark
+                        type: string
+                      - name: bookmarks
+                        type: string
+                      - name: last-location-prompt
+                        type: string
+                      - name: delete-bookmark
+                        type: string
+                  - name: controls
+                    label: Control labels
+                    type: object
+                    fields:
+                      - name: language-select
+                        type: string
+                      - name: choose-chapter
+                        type: string
+                  - name: metadata
+                    label: Metadata labels
+                    type: object
+                    fields:
+                      - name: title
+                        type: string
+                      - name: subtitle
+                        type: string
+                      - name: creator
+                        type: string
+                      - name: contributor
+                        type: string
+                      - name: publisher
+                        type: string
+                      - name: language
+                        type: string
+                      - name: identifier
+                        type: string
+                      - name: description
+                        type: string
+                  - name: video
+                    label: Video labels
+                    type: object
+                    fields:
+                      - name: video-title
+                        type: string
+                      - name: play-video
+                        type: string
                   - name: copy
-                    type: string
-                  - name: copied
-                    type: string
-                  - name: copy-failed
-                    type: string
-              - name: share
-                label: Share labels
-                type: object
-                fields:
+                    label: Copy labels
+                    type: object
+                    fields:
+                      - name: copy
+                        type: string
+                      - name: copied
+                        type: string
+                      - name: copy-failed
+                        type: string
                   - name: share
-                    type: string
-                  - name: link
-                    type: string
-                  - name: email
-                    type: string
-                  - name: bluesky
-                    type: string
-                  - name: facebook
-                    type: string
-                  - name: linkedin
-                    type: string
-                  - name: reddit
-                    type: string
-                  - name: twitter
-                    type: string
-                  - name: whatsapp
-                    type: string
-              - name: expandable-box
-                label: Expandable-box labels
+                    label: Share labels
+                    type: object
+                    fields:
+                      - name: share
+                        type: string
+                      - name: link
+                        type: string
+                      - name: email
+                        type: string
+                      - name: bluesky
+                        type: string
+                      - name: facebook
+                        type: string
+                      - name: linkedin
+                        type: string
+                      - name: reddit
+                        type: string
+                      - name: twitter
+                        type: string
+                      - name: whatsapp
+                        type: string
+                  - name: expandable-box
+                    label: Expandable-box labels
+                    type: object
+                    fields:
+                      - name: read-more
+                        type: string
+                  - name: spoiler
+                    label: Spoiler labels
+                    type: object
+                    fields:
+                      - name: show
+                        type: string
+                      - name: hide
+                        type: string
+                  - name: headings
+                    label: Heading labels
+                    type: object
+                    fields:
+                      - name: link-to-section
+                        type: string
+                  - name: footnotes
+                    label: Footnote labels
+                    type: object
+                    fields:
+                      - name: notes
+                        type: string
+                      - name: back-to-text
+                        type: string
+                      - name: open
+                        type: string
+                      - name: close
+                        type: string
+                  - name: slideshow
+                    label: Slideshow labels
+                    type: object
+                    fields:
+                      - name: slides
+                        type: string
+                  - name: visual-toc
+                    label: Visual table-of-contents labels
+                    type: object
+                    fields:
+                      - name: link-to-page-assistive-text
+                        type: string
+
+          - name: app_settings_en
+            label: Site and PDF settings
+            type: file
+            path: src/data/settings.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: math
+                label: Math rendering
                 type: object
                 fields:
-                  - name: read-more
-                    type: string
-              - name: spoiler
-                label: Spoiler labels
+                  - name: enabled
+                    type: boolean
+                  - name: source
+                    type: select
+                    options:
+                      values:
+                        - name: cdn
+                          label: CDN
+                        - name: local
+                          label: Local
+              - name: web
+                label: Website settings
                 type: object
                 fields:
-                  - name: show
+                  - name: pagination
+                    type: boolean
+                  - name: paginationType
+                    label: Pagination type
+                    type: select
+                    options:
+                      values:
+                        - name: title-arrows
+                          label: Title and arrows
+                        - name: arrows
+                          label: Arrows only
+                        - name: titles
+                          label: Titles only
+                  - name: accordion
+                    type: boolean
+                  - name: accordionLevel
+                    label: Accordion heading level
+                    type: select
+                    options:
+                      values:
+                        - name: h2
+                          label: H2
+                        - name: h3
+                          label: H3
+                  - name: svgInject
+                    label: Inline SVG injection
+                    type: boolean
+                  - name: lazyload
+                    label: Lazy-load media
+                    type: boolean
+                  - name: bookmarks
+                    type: object
+                    fields:
+                      - name: enabled
+                        type: boolean
+                      - name: noteMaxLength
+                        label: Maximum note length
+                        type: number
+                  - name: nav
+                    label: Navigation behavior
+                    type: object
+                    fields:
+                      - name: expandBooks
+                        type: boolean
+                      - name: projectNavPosition
+                        type: select
+                        options:
+                          values:
+                            - name: before
+                              label: Before book navigation
+                            - name: after
+                              label: After book navigation
+                  - name: search
+                    type: object
+                    fields:
+                      - name: jumpBoxLocation
+                        type: string
+                      - name: param
+                        label: Search query parameter
+                        type: string
+                  - name: titleDivider
+                    label: Title divider
                     type: string
-                  - name: hide
-                    type: string
-              - name: headings
-                label: Heading labels
-                type: object
-                fields:
-                  - name: link-to-section
-                    type: string
-              - name: endnotes
-                label: Endnote labels
+                  - name: indexing
+                    label: Search engine indexing
+                    type: object
+                    fields:
+                      - name: development
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+                      - name: live
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+              - name: pdf
+                label: PDF settings
                 type: object
                 fields:
                   - name: notes
-                    type: string
-                  - name: back-to-text
-                    type: string
-              - name: slideshow
-                label: Slideshow labels
-                type: object
-                fields:
-                  - name: slides
-                    type: string
-              - name: visual-toc
-                label: Visual table-of-contents labels
-                type: object
-                fields:
-                  - name: link-to-page-assistive-text
-                    type: string
+                    label: Note placement
+                    type: select
+                    options:
+                      values:
+                        - name: footnotes
+                          label: Footnotes, bottom of page
+                        - name: chapter-footnotes
+                          label: End of chapter
+                        - name: book-footnotes
+                          label: End of book
+                  - name: page
+                    label: Page setup
+                    type: object
+                    fields:
+                      - name: size
+                        type: string
+                      - name: margin
+                        type: string
 
-          - name: sl
-            label: Slovene UI strings
-            type: object
+          - name: glossary_terms_en
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
             fields:
-              - name: direction
-                type: select
-                options:
-                  values:
-                    - name: ltr
-                      label: Left to right
-                    - name: rtl
-                      label: Right to left
-              - name: local-name
-                label: Local language name
+              - name: en
+                label: English glossary
+                type: object
+                list: true
+                fields:
+                  - name: term
+                    label: Term
+                    type: string
+                    required: true
+                  - name: definition
+                    label: Definition
+                    type: text
+                    required: true
+                  - name: forms
+                    label: Word forms
+                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                    type: string
+                    list: true
+
+      - name: pages_en
+        label: Pages
+        type: group
+        items:
+          - name: home_en
+            label: "Home"
+            type: file
+            path: src/content/pages/en/index.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
                 type: string
-              - name: project
-                label: Project text
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
+
+      - name: handbook_en
+        label: Handbook
+        type: group
+        items:
+          - name: handbook_en_about
+            label: "About"
+            type: file
+            path: src/content/book/en/about.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_glossary
+            label: "Glossary"
+            type: file
+            path: src/content/book/en/glossary.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_01
+            label: "1. Why this toolbox?"
+            type: file
+            path: src/content/book/en/01.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_02
+            label: "2. Starting superblocks"
+            type: file
+            path: src/content/book/en/02.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_03
+            label: "3. Tactical urbanism and street design"
+            type: file
+            path: src/content/book/en/03.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_04
+            label: "4. Mobilisation and strategies for change"
+            type: file
+            path: src/content/book/en/04.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_05
+            label: "5. Monitoring: making impact visible"
+            type: file
+            path: src/content/book/en/05.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_en_06
+            label: "6. Work plan and sources"
+            type: file
+            path: src/content/book/en/06.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+  - name: language_sl
+    label: "Slovenščina"
+    type: group
+    items:
+      - name: project_settings_sl
+        label: Project Settings
+        type: group
+        items:
+          - name: project_metadata_sl
+            label: Project metadata
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: sl
+                label: Slovene project text
                 type: object
                 fields:
-                  - name: name
-                    label: Project name
-                    type: string
-                  - name: description
-                    type: text
-                  - name: credit
-                    type: text
-              - name: nav
-                label: Navigation labels
-                type: object
-                fields:
-                  - name: breadcrumb
-                    type: string
-                  - name: menu
-                    type: string
-                  - name: next
-                    type: string
-                  - name: previous
-                    type: string
-                  - name: toc
-                    type: string
-              - name: input
-                label: Input labels
-                type: object
-                fields:
-                  - name: submit
-                    type: string
-                  - name: close
-                    type: string
-              - name: errors
-                label: Error labels
-                type: object
-                fields:
-                  - name: page-not-found
-                    type: string
-              - name: search
-                label: Search labels
-                type: object
-                fields:
-                  - name: search-title
-                    label: Search title
-                    type: string
-                  - name: placeholder
-                    type: string
-                  - name: placeholder-searching
-                    label: Searching placeholder
-                    type: string
-                  - name: search-results
-                    label: Search results heading
-                    type: string
-                  - name: results-for-singular
-                    type: string
-                  - name: results-for-plural
-                    type: string
-                  - name: results-for-none
-                    type: string
-              - name: questions
-                label: Question labels
-                type: object
-                fields:
-                  - name: check-answers-button
-                    type: string
-                  - name: feedback-correct
-                    type: string
-                  - name: feedback-incorrect
-                    type: string
-                  - name: feedback-unfinished
-                    type: text
-              - name: cross-references
-                label: Cross-reference labels
-                type: object
-                fields:
-                  - name: pre-page-number
-                    type: string
-                  - name: post-page-number
-                    type: string
-              - name: bookmarks
-                label: Bookmark labels
-                type: object
-                fields:
-                  - name: bookmark
-                    type: string
-                  - name: set-bookmark
-                    type: string
-                  - name: remove-bookmark
-                    type: string
-                  - name: bookmarks
-                    type: string
-                  - name: last-location-prompt
-                    type: string
-                  - name: delete-bookmark
-                    type: string
-              - name: controls
-                label: Control labels
-                type: object
-                fields:
-                  - name: language-select
-                    type: string
-                  - name: choose-chapter
-                    type: string
-              - name: metadata
-                label: Metadata labels
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
+
+          - name: book_metadata_sl
+            label: Book metadata
+            type: file
+            path: src/data/works.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: sl
+                label: Slovene book metadata
                 type: object
                 fields:
                   - name: title
                     type: string
+                    required: true
                   - name: subtitle
                     type: string
                   - name: creator
                     type: string
                   - name: contributor
                     type: string
+                  - name: description
+                    type: text
                   - name: publisher
                     type: string
+                  - name: rights
+                    type: text
                   - name: language
                     type: string
-                  - name: identifier
+
+          - name: navigation_sl
+            label: Navigation
+            type: file
+            path: src/data/nav.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: sl
+                label: Slovene navigation
+                type: object
+                list: true
+                fields:
+                  - name: label
                     type: string
-                  - name: description
+                    required: true
+                  - name: file
                     type: string
-              - name: video
-                label: Video labels
+                    required: true
+
+          - name: locale_strings_sl
+            label: UI translations
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: sl
+                label: Slovene UI strings
                 type: object
                 fields:
-                  - name: video-title
+                  - name: direction
+                    type: select
+                    options:
+                      values:
+                        - name: ltr
+                          label: Left to right
+                        - name: rtl
+                          label: Right to left
+                  - name: local-name
+                    label: Local language name
                     type: string
-                  - name: play-video
-                    type: string
-              - name: copy
-                label: Copy labels
-                type: object
-                fields:
+                  - name: nav
+                    label: Navigation labels
+                    type: object
+                    fields:
+                      - name: breadcrumb
+                        type: string
+                      - name: menu
+                        type: string
+                      - name: next
+                        type: string
+                      - name: previous
+                        type: string
+                      - name: toc
+                        type: string
+                  - name: input
+                    label: Input labels
+                    type: object
+                    fields:
+                      - name: submit
+                        type: string
+                      - name: close
+                        type: string
+                  - name: errors
+                    label: Error labels
+                    type: object
+                    fields:
+                      - name: page-not-found
+                        type: string
+                  - name: search
+                    label: Search labels
+                    type: object
+                    fields:
+                      - name: search-title
+                        label: Search title
+                        type: string
+                      - name: placeholder
+                        type: string
+                      - name: placeholder-searching
+                        label: Searching placeholder
+                        type: string
+                      - name: search-results
+                        label: Search results heading
+                        type: string
+                      - name: results-for-singular
+                        type: string
+                      - name: results-for-plural
+                        type: string
+                      - name: results-for-none
+                        type: string
+                  - name: questions
+                    label: Question labels
+                    type: object
+                    fields:
+                      - name: check-answers-button
+                        type: string
+                      - name: correct-answers
+                        type: string
+                      - name: feedback-correct
+                        type: string
+                      - name: feedback-incorrect
+                        type: string
+                      - name: feedback-unfinished
+                        type: text
+                  - name: cross-references
+                    label: Cross-reference labels
+                    type: object
+                    fields:
+                      - name: pre-page-number
+                        type: string
+                      - name: post-page-number
+                        type: string
+                  - name: bookmarks
+                    label: Bookmark labels
+                    type: object
+                    fields:
+                      - name: bookmark
+                        type: string
+                      - name: set-bookmark
+                        type: string
+                      - name: remove-bookmark
+                        type: string
+                      - name: bookmarks
+                        type: string
+                      - name: last-location-prompt
+                        type: string
+                      - name: delete-bookmark
+                        type: string
+                  - name: controls
+                    label: Control labels
+                    type: object
+                    fields:
+                      - name: language-select
+                        type: string
+                      - name: choose-chapter
+                        type: string
+                  - name: metadata
+                    label: Metadata labels
+                    type: object
+                    fields:
+                      - name: title
+                        type: string
+                      - name: subtitle
+                        type: string
+                      - name: creator
+                        type: string
+                      - name: contributor
+                        type: string
+                      - name: publisher
+                        type: string
+                      - name: language
+                        type: string
+                      - name: identifier
+                        type: string
+                      - name: description
+                        type: string
+                  - name: video
+                    label: Video labels
+                    type: object
+                    fields:
+                      - name: video-title
+                        type: string
+                      - name: play-video
+                        type: string
                   - name: copy
-                    type: string
-                  - name: copied
-                    type: string
-                  - name: copy-failed
-                    type: string
-              - name: share
-                label: Share labels
-                type: object
-                fields:
+                    label: Copy labels
+                    type: object
+                    fields:
+                      - name: copy
+                        type: string
+                      - name: copied
+                        type: string
+                      - name: copy-failed
+                        type: string
                   - name: share
-                    type: string
-                  - name: link
-                    type: string
-                  - name: email
-                    type: string
-                  - name: bluesky
-                    type: string
-                  - name: facebook
-                    type: string
-                  - name: linkedin
-                    type: string
-                  - name: reddit
-                    type: string
-                  - name: twitter
-                    type: string
-                  - name: whatsapp
-                    type: string
-              - name: expandable-box
-                label: Expandable-box labels
+                    label: Share labels
+                    type: object
+                    fields:
+                      - name: share
+                        type: string
+                      - name: link
+                        type: string
+                      - name: email
+                        type: string
+                      - name: bluesky
+                        type: string
+                      - name: facebook
+                        type: string
+                      - name: linkedin
+                        type: string
+                      - name: reddit
+                        type: string
+                      - name: twitter
+                        type: string
+                      - name: whatsapp
+                        type: string
+                  - name: expandable-box
+                    label: Expandable-box labels
+                    type: object
+                    fields:
+                      - name: read-more
+                        type: string
+                  - name: spoiler
+                    label: Spoiler labels
+                    type: object
+                    fields:
+                      - name: show
+                        type: string
+                      - name: hide
+                        type: string
+                  - name: headings
+                    label: Heading labels
+                    type: object
+                    fields:
+                      - name: link-to-section
+                        type: string
+                  - name: footnotes
+                    label: Footnote labels
+                    type: object
+                    fields:
+                      - name: notes
+                        type: string
+                      - name: back-to-text
+                        type: string
+                      - name: open
+                        type: string
+                      - name: close
+                        type: string
+                  - name: slideshow
+                    label: Slideshow labels
+                    type: object
+                    fields:
+                      - name: slides
+                        type: string
+                  - name: visual-toc
+                    label: Visual table-of-contents labels
+                    type: object
+                    fields:
+                      - name: link-to-page-assistive-text
+                        type: string
+
+          - name: app_settings_sl
+            label: Site and PDF settings
+            type: file
+            path: src/data/settings.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: math
+                label: Math rendering
                 type: object
                 fields:
-                  - name: read-more
-                    type: string
-              - name: spoiler
-                label: Spoiler labels
+                  - name: enabled
+                    type: boolean
+                  - name: source
+                    type: select
+                    options:
+                      values:
+                        - name: cdn
+                          label: CDN
+                        - name: local
+                          label: Local
+              - name: web
+                label: Website settings
                 type: object
                 fields:
-                  - name: show
+                  - name: pagination
+                    type: boolean
+                  - name: paginationType
+                    label: Pagination type
+                    type: select
+                    options:
+                      values:
+                        - name: title-arrows
+                          label: Title and arrows
+                        - name: arrows
+                          label: Arrows only
+                        - name: titles
+                          label: Titles only
+                  - name: accordion
+                    type: boolean
+                  - name: accordionLevel
+                    label: Accordion heading level
+                    type: select
+                    options:
+                      values:
+                        - name: h2
+                          label: H2
+                        - name: h3
+                          label: H3
+                  - name: svgInject
+                    label: Inline SVG injection
+                    type: boolean
+                  - name: lazyload
+                    label: Lazy-load media
+                    type: boolean
+                  - name: bookmarks
+                    type: object
+                    fields:
+                      - name: enabled
+                        type: boolean
+                      - name: noteMaxLength
+                        label: Maximum note length
+                        type: number
+                  - name: nav
+                    label: Navigation behavior
+                    type: object
+                    fields:
+                      - name: expandBooks
+                        type: boolean
+                      - name: projectNavPosition
+                        type: select
+                        options:
+                          values:
+                            - name: before
+                              label: Before book navigation
+                            - name: after
+                              label: After book navigation
+                  - name: search
+                    type: object
+                    fields:
+                      - name: jumpBoxLocation
+                        type: string
+                      - name: param
+                        label: Search query parameter
+                        type: string
+                  - name: titleDivider
+                    label: Title divider
                     type: string
-                  - name: hide
-                    type: string
-              - name: headings
-                label: Heading labels
-                type: object
-                fields:
-                  - name: link-to-section
-                    type: string
-              - name: endnotes
-                label: Endnote labels
+                  - name: indexing
+                    label: Search engine indexing
+                    type: object
+                    fields:
+                      - name: development
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+                      - name: live
+                        type: select
+                        options:
+                          values:
+                            - name: index
+                              label: Index
+                            - name: noindex
+                              label: No index
+              - name: pdf
+                label: PDF settings
                 type: object
                 fields:
                   - name: notes
-                    type: string
-                  - name: back-to-text
-                    type: string
-              - name: slideshow
-                label: Slideshow labels
+                    label: Note placement
+                    type: select
+                    options:
+                      values:
+                        - name: footnotes
+                          label: Footnotes, bottom of page
+                        - name: chapter-footnotes
+                          label: End of chapter
+                        - name: book-footnotes
+                          label: End of book
+                  - name: page
+                    label: Page setup
+                    type: object
+                    fields:
+                      - name: size
+                        type: string
+                      - name: margin
+                        type: string
+
+          - name: glossary_terms_sl
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: sl
+                label: Slovene glossary
                 type: object
+                list: true
                 fields:
-                  - name: slides
+                  - name: term
+                    label: Term
                     type: string
-              - name: visual-toc
-                label: Visual table-of-contents labels
-                type: object
-                fields:
-                  - name: link-to-page-assistive-text
+                    required: true
+                  - name: definition
+                    label: Definition
+                    type: text
+                    required: true
+                  - name: forms
+                    label: Word forms
+                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
                     type: string
+                    list: true
 
-
-      - name: book_metadata
-        label: Book Metadata
-        type: file
-        path: src/data/works.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: de
-            label: German book metadata
-            type: object
+      - name: pages_sl
+        label: Pages
+        type: group
+        items:
+          - name: home_sl
+            label: "Domov"
+            type: file
+            path: src/content/pages/sl/index.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
             fields:
               - name: title
                 type: string
                 required: true
-              - name: subtitle
-                type: string
-              - name: creator
-                type: string
-              - name: contributor
-                type: string
-              - name: description
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
                 type: text
-              - name: publisher
-                type: string
-              - name: rights
-                type: text
-              - name: language
-                type: string
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
 
-          - name: en
-            label: English book metadata
-            type: object
+      - name: handbook_sl
+        label: Handbook
+        type: group
+        items:
+          - name: handbook_sl_about
+            label: "O nas"
+            type: file
+            path: src/content/book/sl/about.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
             fields:
               - name: title
+                label: Page title
                 type: string
                 required: true
-              - name: subtitle
-                type: string
-              - name: creator
-                type: string
-              - name: contributor
-                type: string
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
               - name: description
+                label: Description
                 type: text
-              - name: publisher
-                type: string
-              - name: rights
-                type: text
-              - name: language
-                type: string
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
 
-          - name: sl
-            label: Slovene book metadata
-            type: object
+          - name: handbook_sl_glossary
+            label: "Glosar"
+            type: file
+            path: src/content/book/sl/glossary.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
             fields:
               - name: title
+                label: Page title
                 type: string
                 required: true
-              - name: subtitle
-                type: string
-              - name: creator
-                type: string
-              - name: contributor
-                type: string
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
               - name: description
+                label: Description
                 type: text
-              - name: publisher
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_sl_01
+            label: "1. Zakaj ta zbirka orodij?"
+            type: file
+            path: src/content/book/sl/01.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
                 type: string
-              - name: rights
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
                 type: text
-              - name: language
-                type: string
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
 
-      - name: navigation
-        label: Navigation
-        type: file
-        path: src/data/nav.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: de
-            label: German navigation
-            type: object
-            list: true
+          - name: handbook_sl_02
+            label: "2. Kako začeti s superbloki"
+            type: file
+            path: src/content/book/sl/02.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
             fields:
-              - name: label
+              - name: title
+                label: Page title
                 type: string
                 required: true
-              - name: file
-                type: string
-                required: true
-
-          - name: en
-            label: English navigation
-            type: object
-            list: true
-            fields:
-              - name: label
-                type: string
-                required: true
-              - name: file
-                type: string
-                required: true
-
-          - name: sl
-            label: Slovene navigation
-            type: object
-            list: true
-            fields:
-              - name: label
-                type: string
-                required: true
-              - name: file
-                type: string
-                required: true
-
-      - name: glossary
-        label: Glossary
-        type: file
-        path: src/data/glossary.json
-        format: json
-        operations:
-          create: false
-          delete: false
-        fields:
-          - name: de
-            label: German glossary
-            type: object
-            list: true
-            fields:
-              - name: term
-                label: Term
-                type: string
-                required: true
-              - name: definition
-                label: Definition
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
                 type: text
-                required: true
-              - name: forms
-                label: Word forms
-                description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
-                type: string
-                list: true
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
 
-          - name: en
-            label: English glossary
-            type: object
-            list: true
+          - name: handbook_sl_03
+            label: "3. Taktični urbanizem in oblikovanje ulic"
+            type: file
+            path: src/content/book/sl/03.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
             fields:
-              - name: term
-                label: Term
+              - name: title
+                label: Page title
                 type: string
                 required: true
-              - name: definition
-                label: Definition
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
                 type: text
-                required: true
-              - name: forms
-                label: Word forms
-                description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
-                type: string
-                list: true
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
 
-          - name: sl
-            label: Slovene glossary
-            type: object
-            list: true
+          - name: handbook_sl_04
+            label: "4. Mobilizacija in strategije sprememb"
+            type: file
+            path: src/content/book/sl/04.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
             fields:
-              - name: term
-                label: Term
+              - name: title
+                label: Page title
                 type: string
                 required: true
-              - name: definition
-                label: Definition
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
                 type: text
-                required: true
-              - name: forms
-                label: Word forms
-                description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_sl_05
+            label: "5. Spremljanje: pokažimo učinek"
+            type: file
+            path: src/content/book/sl/05.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
                 type: string
-                list: true
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: handbook_sl_06
+            label: "6. Delovni načrt in viri"
+            type: file
+            path: src/content/book/sl/06.mdx
+            format: yaml-frontmatter
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe

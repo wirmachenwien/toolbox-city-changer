@@ -40,6 +40,7 @@ from handbook.book import (
     find_asset,
     front_opener,
     glossary_data,
+    locale_text,
     load_works,
     markdown_to_html,
     read_chapter_mdx,
@@ -47,7 +48,6 @@ from handbook.book import (
 )
 from handbook.mdx import (
     CCBADGE_RE,
-    ENDNOTES_RE,
     FEATURE_CLOSE_RE,
     FEATURE_OPEN_RE,
     FIGURE_RE,
@@ -58,9 +58,10 @@ from handbook.mdx import (
     QUESTION_RE,
     QUIZ_RE,
     VIDEO_RE,
+    attrs,
     chapter_lists,
-    endnotes_html,
     feature_open_html,
+    footnote_attrs,
     glossary_html,
     glossary_lang_html,
     pullquote_html,
@@ -146,35 +147,61 @@ class EpubBook:
 
     def convert_mdx(self, text: str) -> str:
         text = FRONTMATTER_RE.sub("", text, count=1)
+        answers_label = locale_text(self.lang, "questions.correct-answers", "Correct answers")
 
         def figure(match: re.Match[str]) -> str:
-            src, alt, caption = match.group(1), match.group(2), (match.group(3) or "").strip()
+            values = attrs(match.group(1) or match.group(2))
+            src, alt = values.get("src", ""), values.get("alt", "")
+            caption = (values.get("caption") or match.group(3) or "").strip()
             href = html.escape(self.add_image(src), quote=True)
             alt_text = html.escape(alt, quote=True)
             caption_html = f"<figcaption>{html.escape(caption)}</figcaption>" if caption else ""
             return f'<figure><img src="{href}" alt="{alt_text}" />{caption_html}</figure>'
 
         text = FIGURE_RE.sub(figure, text)
-        text = VIDEO_RE.sub(
-            lambda m: f'\n\n*Video: [{m.group(2)}](https://www.youtube.com/watch?v={m.group(1)})*\n',
-            text,
-        )
+        def video(match: re.Match[str]) -> str:
+            values = attrs(match.group(1) or match.group(2))
+            caption = values.get("caption", "")
+            video_id = values.get("id", "")
+            return f'\n\n*Video: [{caption}](https://www.youtube.com/watch?v={video_id})*\n'
+
+        text = VIDEO_RE.sub(video, text)
         text = strip_static_handlers(text)
         text = CCBADGE_RE.sub(
             '<p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> Wir machen Wien, Changing Cities &amp; Prostorož</p>',
             text,
         )
-        text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(m.group(1), html.escape), text)
+        text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(attrs(m.group(1)).get("title"), html.escape), text)
         text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
         text = PULLQUOTE_RE.sub(epub_pullquote_html, text)
-        # Footnotes: EPUB side of the divergence documented in handbook.mdx —
-        # linked <a href="#note-id"> refs plus an endnotes section.
-        text = FOOTNOTE_RE.sub(lambda m: f'<a href="#note-{_attr(m.group(1))}"><sup id="ref-{_attr(m.group(1))}">{m.group(2)}</sup></a>', text)
-        text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1), _attr), text)
+        # Footnotes: linked markers plus a chapter footnotes section.
+        chapter_notes: list[tuple[str, str, str]] = []
+
+        def footnote(match: re.Match[str]) -> str:
+            note_id, number, inline_text = footnote_attrs(match.group(1), len(chapter_notes) + 1)
+            if inline_text is not None:
+                chapter_notes.append((note_id, number, inline_text))
+            return f'<a href="#note-{_attr(note_id)}"><sup id="ref-{_attr(note_id)}">{number}</sup></a>'
+
+        text = FOOTNOTE_RE.sub(footnote, text)
+        if chapter_notes:
+            items = ''.join(
+                f'<li id="note-{_attr(note_id)}">{_attr(note_text)} '
+                f'<a href="#ref-{_attr(note_id)}">↩</a></li>'
+                for note_id, _, note_text in chapter_notes
+            )
+            text += f'\n\n<section class="footnotes"><ol>{items}</ol></section>\n'
         text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1), html.escape), text)
         text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1), glossary_data(), html.escape), text)
-        text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), self.lang, DEFAULT_LANG), text)
-        text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), self.lang, DEFAULT_LANG), text)
+        text = QUIZ_RE.sub(lambda m: quiz_html(attrs(m.group(1)).get("question", ""), m.group(2), answers_label), text)
+        text = QUESTION_RE.sub(
+            lambda m: question_html(
+                attrs(m.group(1)).get("question", ""),
+                m.group(2),
+                attrs(m.group(1) + m.group(3)).get("answer", "0"),
+                answers_label,
+            ), text
+        )
         return text.strip() + "\n"
 
     def render_markdown(self, md_text: str) -> str:

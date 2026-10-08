@@ -15,14 +15,10 @@ Deliberately NOT shared (kept in each builder):
   images, OPF/nav/XHTML packaging, font embedding.
 
 FOOTNOTE DIVERGENCE (deliberate, keep in sync):
-- PDF (print on paper): collect the <Endnotes> texts via parse_endnotes(),
-  delete the end-of-chapter section, and attach each note to its
-  <FootnoteRef> as <span class="footnote"> (CSS `float: footnote`), so the
-  note prints at the bottom of the page carrying the reference.
-- EPUB (reflowable reader): keep both directions linked — <FootnoteRef>
-  becomes <a href="#note-<id>"><sup id="ref-<id>">n</sup></a> and
-  <Endnotes> becomes endnotes_html(), a <section class="endnotes"> list
-  whose items link back with href="#ref-<id>".
+- PDF (print on paper): <Footnote text={"..."} /> renders either as page
+  footnotes, chapter footnotes, or book footnotes depending on pdf.notes.
+- EPUB (reflowable reader): <Footnote> becomes linked refs plus a footnotes
+  section at the end of the chapter.
 """
 
 from __future__ import annotations
@@ -39,38 +35,40 @@ def _identity(text: str) -> str:
 
 
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
-FIGURE_RE = re.compile(
-    r'<Figure\s+src="([^"]+)"\s+alt="([^"]*)"(?:\s*/>|>(.*?)</Figure>)', re.DOTALL
-)
-VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>)')
-BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
-DOWNLOAD_RE = re.compile(r'<DownloadLink\s+href="([^"]+)">(.*?)</DownloadLink>', re.DOTALL)
+FIGURE_RE = re.compile(r'<Figure\b([^>]*)\s*/>|<Figure\b([^>]*)>(.*?)</Figure>', re.DOTALL)
+VIDEO_RE = re.compile(r'<Video\b([^>]*)\s*/>|<Video\b([^>]*)>')
+BUTTON_RE = re.compile(r'<ButtonLink\b([^>]*)>([^<]+)</ButtonLink>')
+DOWNLOAD_RE = re.compile(r'<DownloadLink\b([^>]*)>(.*?)</DownloadLink>', re.DOTALL)
 COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
 TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
 SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
 CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
 OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
-FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
+FEATURE_OPEN_RE = re.compile(r'<FeatureBox\b([^>]*)>')
 FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
-PULLQUOTE_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>(.*?)</PullQuote>', re.DOTALL)
+PULLQUOTE_RE = re.compile(r'<PullQuote\b([^>]*)>(.*?)</PullQuote>', re.DOTALL)
 TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
 TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
-FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
-ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
+FOOTNOTE_RE = re.compile(r'<Footnote\b([^>]*)\s*/>', re.DOTALL)
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
-QUIZ_RE = re.compile(
-    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
-    re.DOTALL,
-)
-QUESTION_RE = re.compile(
-    r'<Question\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}[^>]*?answer=\{(\d+)\}[^>]*/?>',
-    re.DOTALL,
-)
+QUIZ_RE = re.compile(r'<Quiz\b(.*?)options=\{\[(.*?)\]\}\s*/>', re.DOTALL)
+QUESTION_RE = re.compile(r'<Question\b(.*?)options=\{\[(.*?)\]\}(.*?)\s*/?>', re.DOTALL)
+
+ATTR_RE = re.compile(r'([A-Za-z][\w-]*)=(?:"([^"]*)"|\{\s*"([^"]*)"\s*\}|\{\s*(\d+)\s*\})')
+
+
+def attrs(source: str | None) -> dict[str, str]:
+    if not source:
+        return {}
+    values: dict[str, str] = {}
+    for name, quoted, expression, number in ATTR_RE.findall(source):
+        values[name] = quoted or expression or number
+    return values
 
 
 def make_glossary_lang_re(langs: tuple[str, ...]) -> re.Pattern[str]:
     """<Glossary lang="xx"/> matcher for the configured site languages."""
-    return re.compile(r'<Glossary\s+lang="(' + "|".join(langs) + r')"\s*/>')
+    return re.compile(r'<Glossary\s+lang=(?:"|\{\s*")(' + "|".join(langs) + r')(?:"|"\s*\})\s*/>')
 
 
 # Chapter slugs styled as front matter (mirrors src/data/works.ts).
@@ -124,8 +122,11 @@ def object_entries(source: str) -> list[tuple[str, str]]:
     return re.findall(r'\{\s*term:\s*"([^"]+)",\s*definition:\s*"([^"]+)"\s*\}', source)
 
 
-def note_entries(source: str) -> list[tuple[str, str]]:
-    return re.findall(r'\{\s*id:\s*"([^"]+)",\s*text:\s*"([^"]+)"\s*\}', source)
+def footnote_attrs(source: str, fallback_index: int = 1) -> tuple[str, str, str | None]:
+    values = attrs(source)
+    number = values.get("number", str(fallback_index))
+    note_id = values.get("id") or f"fn-{number}"
+    return note_id, number, values.get("text")
 
 
 def option_entries(source: str) -> list[tuple[str, bool]]:
@@ -149,31 +150,9 @@ def glossary_lang_html(lang: str, data: dict, escape_fn: EscapeFn = _identity) -
     return f'\n\n<dl class="glossary">{items}</dl>\n'
 
 
-def parse_endnotes(text: str) -> tuple[str, dict[str, str]]:
-    """PDF side of the footnote divergence: strip <Endnotes>, return notes.
-
-    Returns (text_without_endnotes_section, {note_id: note_text}).
-    """
-    notes: dict[str, str] = {}
-    for match in ENDNOTES_RE.finditer(text):
-        for note_id, note_text in note_entries(match.group(1)):
-            notes[note_id] = note_text
-    return ENDNOTES_RE.sub("", text), notes
-
-
-def endnotes_html(source: str, escape_fn: EscapeFn = _identity) -> str:
-    """EPUB side of the footnote divergence: linked endnotes section."""
-    items = ''.join(
-        f'<li id="note-{escape_fn(note_id)}">{escape_fn(text)} '
-        f'<a href="#ref-{escape_fn(note_id)}">↩</a></li>'
-        for note_id, text in note_entries(source)
-    )
-    return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
-
-
 def pullquote_html(match: re.Match[str], escape_fn: EscapeFn = _identity) -> str:
     """Pull quote keeping an optional citation (dropped nothing on paper)."""
-    cite, body = match.group(1), match.group(2).strip()
+    cite, body = attrs(match.group(1)).get("cite"), match.group(2).strip()
     footer = f"\n<footer>— {escape_fn(cite)}</footer>" if cite else ""
     return f"\n\n<blockquote class=\"pullquote\">\n{body}{footer}\n</blockquote>\n"
 
@@ -185,12 +164,9 @@ def feature_open_html(title: str | None, escape_fn: EscapeFn = _identity) -> str
     return '\n\n<div class="feature-box">\n'
 
 
-QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
-
-
-def _answers_label(lang: str, default_lang: str) -> str:
-    """Print answer key label, falling back to the default language, then English."""
-    return QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL.get(default_lang, QUIZ_ANSWERS_LABEL["en"]))
+def component_link(attrs_source: str, label: str) -> str:
+    href = attrs(attrs_source).get("href", "")
+    return f"[{label}]({href})" if href else label
 
 
 def _quiz_wrap(question: str, items: str, answer_line: str) -> str:
@@ -202,26 +178,24 @@ def _quiz_wrap(question: str, items: str, answer_line: str) -> str:
     )
 
 
-def quiz_html(question: str, source: str, lang: str, default_lang: str) -> str:
+def quiz_html(question: str, source: str, answers_label: str) -> str:
     entries = option_entries(source)
     options = ''.join(f'<li>{label}</li>' for label, _ in entries)
     correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(entries) if is_correct)
-    label = _answers_label(lang, default_lang)
-    return _quiz_wrap(question, options, f"{label}: {correct}")
+    return _quiz_wrap(question, options, f"{answers_label}: {correct}")
 
 
-def question_html(question: str, source: str, answer: str, lang: str, default_lang: str) -> str:
+def question_html(question: str, source: str, answer: str, answers_label: str) -> str:
     """Single-choice Question: plain string options plus a 0-based answer index."""
     options = re.findall(r'"([^"]+)"', source)
     items = ''.join(f'<li>{label}</li>' for label in options)
-    label = _answers_label(lang, default_lang)
-    return _quiz_wrap(question, items, f"{label}: {int(answer) + 1}")
+    return _quiz_wrap(question, items, f"{answers_label}: {int(answer) + 1}")
 
 
 def strip_static_handlers(text: str) -> str:
     """Handlers identical in PDF and EPUB: Button/Download links, CopyText, Toc, Spoiler, TableWrap."""
-    text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
-    text = DOWNLOAD_RE.sub(lambda m: f"[{m.group(2).strip()}]({m.group(1)})", text)
+    text = BUTTON_RE.sub(lambda m: component_link(m.group(1), m.group(2)), text)
+    text = DOWNLOAD_RE.sub(lambda m: component_link(m.group(1), m.group(2).strip()), text)
     text = COPY_RE.sub("", text)
     text = TOC_RE.sub("", text)
     text = SPOILER_RE.sub(lambda m: m.group(1), text)

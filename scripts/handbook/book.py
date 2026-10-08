@@ -40,6 +40,7 @@ CONTENT = ROOT / "src" / "content" / "book"
 ASSETS = ROOT / "src" / "assets"
 DATA = ROOT / "src" / "data" / "works.json"
 GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
+LOCALES_DATA = ROOT / "src" / "data" / "locales.json"
 PAGES = ROOT / "src" / "content" / "pages"
 
 # Site languages, default language and download stem come from
@@ -64,6 +65,27 @@ def glossary_data() -> dict:
 def load_works() -> dict:
     """Full src/data/works.json mapping (one entry per language)."""
     return json.loads(DATA.read_text(encoding="utf-8"))
+
+
+@functools.lru_cache(maxsize=None)
+def locales_data() -> dict:
+    """Parsed src/data/locales.json (same source used by the web i18n helper)."""
+    return json.loads(LOCALES_DATA.read_text(encoding="utf-8"))
+
+
+def locale_text(lang: str, path: str, fallback: str = "") -> str:
+    """Nested locale lookup with default-language, then English fallback."""
+    data = locales_data()
+
+    def lookup(candidate: str) -> str | None:
+        node = data.get(candidate)
+        for part in path.split("."):
+            if not isinstance(node, dict) or part not in node:
+                return None
+            node = node[part]
+        return node if isinstance(node, str) else None
+
+    return lookup(lang) or lookup(DEFAULT_LANG) or lookup("en") or fallback
 
 
 def front_opener(lang: str) -> str:

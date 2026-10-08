@@ -1,0 +1,20 @@
+{
+  "math": { "enabled": true, "source": "cdn" },
+  "web": {
+    "pagination": true,
+    "paginationType": "title-arrows",
+    "accordion": false,
+    "accordionLevel": "h3",
+    "svgInject": true,
+    "lazyload": true,
+    "bookmarks": { "enabled": true, "noteMaxLength": 5000 },
+    "nav": { "expandBooks": true, "projectNavPosition": "before" },
+    "search": { "jumpBoxLocation": "mainHeading", "param": "query" },
+    "titleDivider": " – ",
+    "indexing": { "development": "index", "live": "index" }
+  },
+  "pdf": {
+    "notes": "footnotes",
+    "page": { "size": "A4", "margin": "20mm 16mm 22mm 16mm" }
+  }
+}
