@@ -68,6 +68,28 @@ QUESTION_RE = re.compile(
     re.DOTALL,
 )
 
+# Chapter slugs styled as front matter (mirrors src/data/works.ts).
+FRONTMATTER_FILES = {"0-0-cover", "0-1-titlepage", "about", "contents"}
+
+
+def chapter_lists(work: dict) -> tuple[list[str], list[dict]]:
+    """Derive print order + TOC from the single `chapters` list per language.
+
+    Single source of truth (mirrors src/data/works.ts): `files` is every
+    chapter in order, `toc` carries each label plus the frontmatter class.
+    """
+    files = [chapter["file"] for chapter in work["chapters"]]
+    toc = [
+        {
+            "label": chapter["label"],
+            "file": chapter["file"],
+            **({"class": "frontmatter-entry"} if chapter["file"] in FRONTMATTER_FILES else {}),
+        }
+        for chapter in work["chapters"]
+    ]
+    return files, toc
+
+
 PAGES = ROOT / "src" / "content" / "pages"
 
 
@@ -311,8 +333,7 @@ def build_document(lang: str) -> str:
     import markdown  # pip: markdown
 
     works = json.loads(DATA.read_text(encoding="utf-8"))[lang]
-    files: list[str] = works["products"]["pdf"]["files"]
-    toc: list[dict] = works["products"]["pdf"]["toc"]
+    files, toc = chapter_lists(works)
     title = works["title"]
     # The cover is generated from the start-page hero image + metadata.
     cover_file = front_opener(lang) or works.get("image") or ""

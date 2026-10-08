@@ -33,7 +33,8 @@ const PAGE_FILES = ['index', 'search'];
 const SEARCH_TERMS = { de: 'Superblocks', en: 'superblocks', sl: 'superbloki' };
 
 function bookFiles(lang) {
-  return [...(WORKS[lang]?.products?.web?.files ?? []), 'index'];
+  const chapters = WORKS[lang]?.chapters ?? [];
+  return [...chapters.filter((chapter) => chapter.web !== false).map((chapter) => chapter.file), 'index'];
 }
 
 let failures = 0;

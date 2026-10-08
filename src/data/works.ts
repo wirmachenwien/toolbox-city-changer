@@ -14,6 +14,13 @@ const tocEntrySchema = z.object({
   class: z.string().optional(),
 });
 
+const chapterSchema = z.object({
+  file: z.string(),
+  label: z.string(),
+  /** Print-only chapters (cover/title sheets) have no web page. */
+  web: z.boolean().optional().default(true),
+});
+
 const workSchema = z.object({
   title: z.string(),
   subtitle: z.string().optional().default(''),
@@ -32,7 +39,11 @@ const workSchema = z.object({
   products: z.object({
     pdf: z.object({ files: z.array(z.string()), toc: z.array(tocEntrySchema) }),
     web: z.object({ files: z.array(z.string()), nav: z.array(tocEntrySchema) }),
-  }),
+  }).optional(),
+  /** Single ordered chapter list per language (single source of truth for
+   *  reading order). `files`/`nav`/`toc` are derived from it below. Any
+   *  legacy `products` block is ignored. */
+  chapters: z.array(chapterSchema).min(1),
 });
 
 export type Work = z.infer<typeof workSchema>;
@@ -41,6 +52,12 @@ export type TocEntry = z.infer<typeof tocEntrySchema>;
 const parsedWorks = z.record(z.string(), workSchema).parse(raw) as Record<string, Work>;
 for (const lang of languages) {
   if (!parsedWorks[lang]) throw new Error(`works.json: missing work "${lang}" (see handbook.config.ts)`);
+  const files = parsedWorks[lang].chapters.map((chapter) => chapter.file);
+  const duplicates = files.filter((file, index) => files.indexOf(file) !== index);
+  if (duplicates.length > 0) {
+    throw new Error(`works.json: duplicate chapter(s) in "${lang}": ${[...new Set(duplicates)].join(', ')}`);
+  }
+  if (!files.includes('contents')) throw new Error(`works.json: "${lang}" chapters are missing "contents"`);
 }
 const works = parsedWorks as Record<Language, Work>;
 
@@ -48,11 +65,51 @@ const works = parsedWorks as Record<Language, Work>;
 // This keeps generated navigation, pagination, TOCs and any future metadata
 // edits unified even if someone enters "2 Title" in works.json.
 for (const work of Object.values(works)) {
-  for (const entry of [...work.products.pdf.toc, ...work.products.web.nav]) {
+  for (const entry of work.chapters) {
     if (/^\d+\s+/.test(entry.label)) {
       entry.label = entry.label.replace(/^(\d+)\s+/, '$1. ');
     }
   }
+}
+
+/** Chapter slugs styled as front matter (print sheets + about/contents). */
+const FRONTMATTER_FILES = new Set(['0-0-cover', '0-1-titlepage', 'about', 'contents']);
+
+function chapterTocEntry(chapter: Work['chapters'][number]): TocEntry {
+  return FRONTMATTER_FILES.has(chapter.file)
+    ? { label: chapter.label, file: chapter.file, class: 'frontmatter-entry' }
+    : { label: chapter.label, file: chapter.file };
+}
+
+/** Full print order (PDF/EPUB): every chapter, including print-only sheets. */
+export function pdfOrder(lang: Language): string[] {
+  return pdfFiles(works[lang]);
+}
+
+/** Full print table of contents (PDF/EPUB). Mirrors the derivation in
+ *  `scripts/build-pdf.py` / `scripts/build-epub.py`. */
+export function pdfBookToc(lang: Language): TocEntry[] {
+  return pdfToc(works[lang]);
+}
+
+/** Web reading order: print-only sheets (`web: false`) excluded. */
+function webFiles(work: Work): string[] {
+  return work.chapters.filter((chapter) => chapter.web !== false).map((chapter) => chapter.file);
+}
+
+/** Print order: every chapter, including print-only sheets. */
+function pdfFiles(work: Work): string[] {
+  return work.chapters.map((chapter) => chapter.file);
+}
+
+/** Print table of contents: every chapter. */
+function pdfToc(work: Work): TocEntry[] {
+  return work.chapters.map(chapterTocEntry);
+}
+
+/** Web navigation entries: print-only sheets excluded. */
+function webNav(work: Work): TocEntry[] {
+  return work.chapters.filter((chapter) => chapter.web !== false).map(chapterTocEntry);
 }
 
 export function getWork(lang: Language): Work {
@@ -66,7 +123,7 @@ export const WEB_EXCLUDED_FILES = ['0-0-cover', '0-1-titlepage'];
 
 /** Ordered chapter slugs for the web navigation of a language. */
 export function bookOrder(lang: Language): string[] {
-  return works[lang].products.web.files;
+  return webFiles(works[lang]);
 }
 
 /** Table of contents entries (label + file) for a language. Catalogue labels
@@ -74,7 +131,7 @@ export function bookOrder(lang: Language): string[] {
  *  hast-transformed prose. Copies are returned; the validated store is
  *  never mutated. */
 export function bookToc(lang: Language): TocEntry[] {
-  return works[lang].products.web.nav.map((entry) => ({
+  return webNav(works[lang]).map((entry) => ({
     ...entry,
     label: smartQuotes(entry.label, lang),
   }));

@@ -189,6 +189,28 @@ def as_xhtml(body: str) -> str:
     return body
 
 
+# Chapter slugs styled as front matter (mirrors src/data/works.ts).
+FRONTMATTER_FILES = {"0-0-cover", "0-1-titlepage", "about", "contents"}
+
+
+def chapter_lists(work: dict) -> tuple[list[str], list[dict]]:
+    """Derive print order + TOC from the single `chapters` list per language.
+
+    Single source of truth (mirrors src/data/works.ts): `files` is every
+    chapter in order, `toc` carries each label plus the frontmatter class.
+    """
+    files = [chapter["file"] for chapter in work["chapters"]]
+    toc = [
+        {
+            "label": chapter["label"],
+            "file": chapter["file"],
+            **({"class": "frontmatter-entry"} if chapter["file"] in FRONTMATTER_FILES else {}),
+        }
+        for chapter in work["chapters"]
+    ]
+    return files, toc
+
+
 class EpubBook:
     def __init__(self, lang: str, works: dict, out_path: Path):
         self.lang = lang
@@ -269,8 +291,7 @@ class EpubBook:
         self.chapters.append({"slug": slug, "title": title, "filename": filename, "body": body})
 
     def build_chapters(self) -> None:
-        files: list[str] = self.works["products"]["pdf"]["files"]
-        toc: list[dict] = self.works["products"]["pdf"]["toc"]
+        files, toc = chapter_lists(self.works)
         labels = {entry["file"]: entry["label"] for entry in toc}
 
         for filename in EPUB_FONTS:
