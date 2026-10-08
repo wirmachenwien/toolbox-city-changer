@@ -8,6 +8,7 @@
       "credit": "Ein Handbuch von <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
     },
     "nav": {
+      "breadcrumb": "Breadcrumb",
       "menu": "Menü",
       "next": "Weiter",
       "previous": "Zurück",
@@ -16,6 +17,9 @@
     "input": {
       "submit": "Absenden",
       "close": "Schließen"
+    },
+    "errors": {
+      "page-not-found": "Seite nicht gefunden"
     },
     "search": {
       "search-title": "Suche",
@@ -37,6 +41,7 @@
       "post-page-number": ")"
     },
     "bookmarks": {
+      "bookmark": "Lesezeichen",
       "set-bookmark": "Lesezeichen setzen",
       "remove-bookmark": "Lesezeichen entfernen",
       "bookmarks": "Lesezeichen",
@@ -58,6 +63,7 @@
       "description": "Beschreibung"
     },
     "video": {
+      "video-title": "Video",
       "play-video": "Video abspielen"
     },
     "copy": {
@@ -83,6 +89,16 @@
       "show": "Verborgenen Inhalt anzeigen",
       "hide": "Inhalt wieder verbergen"
     },
+    "headings": {
+      "link-to-section": "Link zu diesem Abschnitt"
+    },
+    "endnotes": {
+      "notes": "Anmerkungen",
+      "back-to-text": "Zurück zum Text"
+    },
+    "slideshow": {
+      "slides": "Folien"
+    },
     "visual-toc": {
       "link-to-page-assistive-text": "Link zur Seite"
     }
@@ -96,6 +112,7 @@
       "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
     },
     "nav": {
+      "breadcrumb": "Breadcrumb",
       "menu": "Menu",
       "next": "Next",
       "previous": "Previous",
@@ -104,6 +121,9 @@
     "input": {
       "submit": "Submit",
       "close": "Close"
+    },
+    "errors": {
+      "page-not-found": "Page not found"
     },
     "search": {
       "search-title": "Search",
@@ -125,6 +145,7 @@
       "post-page-number": ")"
     },
     "bookmarks": {
+      "bookmark": "Bookmark",
       "set-bookmark": "Set bookmark",
       "remove-bookmark": "Remove bookmark",
       "bookmarks": "Bookmarks",
@@ -146,6 +167,7 @@
       "description": "Description"
     },
     "video": {
+      "video-title": "Video",
       "play-video": "Play video"
     },
     "copy": {
@@ -171,6 +193,16 @@
       "show": "Show hidden content",
       "hide": "Hide content again"
     },
+    "headings": {
+      "link-to-section": "Link to this section"
+    },
+    "endnotes": {
+      "notes": "Notes",
+      "back-to-text": "Back to text"
+    },
+    "slideshow": {
+      "slides": "Slides"
+    },
     "visual-toc": {
       "link-to-page-assistive-text": "Link to page"
     }
@@ -179,6 +211,7 @@
     "direction": "ltr",
     "local-name": "Slovenščina",
     "nav": {
+      "breadcrumb": "Drobtinice",
       "menu": "Meni",
       "next": "Naprej",
       "previous": "Nazaj",
@@ -187,6 +220,9 @@
     "input": {
       "submit": "Oddaj",
       "close": "Zapri"
+    },
+    "errors": {
+      "page-not-found": "Stran ni najdena"
     },
     "search": {
       "search-title": "Iskanje",
@@ -208,6 +244,7 @@
       "post-page-number": ")"
     },
     "bookmarks": {
+      "bookmark": "Zaznamek",
       "set-bookmark": "Nastavi zaznamek",
       "remove-bookmark": "Odstrani zaznamek",
       "bookmarks": "Zaznamki",
@@ -229,6 +266,7 @@
       "description": "Opis"
     },
     "video": {
+      "video-title": "Video",
       "play-video": "Predvajaj video"
     },
     "copy": {
@@ -253,6 +291,16 @@
     "spoiler": {
       "show": "Prikaži skrito vsebino",
       "hide": "Znova skrij vsebino"
+    },
+    "headings": {
+      "link-to-section": "Povezava do tega razdelka"
+    },
+    "endnotes": {
+      "notes": "Opombe",
+      "back-to-text": "Nazaj na besedilo"
+    },
+    "slideshow": {
+      "slides": "Diapozitivi"
     },
     "visual-toc": {
       "link-to-page-assistive-text": "Povezava do strani"

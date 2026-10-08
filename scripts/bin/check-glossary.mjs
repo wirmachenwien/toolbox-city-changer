@@ -40,8 +40,9 @@ for (const lang of languages) {
 
   // Glossary chapter renders from shared data (no duplicated inline entries).
   const chapter = readFileSync(`${BOOK}/${lang}/glossary.mdx`, 'utf8');
-  if (!chapter.includes(`<Glossary lang="${lang}"`)) {
-    fail(`${lang}/glossary.mdx: must render shared data via <Glossary lang="${lang}" />`);
+  const glossaryComponent = new RegExp(`<Glossary\\s+lang=(?:"${lang}"|\\{["']${lang}["']\\})\\s*/>`);
+  if (!glossaryComponent.test(chapter)) {
+    fail(`${lang}/glossary.mdx: must render shared data via <Glossary lang={"${lang}"} />`);
   }
   if (chapter.includes('entries={') || /term:\s*"/.test(chapter)) {
     fail(`${lang}/glossary.mdx: must not duplicate terms inline`);

@@ -314,6 +314,676 @@ content:
           - name: credit
             type: text
 
+      - name: locale_strings
+        label: UI Translations
+        type: file
+        path: src/data/locales.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: de
+            label: German UI strings
+            type: object
+            fields:
+              - name: direction
+                type: select
+                options:
+                  values:
+                    - name: ltr
+                      label: Left to right
+                    - name: rtl
+                      label: Right to left
+              - name: local-name
+                label: Local language name
+                type: string
+              - name: project
+                label: Project text
+                type: object
+                fields:
+                  - name: name
+                    label: Project name
+                    type: string
+                  - name: description
+                    type: text
+                  - name: credit
+                    type: text
+              - name: nav
+                label: Navigation labels
+                type: object
+                fields:
+                  - name: breadcrumb
+                    type: string
+                  - name: menu
+                    type: string
+                  - name: next
+                    type: string
+                  - name: previous
+                    type: string
+                  - name: toc
+                    type: string
+              - name: input
+                label: Input labels
+                type: object
+                fields:
+                  - name: submit
+                    type: string
+                  - name: close
+                    type: string
+              - name: errors
+                label: Error labels
+                type: object
+                fields:
+                  - name: page-not-found
+                    type: string
+              - name: search
+                label: Search labels
+                type: object
+                fields:
+                  - name: search-title
+                    label: Search title
+                    type: string
+                  - name: placeholder
+                    type: string
+                  - name: placeholder-searching
+                    label: Searching placeholder
+                    type: string
+                  - name: search-results
+                    label: Search results heading
+                    type: string
+                  - name: results-for-singular
+                    type: string
+                  - name: results-for-plural
+                    type: string
+                  - name: results-for-none
+                    type: string
+              - name: questions
+                label: Question labels
+                type: object
+                fields:
+                  - name: check-answers-button
+                    type: string
+                  - name: feedback-correct
+                    type: string
+                  - name: feedback-incorrect
+                    type: string
+                  - name: feedback-unfinished
+                    type: text
+              - name: cross-references
+                label: Cross-reference labels
+                type: object
+                fields:
+                  - name: pre-page-number
+                    type: string
+                  - name: post-page-number
+                    type: string
+              - name: bookmarks
+                label: Bookmark labels
+                type: object
+                fields:
+                  - name: bookmark
+                    type: string
+                  - name: set-bookmark
+                    type: string
+                  - name: remove-bookmark
+                    type: string
+                  - name: bookmarks
+                    type: string
+                  - name: last-location-prompt
+                    type: string
+                  - name: delete-bookmark
+                    type: string
+              - name: controls
+                label: Control labels
+                type: object
+                fields:
+                  - name: language-select
+                    type: string
+                  - name: choose-chapter
+                    type: string
+              - name: metadata
+                label: Metadata labels
+                type: object
+                fields:
+                  - name: title
+                    type: string
+                  - name: subtitle
+                    type: string
+                  - name: creator
+                    type: string
+                  - name: contributor
+                    type: string
+                  - name: publisher
+                    type: string
+                  - name: language
+                    type: string
+                  - name: identifier
+                    type: string
+                  - name: description
+                    type: string
+              - name: video
+                label: Video labels
+                type: object
+                fields:
+                  - name: video-title
+                    type: string
+                  - name: play-video
+                    type: string
+              - name: copy
+                label: Copy labels
+                type: object
+                fields:
+                  - name: copy
+                    type: string
+                  - name: copied
+                    type: string
+                  - name: copy-failed
+                    type: string
+              - name: share
+                label: Share labels
+                type: object
+                fields:
+                  - name: share
+                    type: string
+                  - name: link
+                    type: string
+                  - name: email
+                    type: string
+                  - name: bluesky
+                    type: string
+                  - name: facebook
+                    type: string
+                  - name: linkedin
+                    type: string
+                  - name: reddit
+                    type: string
+                  - name: twitter
+                    type: string
+                  - name: whatsapp
+                    type: string
+              - name: expandable-box
+                label: Expandable-box labels
+                type: object
+                fields:
+                  - name: read-more
+                    type: string
+              - name: spoiler
+                label: Spoiler labels
+                type: object
+                fields:
+                  - name: show
+                    type: string
+                  - name: hide
+                    type: string
+              - name: headings
+                label: Heading labels
+                type: object
+                fields:
+                  - name: link-to-section
+                    type: string
+              - name: endnotes
+                label: Endnote labels
+                type: object
+                fields:
+                  - name: notes
+                    type: string
+                  - name: back-to-text
+                    type: string
+              - name: slideshow
+                label: Slideshow labels
+                type: object
+                fields:
+                  - name: slides
+                    type: string
+              - name: visual-toc
+                label: Visual table-of-contents labels
+                type: object
+                fields:
+                  - name: link-to-page-assistive-text
+                    type: string
+
+          - name: en
+            label: English UI strings
+            type: object
+            fields:
+              - name: direction
+                type: select
+                options:
+                  values:
+                    - name: ltr
+                      label: Left to right
+                    - name: rtl
+                      label: Right to left
+              - name: local-name
+                label: Local language name
+                type: string
+              - name: project
+                label: Project text
+                type: object
+                fields:
+                  - name: name
+                    label: Project name
+                    type: string
+                  - name: description
+                    type: text
+                  - name: credit
+                    type: text
+              - name: nav
+                label: Navigation labels
+                type: object
+                fields:
+                  - name: breadcrumb
+                    type: string
+                  - name: menu
+                    type: string
+                  - name: next
+                    type: string
+                  - name: previous
+                    type: string
+                  - name: toc
+                    type: string
+              - name: input
+                label: Input labels
+                type: object
+                fields:
+                  - name: submit
+                    type: string
+                  - name: close
+                    type: string
+              - name: errors
+                label: Error labels
+                type: object
+                fields:
+                  - name: page-not-found
+                    type: string
+              - name: search
+                label: Search labels
+                type: object
+                fields:
+                  - name: search-title
+                    label: Search title
+                    type: string
+                  - name: placeholder
+                    type: string
+                  - name: placeholder-searching
+                    label: Searching placeholder
+                    type: string
+                  - name: search-results
+                    label: Search results heading
+                    type: string
+                  - name: results-for-singular
+                    type: string
+                  - name: results-for-plural
+                    type: string
+                  - name: results-for-none
+                    type: string
+              - name: questions
+                label: Question labels
+                type: object
+                fields:
+                  - name: check-answers-button
+                    type: string
+                  - name: feedback-correct
+                    type: string
+                  - name: feedback-incorrect
+                    type: string
+                  - name: feedback-unfinished
+                    type: text
+              - name: cross-references
+                label: Cross-reference labels
+                type: object
+                fields:
+                  - name: pre-page-number
+                    type: string
+                  - name: post-page-number
+                    type: string
+              - name: bookmarks
+                label: Bookmark labels
+                type: object
+                fields:
+                  - name: bookmark
+                    type: string
+                  - name: set-bookmark
+                    type: string
+                  - name: remove-bookmark
+                    type: string
+                  - name: bookmarks
+                    type: string
+                  - name: last-location-prompt
+                    type: string
+                  - name: delete-bookmark
+                    type: string
+              - name: controls
+                label: Control labels
+                type: object
+                fields:
+                  - name: language-select
+                    type: string
+                  - name: choose-chapter
+                    type: string
+              - name: metadata
+                label: Metadata labels
+                type: object
+                fields:
+                  - name: title
+                    type: string
+                  - name: subtitle
+                    type: string
+                  - name: creator
+                    type: string
+                  - name: contributor
+                    type: string
+                  - name: publisher
+                    type: string
+                  - name: language
+                    type: string
+                  - name: identifier
+                    type: string
+                  - name: description
+                    type: string
+              - name: video
+                label: Video labels
+                type: object
+                fields:
+                  - name: video-title
+                    type: string
+                  - name: play-video
+                    type: string
+              - name: copy
+                label: Copy labels
+                type: object
+                fields:
+                  - name: copy
+                    type: string
+                  - name: copied
+                    type: string
+                  - name: copy-failed
+                    type: string
+              - name: share
+                label: Share labels
+                type: object
+                fields:
+                  - name: share
+                    type: string
+                  - name: link
+                    type: string
+                  - name: email
+                    type: string
+                  - name: bluesky
+                    type: string
+                  - name: facebook
+                    type: string
+                  - name: linkedin
+                    type: string
+                  - name: reddit
+                    type: string
+                  - name: twitter
+                    type: string
+                  - name: whatsapp
+                    type: string
+              - name: expandable-box
+                label: Expandable-box labels
+                type: object
+                fields:
+                  - name: read-more
+                    type: string
+              - name: spoiler
+                label: Spoiler labels
+                type: object
+                fields:
+                  - name: show
+                    type: string
+                  - name: hide
+                    type: string
+              - name: headings
+                label: Heading labels
+                type: object
+                fields:
+                  - name: link-to-section
+                    type: string
+              - name: endnotes
+                label: Endnote labels
+                type: object
+                fields:
+                  - name: notes
+                    type: string
+                  - name: back-to-text
+                    type: string
+              - name: slideshow
+                label: Slideshow labels
+                type: object
+                fields:
+                  - name: slides
+                    type: string
+              - name: visual-toc
+                label: Visual table-of-contents labels
+                type: object
+                fields:
+                  - name: link-to-page-assistive-text
+                    type: string
+
+          - name: sl
+            label: Slovene UI strings
+            type: object
+            fields:
+              - name: direction
+                type: select
+                options:
+                  values:
+                    - name: ltr
+                      label: Left to right
+                    - name: rtl
+                      label: Right to left
+              - name: local-name
+                label: Local language name
+                type: string
+              - name: project
+                label: Project text
+                type: object
+                fields:
+                  - name: name
+                    label: Project name
+                    type: string
+                  - name: description
+                    type: text
+                  - name: credit
+                    type: text
+              - name: nav
+                label: Navigation labels
+                type: object
+                fields:
+                  - name: breadcrumb
+                    type: string
+                  - name: menu
+                    type: string
+                  - name: next
+                    type: string
+                  - name: previous
+                    type: string
+                  - name: toc
+                    type: string
+              - name: input
+                label: Input labels
+                type: object
+                fields:
+                  - name: submit
+                    type: string
+                  - name: close
+                    type: string
+              - name: errors
+                label: Error labels
+                type: object
+                fields:
+                  - name: page-not-found
+                    type: string
+              - name: search
+                label: Search labels
+                type: object
+                fields:
+                  - name: search-title
+                    label: Search title
+                    type: string
+                  - name: placeholder
+                    type: string
+                  - name: placeholder-searching
+                    label: Searching placeholder
+                    type: string
+                  - name: search-results
+                    label: Search results heading
+                    type: string
+                  - name: results-for-singular
+                    type: string
+                  - name: results-for-plural
+                    type: string
+                  - name: results-for-none
+                    type: string
+              - name: questions
+                label: Question labels
+                type: object
+                fields:
+                  - name: check-answers-button
+                    type: string
+                  - name: feedback-correct
+                    type: string
+                  - name: feedback-incorrect
+                    type: string
+                  - name: feedback-unfinished
+                    type: text
+              - name: cross-references
+                label: Cross-reference labels
+                type: object
+                fields:
+                  - name: pre-page-number
+                    type: string
+                  - name: post-page-number
+                    type: string
+              - name: bookmarks
+                label: Bookmark labels
+                type: object
+                fields:
+                  - name: bookmark
+                    type: string
+                  - name: set-bookmark
+                    type: string
+                  - name: remove-bookmark
+                    type: string
+                  - name: bookmarks
+                    type: string
+                  - name: last-location-prompt
+                    type: string
+                  - name: delete-bookmark
+                    type: string
+              - name: controls
+                label: Control labels
+                type: object
+                fields:
+                  - name: language-select
+                    type: string
+                  - name: choose-chapter
+                    type: string
+              - name: metadata
+                label: Metadata labels
+                type: object
+                fields:
+                  - name: title
+                    type: string
+                  - name: subtitle
+                    type: string
+                  - name: creator
+                    type: string
+                  - name: contributor
+                    type: string
+                  - name: publisher
+                    type: string
+                  - name: language
+                    type: string
+                  - name: identifier
+                    type: string
+                  - name: description
+                    type: string
+              - name: video
+                label: Video labels
+                type: object
+                fields:
+                  - name: video-title
+                    type: string
+                  - name: play-video
+                    type: string
+              - name: copy
+                label: Copy labels
+                type: object
+                fields:
+                  - name: copy
+                    type: string
+                  - name: copied
+                    type: string
+                  - name: copy-failed
+                    type: string
+              - name: share
+                label: Share labels
+                type: object
+                fields:
+                  - name: share
+                    type: string
+                  - name: link
+                    type: string
+                  - name: email
+                    type: string
+                  - name: bluesky
+                    type: string
+                  - name: facebook
+                    type: string
+                  - name: linkedin
+                    type: string
+                  - name: reddit
+                    type: string
+                  - name: twitter
+                    type: string
+                  - name: whatsapp
+                    type: string
+              - name: expandable-box
+                label: Expandable-box labels
+                type: object
+                fields:
+                  - name: read-more
+                    type: string
+              - name: spoiler
+                label: Spoiler labels
+                type: object
+                fields:
+                  - name: show
+                    type: string
+                  - name: hide
+                    type: string
+              - name: headings
+                label: Heading labels
+                type: object
+                fields:
+                  - name: link-to-section
+                    type: string
+              - name: endnotes
+                label: Endnote labels
+                type: object
+                fields:
+                  - name: notes
+                    type: string
+                  - name: back-to-text
+                    type: string
+              - name: slideshow
+                label: Slideshow labels
+                type: object
+                fields:
+                  - name: slides
+                    type: string
+              - name: visual-toc
+                label: Visual table-of-contents labels
+                type: object
+                fields:
+                  - name: link-to-page-assistive-text
+                    type: string
+
+
       - name: book_metadata
         label: Book Metadata
         type: file

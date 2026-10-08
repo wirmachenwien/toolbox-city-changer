@@ -3,15 +3,17 @@ import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
+  quote?: string;
   cite?: string;
   lang?: Language;
 }
-const { cite, lang } = Astro.props;
-// The citation bypasses the markdown pipeline, so quotes are localised
+const { quote, cite, lang } = Astro.props;
+// Prop-supplied text bypasses the markdown pipeline, so quotes are localised
 // here to match the hast-transformed prose (only when lang is known).
+const displayQuote = quote && lang ? smartQuotes(quote, lang) : quote;
 const displayCite = cite && lang ? smartQuotes(cite, lang) : cite;
 ---
 <blockquote class="pullquote">
-  <slot />
+  {displayQuote ? <p>{displayQuote}</p> : <slot />}
   {displayCite && <footer>— {displayCite}</footer>}
 </blockquote>

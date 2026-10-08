@@ -1,7 +1,8 @@
 ---
 interface Props {
   href: string;
+  label?: string;
 }
-const { href } = Astro.props;
+const { href, label } = Astro.props;
 ---
-<a class="button-link" href={href}><slot /></a>
+<a class="button-link" href={href}>{label ?? <slot />}</a>

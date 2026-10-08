@@ -1,0 +1,17 @@
+---
+import DownloadLink from './DownloadLink.astro';
+
+interface Link {
+  href: string;
+  label: string;
+}
+
+interface Props {
+  links: Link[];
+}
+
+const { links } = Astro.props;
+---
+<div class="download-buttons">
+  {links.map((link) => <DownloadLink href={link.href}>{link.label}</DownloadLink>)}
+</div>

@@ -4,14 +4,16 @@ import type { Language } from '../data/locales';
 
 interface Props {
   title?: string;
+  body?: string;
   lang?: Language;
 }
-const { title, lang } = Astro.props;
-// The title bypasses the markdown pipeline, so quotes are localised here
+const { title, body, lang } = Astro.props;
+// Prop-supplied text bypasses the markdown pipeline, so quotes are localised here
 // to match the hast-transformed prose (only when lang is known).
 const displayTitle = title && lang ? smartQuotes(title, lang) : title;
+const displayBody = body && lang ? smartQuotes(body, lang) : body;
 ---
 <aside class="feature-box">
   {displayTitle && <p><strong>{displayTitle}</strong></p>}
-  <slot />
+  {displayBody ? <p>{displayBody}</p> : <slot />}
 </aside>

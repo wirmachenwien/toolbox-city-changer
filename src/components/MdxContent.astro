@@ -1,11 +1,12 @@
 ---
 // Shared MDX renderer: renders a content-collection entry with the project
-// component scope (Figure, Video, ButtonLink, DownloadLink, CopyText, Toc, and content aids).
+// component scope (Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, and content aids).
 import { render, type CollectionEntry } from 'astro:content';
 import Figure from './Figure.astro';
 import Video from './Video.astro';
 import ButtonLink from './ButtonLink.astro';
 import DownloadLink from './DownloadLink.astro';
+import SideBySideButtons from './SideBySideButtons.astro';
 import CopyText from './CopyText.astro';
 import Toc from './Toc.astro';
 import CcBadge from './CcBadge.astro';
@@ -26,4 +27,4 @@ interface Props {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
-<Content components={{ Figure, Video, ButtonLink, DownloadLink, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, FootnoteRef, Endnotes, Spoiler }} />
+<Content components={{ Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, FootnoteRef, Endnotes, Spoiler }} />

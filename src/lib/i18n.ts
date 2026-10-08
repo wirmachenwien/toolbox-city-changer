@@ -2,21 +2,27 @@
 import { locales, type Language } from '../data/locales';
 import { project } from '../data/project';
 
+const ENGLISH_LANG = 'en' as Language;
+
 export function getLocale(lang: Language) {
   return locales[lang];
 }
 
-/** Read a nested locale value ("search.placeholder") with a fallback. */
-export function t(lang: Language, path: string, fallback = ''): string {
+function lookup(lang: Language, path: string): string | undefined {
   let node: unknown = getLocale(lang);
   for (const part of path.split('.')) {
     if (node && typeof node === 'object' && part in (node as Record<string, unknown>)) {
       node = (node as Record<string, unknown>)[part];
     } else {
-      return fallback;
+      return undefined;
     }
   }
-  return typeof node === 'string' ? node : fallback;
+  return typeof node === 'string' ? node : undefined;
+}
+
+/** Read a nested locale value ("search.placeholder") with English fallback. */
+export function t(lang: Language, path: string, fallback = ''): string {
+  return lookup(lang, path) ?? lookup(ENGLISH_LANG, path) ?? fallback;
 }
 
 export function htmlDir(lang: Language): 'ltr' | 'rtl' {
@@ -30,9 +36,12 @@ export function projectText(lang: Language): { name: string; description: string
   const locale = getLocale(lang) as {
     project?: { name?: string; description?: string; credit?: string };
   };
+  const english = getLocale(ENGLISH_LANG) as {
+    project?: { name?: string; description?: string; credit?: string };
+  };
   return {
-    name: locale.project?.name ?? project.name,
-    description: locale.project?.description ?? project.description,
-    credit: locale.project?.credit ?? project.credit,
+    name: locale.project?.name ?? english.project?.name ?? project.name,
+    description: locale.project?.description ?? english.project?.description ?? project.description,
+    credit: locale.project?.credit ?? english.project?.credit ?? project.credit,
   };
 }
