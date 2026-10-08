@@ -20,13 +20,13 @@
           "0-1-titlepage",
           "about",
           "contents",
+          "glossary",
           "01",
           "02",
           "03",
           "04",
           "05",
-          "06",
-          "glossary"
+          "06"
         ],
         "toc": [
           {
@@ -50,6 +50,10 @@
             "class": "frontmatter-entry"
           },
           {
+            "label": "Glossar",
+            "file": "glossary"
+          },
+          {
             "label": "1. Wozu diese Toolbox?",
             "file": "01"
           },
@@ -72,10 +76,6 @@
           {
             "label": "6. Arbeitsplan und Quellen",
             "file": "06"
-          },
-          {
-            "label": "Glossar",
-            "file": "glossary"
           }
         ]
       },
@@ -83,13 +83,13 @@
         "files": [
           "about",
           "contents",
+          "glossary",
           "01",
           "02",
           "03",
           "04",
           "05",
-          "06",
-          "glossary"
+          "06"
         ],
         "nav": [
           {
@@ -103,6 +103,10 @@
             "class": "frontmatter-entry"
           },
           {
+            "label": "Glossar",
+            "file": "glossary"
+          },
+          {
             "label": "1. Wozu diese Toolbox?",
             "file": "01"
           },
@@ -125,10 +129,6 @@
           {
             "label": "6. Arbeitsplan und Quellen",
             "file": "06"
-          },
-          {
-            "label": "Glossar",
-            "file": "glossary"
           }
         ]
       }
@@ -155,13 +155,13 @@
           "0-1-titlepage",
           "about",
           "contents",
+          "glossary",
           "01",
           "02",
           "03",
           "04",
           "05",
-          "06",
-          "glossary"
+          "06"
         ],
         "toc": [
           {
@@ -185,6 +185,10 @@
             "class": "frontmatter-entry"
           },
           {
+            "label": "Glossary",
+            "file": "glossary"
+          },
+          {
             "label": "1. Why this toolbox?",
             "file": "01"
           },
@@ -207,10 +211,6 @@
           {
             "label": "6. Work plan and sources",
             "file": "06"
-          },
-          {
-            "label": "Glossary",
-            "file": "glossary"
           }
         ]
       },
@@ -218,13 +218,13 @@
         "files": [
           "about",
           "contents",
+          "glossary",
           "01",
           "02",
           "03",
           "04",
           "05",
-          "06",
-          "glossary"
+          "06"
         ],
         "nav": [
           {
@@ -238,6 +238,10 @@
             "class": "frontmatter-entry"
           },
           {
+            "label": "Glossary",
+            "file": "glossary"
+          },
+          {
             "label": "1. Why this toolbox?",
             "file": "01"
           },
@@ -260,10 +264,6 @@
           {
             "label": "6. Work plan and sources",
             "file": "06"
-          },
-          {
-            "label": "Glossary",
-            "file": "glossary"
           }
         ]
       }
@@ -290,13 +290,13 @@
           "0-1-titlepage",
           "about",
           "contents",
+          "glossary",
           "01",
           "02",
           "03",
           "04",
           "05",
-          "06",
-          "glossary"
+          "06"
         ],
         "toc": [
           {
@@ -320,6 +320,10 @@
             "class": "frontmatter-entry"
           },
           {
+            "label": "Glosar",
+            "file": "glossary"
+          },
+          {
             "label": "1. Zakaj ta zbirka orodij?",
             "file": "01"
           },
@@ -342,10 +346,6 @@
           {
             "label": "6. Delovni načrt in viri",
             "file": "06"
-          },
-          {
-            "label": "Glosar",
-            "file": "glossary"
           }
         ]
       },
@@ -353,13 +353,13 @@
         "files": [
           "about",
           "contents",
+          "glossary",
           "01",
           "02",
           "03",
           "04",
           "05",
-          "06",
-          "glossary"
+          "06"
         ],
         "nav": [
           {
@@ -373,6 +373,10 @@
             "class": "frontmatter-entry"
           },
           {
+            "label": "Glosar",
+            "file": "glossary"
+          },
+          {
             "label": "1. Zakaj ta zbirka orodij?",
             "file": "01"
           },
@@ -395,10 +399,6 @@
           {
             "label": "6. Delovni načrt in viri",
             "file": "06"
-          },
-          {
-            "label": "Glosar",
-            "file": "glossary"
           }
         ]
       }
