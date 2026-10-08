@@ -6,8 +6,6 @@ import Pagination from '../components/Pagination.astro';
 import Share from '../components/Share.astro';
 import BookmarkAdd from '../components/BookmarkAdd.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
-import Cover from '../components/Cover.astro';
-import TitlePage from '../components/TitlePage.astro';
 import AboutPage from '../components/AboutPage.astro';
 import ContentsPage from '../components/ContentsPage.astro';
 import { settings } from '../data/settings';
@@ -20,7 +18,7 @@ interface Props {
   file: string;
   title: string;
   description?: string;
-  layout: 'chapter' | 'cover' | 'title' | 'about' | 'contents';
+  layout: 'chapter' | 'about' | 'contents';
   currentUrl: string;
 }
 
@@ -30,8 +28,7 @@ const { lang, file, title, description, layout, currentUrl } = Astro.props;
 const displayTitle = smartQuotes(title, lang);
 const crumbs = bookCrumbs(lang, displayTitle);
 const isChapter = layout === 'chapter';
-// About and contents are reading-order pages too, so they paginate like
-// chapters (cover/title sheets have no web version and never reach this).
+// About and contents are reading-order pages too, so they paginate.
 const showPagination = isChapter || layout === 'about' || layout === 'contents';
 ---
 <BaseLayout
@@ -44,8 +41,6 @@ const showPagination = isChapter || layout === 'about' || layout === 'contents';
 >
   <ReadingProgress />
   {isChapter && <Breadcrumbs items={crumbs} lang={lang} />}
-  {layout === 'cover' && <Cover lang={lang} />}
-  {layout === 'title' && <TitlePage lang={lang} />}
   {layout === 'about' && <AboutPage title={displayTitle} lang={lang} />}
   {layout === 'contents' && <ContentsPage lang={lang} title={displayTitle} />}
   {isChapter && <BookmarkAdd lang={lang} />}
