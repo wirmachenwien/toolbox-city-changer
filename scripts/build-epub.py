@@ -48,6 +48,7 @@ FIGURE_RE = re.compile(
 )
 VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>)')
 BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
+DOWNLOAD_RE = re.compile(r'<DownloadLink\s+href="([^"]+)">(.*?)</DownloadLink>', re.DOTALL)
 COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
 TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
 SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
@@ -66,8 +67,7 @@ EPUB_FONTS = (
 )
 FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
 FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
-PULL_OPEN_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>')
-PULL_CLOSE_RE = re.compile(r'</PullQuote>')
+PULLQUOTE_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>(.*?)</PullQuote>', re.DOTALL)
 TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
 TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
 FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
@@ -112,8 +112,19 @@ def glossary_lang_html(lang: str) -> str:
 
 
 def endnotes_html(source: str) -> str:
-    items = ''.join(f'<li id="note-{html.escape(note_id, quote=True)}">{html.escape(text)}</li>' for note_id, text in note_entries(source))
+    items = ''.join(
+        f'<li id="note-{html.escape(note_id, quote=True)}">{html.escape(text)} '
+        f'<a href="#ref-{html.escape(note_id, quote=True)}">↩</a></li>'
+        for note_id, text in note_entries(source)
+    )
     return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
+
+
+def pullquote_html(match: re.Match[str]) -> str:
+    """Pull quote keeping an optional citation (same as build-pdf.py)."""
+    cite, body = match.group(1), match.group(2).strip()
+    footer = f"\n<footer>— {html.escape(cite)}</footer>" if cite else ""
+    return f"\n\n<blockquote class=\"pullquote\">\n{body}{footer}\n</blockquote>\n"
 
 
 QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
@@ -225,6 +236,7 @@ class EpubBook:
             text,
         )
         text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
+        text = DOWNLOAD_RE.sub(lambda m: f"[{m.group(2).strip()}]({m.group(1)})", text)
         text = COPY_RE.sub("", text)
         text = TOC_RE.sub("", text)
         text = SPOILER_RE.sub(lambda m: m.group(1), text)
@@ -234,11 +246,10 @@ class EpubBook:
         )
         text = FEATURE_OPEN_RE.sub(lambda m: f'\n\n<div class="feature-box"><p><strong>{html.escape(m.group(1))}</strong></p>\n' if m.group(1) else '\n\n<div class="feature-box">\n', text)
         text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
-        text = PULL_OPEN_RE.sub('\n\n<blockquote class="pullquote">\n', text)
-        text = PULL_CLOSE_RE.sub('\n</blockquote>\n', text)
+        text = PULLQUOTE_RE.sub(pullquote_html, text)
         text = TABLE_OPEN_RE.sub('\n\n', text)
         text = TABLE_CLOSE_RE.sub('\n\n', text)
-        text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{html.escape(m.group(1), quote=True)}">{m.group(2)}</sup>', text)
+        text = FOOTNOTE_RE.sub(lambda m: f'<a href="#note-{html.escape(m.group(1), quote=True)}"><sup id="ref-{html.escape(m.group(1), quote=True)}">{m.group(2)}</sup></a>', text)
         text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
         text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
         text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1)), text)
@@ -544,6 +555,66 @@ figcaption {
 .cover-full .cover-sub {
   font-size: 1.1em;
   margin: 0;
+}
+/* Component styles mirror the print stylesheet (src/styles/print.css):
+   tip boxes, pull quotes, glossary lists, quiz boxes and tables.
+   Deliberately absent here: printed link URLs (reader links are tappable)
+   and page footnotes (linked endnotes suit reflowable text). */
+blockquote {
+  margin-left: 0;
+  padding-left: 0.8em;
+  border-left: 3pt solid #0c6b3c;
+  color: #333;
+}
+blockquote.pullquote {
+  font-size: 1.2em;
+  line-height: 1.45;
+  font-style: italic;
+  color: #111;
+  border-left-width: 4.5pt;
+  margin: 1em 0;
+}
+blockquote.pullquote footer {
+  font-size: 0.8em;
+  font-style: normal;
+  color: #444;
+  margin-top: 0.4em;
+}
+.feature-box {
+  background: #eef5ef;
+  border: 0.5pt solid #0c6b3c;
+  border-left-width: 4.5pt;
+  padding: 0.7em 0.9em;
+  margin: 1em 0;
+}
+dl.glossary {
+  margin: 1em 0;
+}
+dl.glossary dt {
+  font-weight: 700;
+  margin-top: 0.7em;
+}
+dl.glossary dd {
+  margin-left: 0;
+  margin-bottom: 0.4em;
+}
+.quiz {
+  border: 0.5pt solid #111;
+  padding: 0.7em 0.9em;
+  margin: 1em 0;
+}
+.quiz ol {
+  margin-bottom: 0;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.9em;
+}
+th, td {
+  border: 0.5pt solid #999;
+  padding: 0.4em 0.5em;
+  text-align: left;
 }
 """
 
