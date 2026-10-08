@@ -44,6 +44,7 @@ FIGURE_RE = re.compile(
 )
 VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>)')
 BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
+DOWNLOAD_RE = re.compile(r'<DownloadLink\s+href="([^"]+)">(.*?)</DownloadLink>', re.DOTALL)
 COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
 TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
 SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
@@ -51,8 +52,7 @@ CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
 OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
 FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
 FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
-PULL_OPEN_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>')
-PULL_CLOSE_RE = re.compile(r'</PullQuote>')
+PULLQUOTE_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>(.*?)</PullQuote>', re.DOTALL)
 TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
 TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
 FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
@@ -192,18 +192,38 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
         text,
     )
     text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
+    text = DOWNLOAD_RE.sub(lambda m: f"[{m.group(2).strip()}]({m.group(1)})", text)
     text = COPY_RE.sub("", text)
     text = TOC_RE.sub("", text)
     text = SPOILER_RE.sub(lambda m: m.group(1), text)
     text = CCBADGE_RE.sub(cc_badge_html(), text)
     text = FEATURE_OPEN_RE.sub(lambda m: f'\n\n<div class="feature-box"><p><strong>{m.group(1)}</strong></p>\n' if m.group(1) else '\n\n<div class="feature-box">\n', text)
     text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
-    text = PULL_OPEN_RE.sub('\n\n<blockquote class="pullquote">\n', text)
-    text = PULL_CLOSE_RE.sub('\n</blockquote>\n', text)
+    text = PULLQUOTE_RE.sub(pullquote_html, text)
     text = TABLE_OPEN_RE.sub('\n\n', text)
     text = TABLE_CLOSE_RE.sub('\n\n', text)
-    text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{m.group(1)}">{m.group(2)}</sup>', text)
-    text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
+    # Footnotes print at the bottom of the page carrying the reference
+    # (CSS float: footnote), so collect the Endnotes texts first, drop the
+    # end-of-chapter section, and attach each note to its FootnoteRef.
+    notes: dict[str, str] = {}
+    for match in ENDNOTES_RE.finditer(text):
+        for note_id, note_text in note_entries(match.group(1)):
+            notes[note_id] = note_text
+    text = ENDNOTES_RE.sub("", text)
+
+    def footnote(match: re.Match[str]) -> str:
+        note_id, number = match.group(1), match.group(2)
+        note_text = notes.get(note_id)
+        if note_text is None:
+            print(f"warning: footnote ref without note: {note_id}", file=sys.stderr)
+            return f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
+        return (
+            f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
+            f'<span class="footnote">'
+            f'<span class="footnote-marker">{number}</span> {note_text}</span>'
+        )
+
+    text = FOOTNOTE_RE.sub(footnote, text)
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
     text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1)), text)
     text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang), text)
@@ -238,11 +258,6 @@ def glossary_lang_html(lang: str) -> str:
     return f'\n\n<dl class="glossary">{items}</dl>\n'
 
 
-def endnotes_html(source: str) -> str:
-    items = ''.join(f'<li id="note-{note_id}">{text}</li>' for note_id, text in note_entries(source))
-    return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
-
-
 QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
 
 
@@ -267,6 +282,13 @@ def question_html(question: str, source: str, answer: str, lang: str = DEFAULT_L
         f'<ol>{items}</ol>'
         f'<p style="transform: rotate(180deg);">{label}: {int(answer) + 1}</p></div>\n'
     )
+
+
+def pullquote_html(match: re.Match[str]) -> str:
+    """Pull quote keeping an optional citation (dropped nothing on paper)."""
+    cite, body = match.group(1), match.group(2).strip()
+    footer = f"\n<footer>— {cite}</footer>" if cite else ""
+    return f"\n\n<blockquote class=\"pullquote\">\n{body}{footer}\n</blockquote>\n"
 
 
 def chapter_html(slug: str, md_text: str, lang: str = DEFAULT_LANG) -> str:
