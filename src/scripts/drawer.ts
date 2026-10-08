@@ -38,7 +38,10 @@ export function initDrawer(): void {
     document.body.classList.add('drawer-open');
     for (const landmark of page) landmark.setAttribute('inert', '');
     setExpanded(true);
-    drawer.querySelector<HTMLElement>('.drawer-inner a')?.focus({ preventScroll: true });
+    // Focus the dialog itself (tabindex="-1", outline suppressed in CSS)
+    // so assistive tech enters it without flashing a focus ring on the
+    // first link for pointer/touch users.
+    drawer.focus({ preventScroll: true });
   };
 
   for (const toggle of toggles) {

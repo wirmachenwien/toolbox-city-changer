@@ -378,6 +378,12 @@ a:hover {
   display: none;
 }
 
+/* Programmatic focus target on open (see drawer.ts): never show a ring on
+   the sheet itself; links inside keep the standard :focus-visible style. */
+.drawer:focus {
+  outline: none;
+}
+
 /* On narrow screens the drawer docks to the inline-end side — the same side
    the menu button sits on (mirrored automatically for RTL) — as a
    full-height sheet covering the sticky masthead. The in-sheet
