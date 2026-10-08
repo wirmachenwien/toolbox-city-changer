@@ -81,20 +81,27 @@ content:
           - name: project_metadata_de
             label: Project metadata
             type: file
-            path: src/data/project.json
+            path: src/data/locales.json
             format: json
             operations:
               create: false
               delete: false
             fields:
-              - name: name
-                label: Project name
-                type: string
-                required: true
-              - name: description
-                type: text
-              - name: credit
-                type: text
+              - name: de
+                label: German project text
+                type: object
+                fields:
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
 
           - name: book_metadata_de
             label: Book metadata
@@ -172,17 +179,6 @@ content:
                   - name: local-name
                     label: Local language name
                     type: string
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
                   - name: nav
                     label: Navigation labels
                     type: object
@@ -812,20 +808,27 @@ content:
           - name: project_metadata_en
             label: Project metadata
             type: file
-            path: src/data/project.json
+            path: src/data/locales.json
             format: json
             operations:
               create: false
               delete: false
             fields:
-              - name: name
-                label: Project name
-                type: string
-                required: true
-              - name: description
-                type: text
-              - name: credit
-                type: text
+              - name: en
+                label: English project text
+                type: object
+                fields:
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
 
           - name: book_metadata_en
             label: Book metadata
@@ -903,17 +906,6 @@ content:
                   - name: local-name
                     label: Local language name
                     type: string
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
                   - name: nav
                     label: Navigation labels
                     type: object
@@ -1543,20 +1535,27 @@ content:
           - name: project_metadata_sl
             label: Project metadata
             type: file
-            path: src/data/project.json
+            path: src/data/locales.json
             format: json
             operations:
               create: false
               delete: false
             fields:
-              - name: name
-                label: Project name
-                type: string
-                required: true
-              - name: description
-                type: text
-              - name: credit
-                type: text
+              - name: sl
+                label: Slovene project text
+                type: object
+                fields:
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
 
           - name: book_metadata_sl
             label: Book metadata
@@ -1634,17 +1633,6 @@ content:
                   - name: local-name
                     label: Local language name
                     type: string
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
                   - name: nav
                     label: Navigation labels
                     type: object

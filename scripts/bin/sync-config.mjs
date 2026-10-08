@@ -240,23 +240,31 @@ function appSettings(lang) {
 }
 
 function projectMetadata(lang) {
+  const display = displayName(lang);
   return `          - name: project_metadata_${lang}
             label: Project metadata
             type: file
-            path: src/data/project.json
+            path: src/data/locales.json
             format: json
             operations:
               create: false
               delete: false
             fields:
-              - name: name
-                label: Project name
-                type: string
-                required: true
-              - name: description
-                type: text
-              - name: credit
-                type: text
+              - name: ${lang}
+                label: ${display} project text
+                type: object
+                fields:
+                  - name: project
+                    label: Project text
+                    type: object
+                    fields:
+                      - name: name
+                        label: Project name
+                        type: string
+                      - name: description
+                        type: text
+                      - name: credit
+                        type: text
 `;
 }
 
@@ -421,17 +429,6 @@ function localeStrings(lang) {
               - name: local-name
                 label: Local language name
                 type: string
-              - name: project
-                label: Project text
-                type: object
-                fields:
-                  - name: name
-                    label: Project name
-                    type: string
-                  - name: description
-                    type: text
-                  - name: credit
-                    type: text
               - name: nav
                 label: Navigation labels
                 type: object
