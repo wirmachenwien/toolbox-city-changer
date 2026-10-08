@@ -1232,9 +1232,9 @@ html:not(.js-fold) .accordion-content {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  border-block-start: 2px solid var(--ink);
+  border-block-start: 1px solid var(--line);
   margin-block-start: 2.5rem;
-  padding-block-start: 1rem;
+  padding-block-start: 1.5rem;
   font-family: var(--font-ui);
 }
 
@@ -1608,6 +1608,10 @@ html:not(.js-fold) .accordion-content {
 
 .contents-list li {
   border-block-end: 1px solid var(--line);
+}
+
+.contents-list li:last-child {
+  border-block-end: none;
 }
 
 .contents-list a {
