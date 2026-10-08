@@ -31,6 +31,7 @@ ASSETS = ROOT / "src" / "assets"
 DATA = ROOT / "src" / "data" / "works.json"
 GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
 PAGES = ROOT / "src" / "content" / "pages"
+EPUB_CSS_PATH = ROOT / "src" / "styles" / "epub.css"
 
 # Site languages, default language and download stem come from
 # handbook.config.ts (single source of truth).
@@ -458,7 +459,7 @@ class EpubBook:
                 '</rootfiles></container>\n',
                 encoding="utf-8",
             )
-            (oebps / "styles" / "epub.css").write_text(EPUB_CSS, encoding="utf-8")
+            (oebps / "styles" / "epub.css").write_text(EPUB_CSS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (oebps / "nav.xhtml").write_text(self.nav_document(), encoding="utf-8")
             (oebps / "content.opf").write_text(self.opf_document(), encoding="utf-8")
 
@@ -477,167 +478,6 @@ class EpubBook:
                 for path in sorted(base.rglob("*")):
                     if path.is_file() and path.name != "mimetype":
                         epub.write(path, path.relative_to(base).as_posix(), compress_type=zipfile.ZIP_DEFLATED)
-
-
-EPUB_CSS = """@font-face {
-  font-family: "Newsreader";
-  font-style: normal;
-  font-weight: 400;
-  src: url("../fonts/NewsreaderText-Regular.ttf");
-}
-@font-face {
-  font-family: "Newsreader";
-  font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/NewsreaderText-Bold.ttf");
-}
-@font-face {
-  font-family: "Newsreader";
-  font-style: italic;
-  font-weight: 400;
-  src: url("../fonts/NewsreaderText-Italic.ttf");
-}
-@font-face {
-  font-family: "Newsreader";
-  font-style: italic;
-  font-weight: 700;
-  src: url("../fonts/NewsreaderText-BoldItalic.ttf");
-}
-@font-face {
-  font-family: "Clarity City";
-  font-style: normal;
-  font-weight: 400;
-  src: url("../fonts/ClarityCity-Regular.ttf");
-}
-@font-face {
-  font-family: "Clarity City";
-  font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/ClarityCity-Bold.ttf");
-}
-body {
-  font-family: "Newsreader", Georgia, serif;
-  line-height: 1.45;
-}
-h1, h2, h3 {
-  font-family: "Clarity City", Helvetica, sans-serif;
-  font-weight: 700;
-  line-height: 1.15;
-}
-img {
-  display: block;
-  height: auto;
-  max-width: 100%;
-}
-figure {
-  margin: 1.5em 0;
-}
-figcaption {
-  font-size: 0.9em;
-  margin-top: 0.5em;
-}
-/* Full-bleed cover: the hero photo fills the whole page with no margins or
-   frames; the metadata sits on top in a bottom-anchored scrim. */
-.cover-full {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  height: 100vh;
-  color: #fff;
-}
-.cover-full img.cover-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.cover-full .cover-scrim {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.05) 70%, rgba(0, 0, 0, 0.25) 100%);
-}
-.cover-full .cover-text {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 8% 6%;
-}
-.cover-full h1 {
-  font-size: 2em;
-  color: #fff;
-  margin: 0 0 0.3em;
-}
-.cover-full .cover-sub {
-  font-size: 1.1em;
-  margin: 0;
-}
-/* Component styles mirror the print stylesheet (src/styles/print.css):
-   tip boxes, pull quotes, glossary lists, quiz boxes and tables.
-   Deliberately absent here: printed link URLs (reader links are tappable)
-   and page footnotes (linked endnotes suit reflowable text). */
-blockquote {
-  margin-left: 0;
-  padding-left: 0.8em;
-  border-left: 3pt solid #0c6b3c;
-  color: #333;
-}
-blockquote.pullquote {
-  font-size: 1.2em;
-  line-height: 1.45;
-  font-style: italic;
-  color: #111;
-  border-left-width: 4.5pt;
-  margin: 1em 0;
-}
-blockquote.pullquote footer {
-  font-size: 0.8em;
-  font-style: normal;
-  color: #444;
-  margin-top: 0.4em;
-}
-.feature-box {
-  background: #eef5ef;
-  border: 0.5pt solid #0c6b3c;
-  border-left-width: 4.5pt;
-  padding: 0.7em 0.9em;
-  margin: 1em 0;
-}
-dl.glossary {
-  margin: 1em 0;
-}
-dl.glossary dt {
-  font-weight: 700;
-  margin-top: 0.7em;
-}
-dl.glossary dd {
-  margin-left: 0;
-  margin-bottom: 0.4em;
-}
-.quiz {
-  border: 0.5pt solid #111;
-  padding: 0.7em 0.9em;
-  margin: 1em 0;
-}
-.quiz ol {
-  margin-bottom: 0;
-}
-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 0.9em;
-}
-th, td {
-  border: 0.5pt solid #999;
-  padding: 0.4em 0.5em;
-  text-align: left;
-}
-"""
 
 
 def main() -> int:
