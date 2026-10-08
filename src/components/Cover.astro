@@ -4,6 +4,7 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { getWork } from '../data/works';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -15,7 +16,9 @@ const work = getWork(lang);
 const pages = await getCollection('pages');
 const home = pages.find((entry) => entry.id === lang);
 const file = home?.data.openerImage || work.image || '';
-const alt = home?.data.openerImageAlt ?? '';
+// Frontmatter alt text bypasses the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose.
+const alt = smartQuotes(home?.data.openerImageAlt ?? '', lang);
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
@@ -27,8 +30,8 @@ const cover = file
 ---
 <div class="sheet cover-sheet">
   {cover && <Image src={cover} alt={alt} title={alt || undefined} widths={[400, 800]} sizes="(max-width: 36rem) 100vw, 36rem" loading="eager" />}
-  <p>{work.type}</p>
-  <h1>{work.title}</h1>
-  {work.subtitle && <p>{work.subtitle}</p>}
-  {work.creator && <p>{work.creator}</p>}
+  <p>{smartQuotes(work.type, lang)}</p>
+  <h1>{smartQuotes(work.title, lang)}</h1>
+  {work.subtitle && <p>{smartQuotes(work.subtitle, lang)}</p>}
+  {work.creator && <p>{smartQuotes(work.creator, lang)}</p>}
 </div>

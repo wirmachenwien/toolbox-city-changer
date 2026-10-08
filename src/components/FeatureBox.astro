@@ -1,10 +1,17 @@
 ---
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
 interface Props {
   title?: string;
+  lang?: Language;
 }
-const { title } = Astro.props;
+const { title, lang } = Astro.props;
+// The title bypasses the markdown pipeline, so quotes are localised here
+// to match the hast-transformed prose (only when lang is known).
+const displayTitle = title && lang ? smartQuotes(title, lang) : title;
 ---
 <aside class="feature-box">
-  {title && <p><strong>{title}</strong></p>}
+  {displayTitle && <p><strong>{displayTitle}</strong></p>}
   <slot />
 </aside>

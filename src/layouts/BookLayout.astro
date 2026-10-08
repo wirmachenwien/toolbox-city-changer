@@ -12,6 +12,7 @@ import AboutPage from '../components/AboutPage.astro';
 import ContentsPage from '../components/ContentsPage.astro';
 import { settings } from '../data/settings';
 import { bookCrumbs } from '../lib/nav';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -24,7 +25,10 @@ interface Props {
 }
 
 const { lang, file, title, description, layout, currentUrl } = Astro.props;
-const crumbs = bookCrumbs(lang, title);
+// The frontmatter title bypasses the markdown pipeline, so quotes are
+// localised once here; crumbs, share links and sheets reuse it.
+const displayTitle = smartQuotes(title, lang);
+const crumbs = bookCrumbs(lang, displayTitle);
 const isChapter = layout === 'chapter';
 ---
 <BaseLayout
@@ -36,15 +40,15 @@ const isChapter = layout === 'chapter';
   currentUrl={currentUrl}
 >
   <ReadingProgress />
-  {isChapter && <Breadcrumbs items={crumbs} />}
+  {isChapter && <Breadcrumbs items={crumbs} lang={lang} />}
   {layout === 'cover' && <Cover lang={lang} />}
   {layout === 'title' && <TitlePage lang={lang} />}
-  {layout === 'about' && <AboutPage title={title} />}
-  {layout === 'contents' && <ContentsPage lang={lang} title={title} />}
+  {layout === 'about' && <AboutPage title={displayTitle} lang={lang} />}
+  {layout === 'contents' && <ContentsPage lang={lang} title={displayTitle} />}
   {isChapter && <BookmarkAdd lang={lang} />}
   <div class="prose" data-prose data-glossary-terms>
     <slot />
   </div>
-  {isChapter && <Share lang={lang} url={currentUrl} title={title} />}
+  {isChapter && <Share lang={lang} url={currentUrl} title={displayTitle} />}
   {isChapter && settings.web.pagination && <Pagination lang={lang} file={file} />}
 </BaseLayout>

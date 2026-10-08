@@ -3,6 +3,7 @@
  // in the locale is rendered (commenting one out of the locale removes it).
 import { t } from '../lib/i18n';
 import { canonical } from '../lib/site';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 import Icon, { type IconName } from './Icon.astro';
 
@@ -13,16 +14,18 @@ interface Props {
 }
 
 const { lang, url, title } = Astro.props;
+// The shared text should match the visible (localised) title.
+const displayTitle = smartQuotes(title, lang);
 const absolute = canonical(url);
 const networks: { key: string; icon: IconName; href: string }[] = [
   { key: 'link', icon: 'link', href: absolute },
-  { key: 'email', icon: 'mail', href: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(absolute)}` },
-  { key: 'bluesky', icon: 'bluesky', href: `https://bsky.app/intent/compose?text=${encodeURIComponent(`${title} ${absolute}`)}` },
+  { key: 'email', icon: 'mail', href: `mailto:?subject=${encodeURIComponent(displayTitle)}&body=${encodeURIComponent(absolute)}` },
+  { key: 'bluesky', icon: 'bluesky', href: `https://bsky.app/intent/compose?text=${encodeURIComponent(`${displayTitle} ${absolute}`)}` },
   { key: 'facebook', icon: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(absolute)}` },
   { key: 'linkedin', icon: 'linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(absolute)}` },
-  { key: 'reddit', icon: 'reddit', href: `https://www.reddit.com/submit?url=${encodeURIComponent(absolute)}&title=${encodeURIComponent(title)}` },
-  { key: 'twitter', icon: 'x', href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(absolute)}&text=${encodeURIComponent(title)}` },
-  { key: 'whatsapp', icon: 'whatsapp', href: `https://wa.me/?text=${encodeURIComponent(`${title} ${absolute}`)}` },
+  { key: 'reddit', icon: 'reddit', href: `https://www.reddit.com/submit?url=${encodeURIComponent(absolute)}&title=${encodeURIComponent(displayTitle)}` },
+  { key: 'twitter', icon: 'x', href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(absolute)}&text=${encodeURIComponent(displayTitle)}` },
+  { key: 'whatsapp', icon: 'whatsapp', href: `https://wa.me/?text=${encodeURIComponent(`${displayTitle} ${absolute}`)}` },
 ];
 const available = networks.filter((network) => t(lang, `share.${network.key}`, '') !== '');
 ---

@@ -4,6 +4,7 @@
 // typed helpers for routes and navigation.
 import { z } from 'zod';
 import { languages } from '../../handbook.config.ts';
+import { smartQuotes } from '../lib/smart-quotes.ts';
 import raw from './works.json';
 import type { Language } from './locales';
 
@@ -68,9 +69,15 @@ export function bookOrder(lang: Language): string[] {
   return works[lang].products.web.files;
 }
 
-/** Table of contents entries (label + file) for a language. */
+/** Table of contents entries (label + file) for a language. Catalogue labels
+ *  bypass the markdown pipeline, so quotes are localised here to match the
+ *  hast-transformed prose. Copies are returned; the validated store is
+ *  never mutated. */
 export function bookToc(lang: Language): TocEntry[] {
-  return works[lang].products.web.nav;
+  return works[lang].products.web.nav.map((entry) => ({
+    ...entry,
+    label: smartQuotes(entry.label, lang),
+  }));
 }
 
 /** Web table of contents without the print-only front matter entries. */

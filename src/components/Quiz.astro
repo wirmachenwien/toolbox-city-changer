@@ -4,6 +4,7 @@
 // data attributes (localised at render time) and clones the embedded icon
 // templates as per-option marks.
 import { t } from '../lib/i18n';
+import { smartQuotes } from '../lib/smart-quotes';
 import Icon from './Icon.astro';
 import type { Language } from '../data/locales';
 
@@ -23,17 +24,21 @@ interface Props {
 }
 
 const { id, question, options, lang = 'en', feedbackCorrect, feedbackIncorrect, feedbackUnfinished } = Astro.props;
+// Author-supplied display strings bypass the markdown pipeline, so quotes
+// are localised here to match the hast-transformed prose.
+const displayQuestion = smartQuotes(question, lang);
+const displayOptions = options.map((option) => ({ ...option, label: smartQuotes(option.label, lang) }));
 ---
 <form
   class="quiz"
   data-quiz={id}
-  data-feedback-correct={feedbackCorrect ?? t(lang, 'questions.feedback-correct', 'Correct!')}
-  data-feedback-incorrect={feedbackIncorrect ?? t(lang, 'questions.feedback-incorrect', 'Incorrect')}
-  data-feedback-unfinished={feedbackUnfinished ?? t(lang, 'questions.feedback-unfinished', "You haven't selected all the correct answers.")}
+  data-feedback-correct={smartQuotes(feedbackCorrect ?? t(lang, 'questions.feedback-correct', 'Correct!'), lang)}
+  data-feedback-incorrect={smartQuotes(feedbackIncorrect ?? t(lang, 'questions.feedback-incorrect', 'Incorrect'), lang)}
+  data-feedback-unfinished={smartQuotes(feedbackUnfinished ?? t(lang, 'questions.feedback-unfinished', "You haven't selected all the correct answers."), lang)}
 >
   <fieldset>
-    <legend>{question}</legend>
-    {options.map((option, index) => (
+    <legend>{displayQuestion}</legend>
+    {displayOptions.map((option, index) => (
       <label>
         <input
           type="checkbox"

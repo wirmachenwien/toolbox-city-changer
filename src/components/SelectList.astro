@@ -2,6 +2,7 @@
 // Localised select dropdown that reveals linked content on change
 // (progressive enhancement over a plain list of links in noscript).
 import { t } from '../lib/i18n';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 export interface SelectOption {
@@ -17,18 +18,21 @@ interface Props {
 }
 
 const { id, label, options, lang = 'en' } = Astro.props;
-const prompt = label ?? t(lang, 'controls.choose-chapter', 'Choose chapter…');
+// Author-supplied labels bypass the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose.
+const prompt = label ? smartQuotes(label, lang) : t(lang, 'controls.choose-chapter', 'Choose chapter…');
+const displayOptions = options.map((option) => ({ ...option, label: smartQuotes(option.label, lang) }));
 ---
 <div class="select-list" data-select-list>
   <label for={id}>{prompt}</label>
   <select id={id} data-select>
-    {options.map((option) => (
+    {displayOptions.map((option) => (
       <option value={option.href}>{option.label}</option>
     ))}
   </select>
   <noscript>
     <ul>
-      {options.map((option) => (
+      {displayOptions.map((option) => (
         <li><a href={option.href}>{option.label}</a></li>
       ))}
     </ul>

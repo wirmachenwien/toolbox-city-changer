@@ -4,6 +4,7 @@
  // full shared glossary from src/data/glossary.json (single source of
  // truth, editable via PagesCMS).
 import { glossaryTerms } from '../data/glossary';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 export interface GlossaryEntry {
@@ -20,10 +21,18 @@ const entries: GlossaryEntry[] =
   (lang
     ? glossaryTerms[lang].map(({ term, definition }) => ({ term, definition }))
     : []);
-if (entries.length === 0) throw new Error('<Glossary> needs either entries or lang');
+// Entries bypass the markdown pipeline, so quotes are localised here to
+// match the hast-transformed prose (only when lang is known).
+const displayEntries = lang
+  ? entries.map((entry) => ({
+      term: smartQuotes(entry.term, lang),
+      definition: smartQuotes(entry.definition, lang),
+    }))
+  : entries;
+if (displayEntries.length === 0) throw new Error('<Glossary> needs either entries or lang');
 ---
 <dl class="glossary">
-  {entries.map((entry) => (
+  {displayEntries.map((entry) => (
     <dt>{entry.term}</dt>
     <dd>{entry.definition}</dd>
   ))}

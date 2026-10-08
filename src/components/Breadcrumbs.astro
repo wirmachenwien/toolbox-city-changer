@@ -1,6 +1,9 @@
 ---
 // Breadcrumb trail. Compact mode (masthead) shows the trail inline;
 // the full mode is used above article content.
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
 export interface Crumb {
   label: string;
   url: string;
@@ -10,13 +13,20 @@ export interface Crumb {
 interface Props {
   items: Crumb[];
   compact?: boolean;
+  lang?: Language;
 }
 
-const { items, compact = false } = Astro.props;
+const { items, compact = false, lang } = Astro.props;
+// Crumb labels (titles, catalogue entries) bypass the markdown pipeline,
+// so quotes are localised here to match the hast-transformed prose (only
+// when lang is known).
+const displayItems = lang
+  ? items.map((item) => ({ ...item, label: smartQuotes(item.label, lang) }))
+  : items;
 ---
 <nav class="crumbs" aria-label="Breadcrumb" data-compact={compact ? 'true' : undefined}>
   <ol>
-    {items.map((item) => (
+    {displayItems.map((item) => (
       <li>
         {item.current || !item.url ? (
           <span aria-current="page">{item.label}</span>

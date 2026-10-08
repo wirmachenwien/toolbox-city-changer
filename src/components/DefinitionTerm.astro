@@ -1,12 +1,21 @@
 ---
 // Term with an inline definition popup (title attribute fallback + client
 // enhancement from src/scripts/definitions.ts).
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
 interface Props {
   term: string;
   definition: string;
+  lang?: Language;
 }
-const { term, definition } = Astro.props;
+const { term, definition, lang } = Astro.props;
+// Author-supplied strings bypass the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose (only when lang is
+// known).
+const displayTerm = lang ? smartQuotes(term, lang) : term;
+const displayDefinition = lang ? smartQuotes(definition, lang) : definition;
 ---
-<dfn class="definition-term" data-definition={definition} tabindex="0" title={definition}>
-  {term}
+<dfn class="definition-term" data-definition={displayDefinition} tabindex="0" title={displayDefinition}>
+  {displayTerm}
 </dfn>

@@ -35,6 +35,7 @@ PAGES = ROOT / "src" / "content" / "pages"
 # Site languages, default language and download stem come from
 # handbook.config.ts (single source of truth).
 from handbook_config import load_config
+from typography import smart_quotes_html
 
 _CONFIG = load_config()
 LANGS: tuple[str, ...] = tuple(_CONFIG["languages"])
@@ -248,7 +249,9 @@ class EpubBook:
     def render_markdown(self, md_text: str) -> str:
         import markdown  # pip: markdown
 
-        return as_xhtml(markdown.markdown(self.convert_mdx(md_text), extensions=["extra"]))
+        # Render-time typographic quotes (source keeps straight quotes).
+        body = markdown.markdown(self.convert_mdx(md_text), extensions=["extra"])
+        return as_xhtml(smart_quotes_html(body, self.lang))
 
     def add_chapter(self, slug: str, title: str, body: str) -> None:
         filename = f"{slug}.xhtml"

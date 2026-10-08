@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import { satteri } from '@astrojs/markdown-satteri';
+import { smartQuotesHastPlugin } from './src/lib/satteri-smart-quotes.ts';
 import { site, base, defaultLang } from './handbook.config.ts';
 
 export default defineConfig({
@@ -22,4 +24,15 @@ export default defineConfig({
     [`/book/${defaultLang}/[...slug]`]: '/book/[...slug]',
   },
   integrations: [mdx()],
+  markdown: {
+    // Render-time typographic quotes: source keeps straight `"` / `'`,
+    // output gets „ “ (de/sl) or “ ” (en) per frontmatter `lang`.
+    // MDX inherits this processor (extendMarkdownConfig defaults to true).
+    // Sätteri's built-in English quotes stay off so the plugin below has
+    // straight quotes left to localise; dashes/ellipses are untouched.
+    processor: satteri({
+      features: { smartPunctuation: { quotes: false } },
+      hastPlugins: [smartQuotesHastPlugin(defaultLang)],
+    }),
+  },
 });

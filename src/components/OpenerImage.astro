@@ -1,13 +1,20 @@
 ---
 // Large opening image for home pages. Always eager, never lazy.
 import { Image } from 'astro:assets';
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
 
 interface Props {
   file: string;
   alt: string;
+  lang?: Language;
 }
 
-const { file, alt } = Astro.props;
+const { file, alt, lang } = Astro.props;
+// Frontmatter alt text bypasses the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose (only when lang is
+// known).
+const displayAlt = lang ? smartQuotes(alt, lang) : alt;
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
@@ -24,8 +31,8 @@ if (!match) {
 <div class="opener">
   <Image
     src={match[1].default}
-    alt={alt}
-    title={alt || undefined}
+    alt={displayAlt}
+    title={displayAlt || undefined}
     widths={[640, 1024]}
     sizes="100vw"
     loading="eager"

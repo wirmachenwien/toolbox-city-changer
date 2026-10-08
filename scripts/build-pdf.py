@@ -31,6 +31,7 @@ PRINT_CSS = ROOT / "src" / "styles" / "print.css"
 # Site languages, default language and download stem come from
 # handbook.config.ts (single source of truth).
 from handbook_config import load_config
+from typography import smart_quotes_html
 
 _CONFIG = load_config()
 LANGS: tuple[str, ...] = tuple(_CONFIG["languages"])
@@ -272,6 +273,8 @@ def chapter_html(slug: str, md_text: str, lang: str = DEFAULT_LANG) -> str:
     import markdown  # pip: markdown
 
     body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
+    # Render-time typographic quotes (source keeps straight quotes).
+    body = smart_quotes_html(body, lang)
     return f'<section class="chapter" id="file-{slug}">\n{body}\n</section>'
 
 
@@ -344,6 +347,8 @@ def build_document(lang: str) -> str:
         md_text = path.read_text(encoding="utf-8")
         if slug == "about":
             body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
+            # Render-time typographic quotes (source keeps straight quotes).
+            body = smart_quotes_html(body, lang)
             about_label = next(
                 (entry["label"] for entry in toc if entry["file"] == "about"),
                 "About",
