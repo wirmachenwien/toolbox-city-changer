@@ -1,4 +1,4 @@
-/* EPUB stylesheet for the reflowable pipeline (scripts/build-epub.py).
+/* EPUB stylesheet for the reflowable pipeline (scripts/bin/build-epub.py).
    Screen styles live in global.css, fixed-page PDF styles in print.css;
    this file only ships inside the EPUB at OEBPS/styles/epub.css.
    Keep print.css/epub.css independently tunable (fixed pages vs. reflowable

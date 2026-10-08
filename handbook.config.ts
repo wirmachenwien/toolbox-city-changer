@@ -7,8 +7,8 @@
 // - src/data/locales.ts (languages, Language)
 // - src/content.config.ts (content language enum)
 // - Python builders (argparse choices, download stem)
-// - scripts/check-site.mjs, scripts/fix-dist.mjs
-// - scripts/sync-config.mjs -> .pages.yml, public/robots.txt, public/site.webmanifest
+// - scripts/bin/check-site.mjs, scripts/bin/fix-dist.mjs
+// - scripts/bin/sync-config.mjs -> .pages.yml, public/robots.txt, public/site.webmanifest
 //
 // To ship a two-language handbook, shrink `languages` (keeping defaultLang
 // inside it) and run `npm run sync:config`, then rebuild.
@@ -26,7 +26,7 @@ export const slug = 'toolbox-city-changer';
  *  URL treatment is decided by `defaultLang` below. */
 export const languages = ['de', 'en', 'sl'] as const;
 
-/** Display names for the CMS config generator (scripts/sync-config.mjs). */
+/** Display names for the CMS config generator (scripts/bin/sync-config.mjs). */
 export const languageNames = { de: 'German', en: 'English', sl: 'Slovene' } as const;
 
 export type Language = (typeof languages)[number];

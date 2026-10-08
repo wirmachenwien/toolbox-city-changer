@@ -1,4 +1,4 @@
-/* Print stylesheet for the WeasyPrint PDF pipeline (scripts/build-pdf.py).
+/* Print stylesheet for the WeasyPrint PDF pipeline (scripts/bin/build-pdf.py).
    Screen styles live in global.css; this file only ships to print.
    The font url() paths below are logical: build-pdf.py rewrites them to
    file:// URIs of the self-hosted Newsreader files so the PDF embeds

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // PDF/EPUB download builder with graceful degradation: when the Python
 // toolchain is unavailable, skip the downloads with a warning instead of
 // failing the whole build, so local development without Python still gets a
@@ -29,7 +30,7 @@ if (problem) {
   process.exit(0);
 }
 
-for (const args of [[ 'scripts/build-pdf.py', '--all' ], [ 'scripts/build-epub.py', '--all' ]]) {
+for (const args of [[ 'scripts/bin/build-pdf.py', '--all' ], [ 'scripts/bin/build-epub.py', '--all' ]]) {
   const run = spawnSync('python3', args, { stdio: 'inherit' });
   if (run.status !== 0) process.exit(run.status ?? 1);
 }

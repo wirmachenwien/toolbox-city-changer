@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Regenerates the files derived from handbook.config.ts (single source of
 // truth) that cannot import it directly because an external tool owns them:
 // - .pages.yml (PagesCMS content model: one chapters/home/metadata section
@@ -9,13 +10,16 @@
 // `npm run check:config` (--check) to make sure the committed files are
 // in sync.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { site, base, languages, languageNames } from '../handbook.config.ts';
+import { site, base, languages, languageNames } from '../../handbook.config.ts';
+import { normalizeBase } from '../lib/paths.mjs';
 
 const LANGS = [...languages];
-const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
+const BASE_PATH = normalizeBase(base);
+
+const displayName = (lang) => languageNames[lang] ?? lang;
 
 function chaptersCollection(lang) {
-  const display = languageNames[lang] ?? lang;
+  const display = displayName(lang);
   return `      - name: chapters_${lang}
         label: Chapters (${display})
         type: collection
@@ -58,7 +62,7 @@ function chaptersCollection(lang) {
 }
 
 function homePage(lang) {
-  const display = languageNames[lang] ?? lang;
+  const display = displayName(lang);
   return `      - name: home_${lang}
         label: Home Page (${display})
         type: file
@@ -94,7 +98,7 @@ function homePage(lang) {
 }
 
 function bookMetadata(lang) {
-  const display = languageNames[lang] ?? lang;
+  const display = displayName(lang);
   return `          - name: ${lang}
             label: ${display} book metadata
             type: object
@@ -120,7 +124,7 @@ function bookMetadata(lang) {
 }
 
 function navigation(lang) {
-  const display = languageNames[lang] ?? lang;
+  const display = displayName(lang);
   return `          - name: ${lang}
             label: ${display} navigation
             type: object
@@ -136,7 +140,7 @@ function navigation(lang) {
 }
 
 function glossary(lang) {
-  const display = languageNames[lang] ?? lang;
+  const display = displayName(lang);
   return `          - name: ${lang}
             label: ${display} glossary
             type: object
@@ -160,7 +164,7 @@ function glossary(lang) {
 
 function languageOptions() {
   return LANGS.map((lang) => {
-    const display = languageNames[lang] ?? lang;
+    const display = displayName(lang);
     return `        - name: ${lang}
           label: ${display}
 `;
@@ -276,7 +280,7 @@ ${LANGS.map((lang) => homePage(lang)).join('\n')}
           create: false
           delete: false
         fields:
-${LANGS.map((lang) => bookMetadata(lang)).join('')}
+${LANGS.map((lang) => bookMetadata(lang)).join('\n')}
       - name: navigation
         label: Navigation
         type: file
@@ -286,7 +290,7 @@ ${LANGS.map((lang) => bookMetadata(lang)).join('')}
           create: false
           delete: false
         fields:
-${LANGS.map((lang) => navigation(lang)).join('')}
+${LANGS.map((lang) => navigation(lang)).join('\n')}
       - name: glossary
         label: Glossary
         type: file
@@ -296,7 +300,7 @@ ${LANGS.map((lang) => navigation(lang)).join('')}
           create: false
           delete: false
         fields:
-${LANGS.map((lang) => glossary(lang)).join('')}`;
+${LANGS.map((lang) => glossary(lang)).join('\n')}`;
 }
 
 function robotsTxt() {

@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""Shared base for the print builders (scripts/bin/build-pdf.py + scripts/bin/build-epub.py).
+
+Single source of truth for everything the two builders do identically,
+previously copy-pasted between them:
+
+- repo paths (ROOT, CONTENT, ASSETS, DATA, GLOSSARY_DATA, PAGES),
+- site languages / default language / download stem from handbook.config.ts,
+- the <Glossary lang=".."/> matcher for the configured languages,
+- glossary.json loading, start-page hero lookup, asset lookup by basename,
+- chapter file reading, Markdown rendering with render-time smart quotes,
+- the --lang/--out/--all CLI trio plus default-first job ordering,
+- the `<slug>-<lang>` download stem.
+
+Deliberately NOT shared (kept in each builder, as with handbook.mdx):
+- PDF: figure -> file-URI <img>, CC badge with embedded PNG, WeasyPrint
+  CSS, cover-resolution warnings, float:footnote spans.
+- EPUB: figure -> packaged-image href with html.escape, CC badge without
+  images, OPF/nav/XHTML packaging, font embedding, XHTML void-element
+  normalization.
+
+Import from here instead of redefining. Entry scripts live in scripts/bin/
+and add scripts/ to sys.path, then `from handbook.book import ...` works
+regardless of where Python is invoked from.
+"""
+
+from __future__ import annotations
+
+import argparse
+import functools
+import json
+from pathlib import Path
+
+from handbook.config import load_config
+from handbook.mdx import find_asset_by_basename, front_opener_for_pages, make_glossary_lang_re
+from handbook.typography import smart_quotes_html
+
+ROOT = Path(__file__).resolve().parent.parent.parent
+CONTENT = ROOT / "src" / "content" / "book"
+ASSETS = ROOT / "src" / "assets"
+DATA = ROOT / "src" / "data" / "works.json"
+GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
+PAGES = ROOT / "src" / "content" / "pages"
+
+# Site languages, default language and download stem come from
+# handbook.config.ts (single source of truth). Loaded eagerly on purpose:
+# add_common_arguments() needs LANGS for argparse choices, and Node is a
+# hard repo requirement anyway (see handbook.config docstring).
+_CONFIG = load_config()
+LANGS: tuple[str, ...] = tuple(_CONFIG["languages"])
+DEFAULT_LANG: str = _CONFIG["defaultLang"]
+SLUG: str = _CONFIG["slug"]
+
+GLOSSARY_LANG_RE = make_glossary_lang_re(LANGS)
+
+
+@functools.lru_cache(maxsize=None)
+def glossary_data() -> dict:
+    """Parsed src/data/glossary.json (cached; the file is static per build)."""
+    return json.loads(GLOSSARY_DATA.read_text(encoding="utf-8"))
+
+
+@functools.lru_cache(maxsize=None)
+def load_works() -> dict:
+    """Full src/data/works.json mapping (one entry per language)."""
+    return json.loads(DATA.read_text(encoding="utf-8"))
+
+
+def front_opener(lang: str) -> str:
+    """Hero image of the language start page (source of the print cover)."""
+    return front_opener_for_pages(PAGES, lang)
+
+
+def find_asset(filename: str) -> Path | None:
+    """Repo file backing a content image name (book, site, then public).
+
+    Site chrome lives in public/ (e.g. the official CC badge PNG, which
+    WeasyPrint can embed; SVG is not a supported image format for print).
+    The CMS image picker may store a repo-relative path; match by basename.
+    """
+    return find_asset_by_basename(filename, ASSETS, ROOT)
+
+
+def read_chapter_mdx(lang: str, slug: str) -> str | None:
+    """Raw MDX of a chapter, or None when the source file is missing.
+
+    The caller warns (PDF warns on stderr, EPUB on stdout — preserved).
+    """
+    path = CONTENT / lang / f"{slug}.mdx"
+    if not path.exists():
+        return None
+    return path.read_text(encoding="utf-8")
+
+
+def markdown_to_html(converted_md: str, lang: str) -> str:
+    """Render converted Markdown to HTML with render-time smart quotes.
+
+    Takes Markdown with MDX components already converted to markup (each
+    builder's convert step); source keeps straight quotes, output gets
+    locale typographic quotes. The Markdown import stays lazy so --help
+    works without the dependency installed.
+    """
+    import markdown  # pip: markdown
+
+    body = markdown.markdown(converted_md, extensions=["extra"])
+    return smart_quotes_html(body, lang)
+
+
+def download_stem(lang: str) -> str:
+    """Download file stem for a language: `<slug>-<lang>`."""
+    return f"{SLUG}-{lang}"
+
+
+def add_common_arguments(parser: argparse.ArgumentParser, noun: str) -> None:
+    """Add the --lang/--out/--all trio shared by both builders."""
+    parser.add_argument("--lang", choices=list(LANGS), default=DEFAULT_LANG)
+    parser.add_argument(
+        "--out",
+        default="dist/downloads",
+        help="output directory (served from dist/ by the site)",
+    )
+    parser.add_argument("--all", action="store_true", help=f"build {noun} for {'/'.join(LANGS)}")
+
+
+def resolve_jobs(args: argparse.Namespace) -> tuple[str, ...]:
+    """Languages to build: default language first with --all, else --lang."""
+    if args.all:
+        return (DEFAULT_LANG, *[lang for lang in LANGS if lang != DEFAULT_LANG])
+    return (args.lang,)

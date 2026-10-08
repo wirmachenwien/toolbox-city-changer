@@ -18,7 +18,7 @@ pnpm-debug.log*
 .env
 .env.production
 
-# python bytecode (scripts/handbook_config.py is imported by the builders)
+# python bytecode (scripts/handbook/ is imported by the builders in scripts/bin/)
 __pycache__/
 
 # macOS-specific files

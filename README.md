@@ -47,7 +47,9 @@ URLs redirect to the canonical locations).
 - `src/components/`, `src/layouts/` — content components and page layouts
 - `src/data/` — book catalogue, nav, locales, glossary (validated JSON)
 - `src/lib/`, `src/scripts/` — URL/i18n helpers and client islands
-- `scripts/` — PDF/EPUB pipelines, build checks, config sync
+- `scripts/bin/` — runnable entry points (PDF/EPUB pipelines, build checks, config sync)
+- `scripts/handbook/` — shared Python library imported by the builders
+- `scripts/lib/` — shared JS helpers imported by the `bin/` entries
 - `.pages.yml` — PagesCMS content model (generated, see above)
 
 ## License

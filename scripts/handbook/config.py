@@ -7,11 +7,12 @@ being parsed or duplicated here.
 
 from __future__ import annotations
 
+import functools
 import json
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 _DUMP_JS = (
     "import('./handbook.config.ts').then((m) => console.log(JSON.stringify({"
@@ -20,6 +21,7 @@ _DUMP_JS = (
 )
 
 
+@functools.lru_cache(maxsize=None)
 def load_config() -> dict:
     """Return {site, base, slug, defaultLang, languages} from handbook.config.ts."""
     proc = subprocess.run(

@@ -87,7 +87,7 @@ export function pdfOrder(lang: Language): string[] {
 }
 
 /** Full print table of contents (PDF/EPUB). Mirrors the derivation in
- *  `scripts/build-pdf.py` / `scripts/build-epub.py`. */
+ *  `scripts/bin/build-pdf.py` / `scripts/bin/build-epub.py`. */
 export function pdfBookToc(lang: Language): TocEntry[] {
   return pdfToc(works[lang]);
 }

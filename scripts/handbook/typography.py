@@ -13,7 +13,6 @@ Two entry points:
 
 from __future__ import annotations
 
-import re
 from html.parser import HTMLParser
 
 QUOTES: dict[str, dict[str, str]] = {
@@ -158,29 +157,3 @@ def smart_quotes_html(html_text: str, lang: str | None) -> str:
     parser.feed(html_text)
     parser.close()
     return parser.result()
-
-
-_TAG_RE = re.compile(r"<[^>]*>|[^<]+")
-
-
-def smart_quotes_html_fallback(html_text: str, lang: str | None) -> str:
-    """Regex fallback if HTML parsing ever fails (same skip rules, best effort)."""
-    state = QuoteState()
-    lang = normalize_lang(lang)
-    skip_depth = 0
-    out: list[str] = []
-    for token in _TAG_RE.findall(html_text):
-        if token.startswith("<"):
-            tag_match = re.match(r"</?\s*([a-zA-Z0-9]+)", token)
-            tag = tag_match.group(1).lower() if tag_match else ""
-            if tag in SKIP_TAGS:
-                if token.startswith("</"):
-                    skip_depth = max(0, skip_depth - 1)
-                elif not token.endswith("/>"):
-                    skip_depth += 1
-            out.append(token)
-        elif skip_depth > 0:
-            out.append(token)
-        else:
-            out.append(smart_quotes_text(token, lang, state))
-    return "".join(out)

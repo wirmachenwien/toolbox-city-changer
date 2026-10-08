@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // Built-site integrity checks against the static build (dist/).
 // Covers every language: each expected page exists with the right
 // <html lang>, the search form routes to the language-local search page,
@@ -7,10 +8,11 @@
 // representative query term.
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, posix } from 'node:path';
-import { site, base, defaultLang, languages } from '../handbook.config.ts';
+import { site, base, defaultLang, languages } from '../../handbook.config.ts';
+import { DIST_DIR, normalizeBase } from '../lib/paths.mjs';
+import { createReporter } from '../lib/reporter.mjs';
 
-const DIST = 'dist';
-const BASE = base.endsWith('/') ? base.slice(0, -1) : base;
+const BASE = normalizeBase(base);
 const LANGS = [...languages];
 // PDF/EPUB downloads are optional locally (`npm run build` skips them with a
 // warning when Python is unavailable), so missing download targets only warn
@@ -19,7 +21,7 @@ const LANGS = [...languages];
 // builds stay strict.
 function downloadsBuilt() {
   try {
-    return readdirSync(join(DIST, 'downloads')).some((name) => /\.(pdf|epub)$/i.test(name));
+    return readdirSync(join(DIST_DIR, 'downloads')).some((name) => /\.(pdf|epub)$/i.test(name));
   } catch {
     return false;
   }
@@ -37,11 +39,8 @@ function bookFiles(lang) {
   return [...chapters.filter((chapter) => chapter.web !== false).map((chapter) => chapter.file), 'index'];
 }
 
-let failures = 0;
-function fail(message) {
-  failures += 1;
-  console.error(`FAIL: ${message}`);
-}
+const reporter = createReporter();
+const fail = (message) => reporter.fail(message);
 
 function pagePath(lang, kind, file) {
   if (kind === 'book') {
@@ -53,7 +52,7 @@ function pagePath(lang, kind, file) {
 }
 
 function readPage(rel) {
-  const full = join(DIST, rel);
+  const full = join(DIST_DIR, rel);
   if (!existsSync(full)) {
     fail(`missing page ${rel}`);
     return null;
@@ -122,23 +121,24 @@ for (const lang of LANGS) {
         if (kind === 'book') return `${BASE}/${other === defaultLang ? 'book/' : `book/${other}/`}`;
         return `${BASE}/${other === defaultLang ? '' : `${other}/`}`;
       }
-      const target = kind === 'book' ? pagePath(other, kind, file) : pagePath(other, kind, file);
+      const target = pagePath(other, kind, file);
       return `${BASE}/${target}`;
     };
     const others = LANGS.filter((other) => other !== lang).map(expectedAlt);
-    const hrefs = links(html).map((href) => resolveUrl(rel, href));
+    const rawLinks = links(html);
+    const hrefs = rawLinks.map((href) => resolveUrl(rel, href));
     for (const other of others) {
       if (!hrefs.includes(other)) fail(`${rel}: missing language-switch link to ${other}`);
     }
 
     // Every local link target must exist in dist/.
-    for (const raw of links(html)) {
+    for (const raw of rawLinks) {
       const resolved = resolveUrl(rel, raw);
       if (!resolved || !resolved.startsWith(`${BASE}/`)) continue;
       let local = resolved.slice(BASE.length + 1).split(/[?#]/)[0];
       if (local.endsWith('/')) local += 'index.html';
       if (local === '') local = 'index.html';
-      if (!existsSync(join(DIST, local)) && !existsSync(join(DIST, `${local}.html`))) {
+      if (!existsSync(join(DIST_DIR, local)) && !existsSync(join(DIST_DIR, `${local}.html`))) {
         // Allow pagefind runtime + hashed asset URLs (checked separately below).
         if (!local.startsWith('_astro/') && !local.startsWith('pagefind/')) {
           if (local.startsWith('downloads/') && !HAS_DOWNLOADS) {
@@ -162,7 +162,11 @@ for (const lang of LANGS) {
 
   // Representative search term must occur in this language's content and the
   // target pages must exist in dist/.
-  const term = SEARCH_TERMS[lang];
+  const term = SEARCH_TERMS[lang] ?? SEARCH_TERMS[defaultLang];
+  if (!term) {
+    fail(`${lang}: no representative search term configured`);
+    continue;
+  }
   const hits = [];
   for (const file of [...PAGE_FILES, ...bookFiles(lang)]) {
     for (const kind of ['pages', 'book']) {
@@ -176,13 +180,13 @@ for (const lang of LANGS) {
   }
   if (hits.length === 0) fail(`${lang}: no content hits for representative term "${term}"`);
   for (const hit of hits.slice(0, 5)) {
-    if (!existsSync(join(DIST, hit))) fail(`${lang}: search hit target missing from dist: ${hit}`);
+    if (!existsSync(join(DIST_DIR, hit))) fail(`${lang}: search hit target missing from dist: ${hit}`);
   }
   console.log(`${lang}: ${hits.length} content file(s) match "${term}"`);
 }
 
 // Pagefind index must cover every language.
-const entryFile = join(DIST, 'pagefind/pagefind-entry.json');
+const entryFile = join(DIST_DIR, 'pagefind/pagefind-entry.json');
 if (!existsSync(entryFile)) {
   fail('pagefind index missing (run npm run build:search)');
 } else {
@@ -196,7 +200,7 @@ if (!existsSync(entryFile)) {
 
 // Content-generated sitemap must list every expected page exactly once,
 // with canonical absolute URLs and no redirect/legacy entries.
-const sitemapFile = join(DIST, 'sitemap.xml');
+const sitemapFile = join(DIST_DIR, 'sitemap.xml');
 if (!existsSync(sitemapFile)) {
   fail('sitemap.xml missing (src/pages/sitemap.xml.ts)');
 } else {
@@ -223,7 +227,7 @@ if (!existsSync(sitemapFile)) {
 }
 
 console.log(`Checked ${checked} pages: language, switching, navigation, search routing, images and local links.`);
-if (failures > 0) {
-  console.error(`${failures} check(s) failed`);
+if (reporter.hasFailures()) {
+  console.error(`${reporter.failures} check(s) failed`);
   process.exit(1);
 }
