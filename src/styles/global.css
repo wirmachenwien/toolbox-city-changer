@@ -177,6 +177,7 @@ a:hover {
   gap: 0.4rem;
   font-family: var(--font-ui);
   font-size: 1.02rem;
+  color: var(--ink);
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
@@ -265,7 +266,7 @@ a:hover {
 
   .menu-toggle:hover {
     background: transparent;
-    color: inherit;
+    color: var(--ink);
   }
 
   .menu-toggle .menu-label {
@@ -431,7 +432,7 @@ a:hover {
 
   body.drawer-open .drawer-toggle-float:hover {
     background: transparent;
-    color: inherit;
+    color: var(--ink);
   }
 }
 
