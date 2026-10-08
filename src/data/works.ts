@@ -5,6 +5,7 @@
 import { z } from 'zod';
 import { languages } from '../../handbook.config.ts';
 import { smartQuotes } from '../lib/smart-quotes.ts';
+import { nav } from './nav';
 import raw from './works.json';
 import type { Language } from './locales';
 
@@ -148,37 +149,57 @@ export function contentsLabel(lang: Language): string {
   return bookToc(lang).find((entry) => entry.file === 'contents')?.label ?? 'Contents';
 }
 
+/** Page kinds that can paginate. Mirrors the `kind` prop of `BaseLayout`. */
+export type PageKind = 'book' | 'page';
+
+/** Pagination neighbour: a TOC entry plus the URL space it lives in.
+ *  Book chapters use kind 'book'; the home-page link before the first
+ *  chapter uses kind 'page' (rendered via `pageUrl`, not `bookUrl`). */
+export interface NeighbourEntry extends TocEntry {
+  kind: PageKind;
+}
+
 /** Previous/next chapter slugs around the given file, or null at the ends. */
 export function chapterNeighbours(
   lang: Language,
   file: string,
-): { prev: TocEntry | null; next: TocEntry | null } {
+): { prev: NeighbourEntry | null; next: NeighbourEntry | null } {
   const toc = webBookToc(lang);
   const index = toc.findIndex((entry) => entry.file === file);
   if (index === -1) return { prev: null, next: null };
+  const at = (entry: TocEntry | undefined): NeighbourEntry | null =>
+    entry ? { ...entry, kind: 'book' } : null;
   return {
-    prev: index > 0 ? toc[index - 1] : null,
-    next: index < toc.length - 1 ? toc[index + 1] : null,
+    prev: index > 0 ? at(toc[index - 1]) : null,
+    next: index < toc.length - 1 ? at(toc[index + 1]) : null,
   };
 }
 
-/** Page kinds that can paginate. Mirrors the `kind` prop of `BaseLayout`. */
-export type PageKind = 'book' | 'page';
+/** The project home page as a pagination neighbour ("Start"/"Home"/"Domov",
+ *  labelled from nav.json like the header nav and breadcrumbs). */
+function homeNeighbour(lang: Language): NeighbourEntry {
+  const label = nav[lang][0]?.label ?? '';
+  return { label: smartQuotes(label, lang), file: 'index', kind: 'page' };
+}
 
 /** Single source of truth for "which pages paginate": book pages follow the
  *  reading order, project home pages (`page` + `index`) lead into the front
- *  of the book. Returns `null` when the page has no pagination. */
+ *  of the book, and the first chapter links back to the home page.
+ *  Returns `null` when the page has no pagination. */
 export function paginationNeighbours(
   lang: Language,
   kind: PageKind,
   file: string,
-): { prev: TocEntry | null; next: TocEntry | null } | null {
+): { prev: NeighbourEntry | null; next: NeighbourEntry | null } | null {
   if (kind === 'page') {
     if (file !== 'index') return null;
     const next = webBookToc(lang)[0] ?? null;
-    return next ? { prev: null, next } : null;
+    return next ? { prev: null, next: { ...next, kind: 'book' } } : null;
   }
   const { prev, next } = chapterNeighbours(lang, file);
   if (!prev && !next) return null;
+  if (!prev && file === webBookToc(lang)[0]?.file) {
+    return { prev: homeNeighbour(lang), next };
+  }
   return { prev, next };
 }
