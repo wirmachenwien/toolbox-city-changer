@@ -128,8 +128,18 @@ h1, h2, h3 {
   break-after: avoid;
 }
 
-figure, table, blockquote, .feature-box, .quiz, dl.glossary {
+figure, table, blockquote, .feature-box, .quiz {
   break-inside: avoid;
+}
+
+/* The A–Z glossary is long by design: it may flow across pages, but a term
+   always stays with its own definition. */
+dl.glossary {
+  break-inside: auto;
+}
+
+dl.glossary dt {
+  break-after: avoid;
 }
 
 /* Accordions print fully expanded: the screen collapse animation has no
