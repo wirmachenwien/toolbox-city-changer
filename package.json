@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",
-    "astro": "^7.3.6",
+    "astro": "^7.3.8",
     "qrcode": "^1.5.4",
     "zod": "^4.6.5"
   },
