@@ -104,3 +104,24 @@ export function chapterNeighbours(
     next: index < toc.length - 1 ? toc[index + 1] : null,
   };
 }
+
+/** Page kinds that can paginate. Mirrors the `kind` prop of `BaseLayout`. */
+export type PageKind = 'book' | 'page';
+
+/** Single source of truth for "which pages paginate": book pages follow the
+ *  reading order, project home pages (`page` + `index`) lead into the front
+ *  of the book. Returns `null` when the page has no pagination. */
+export function paginationNeighbours(
+  lang: Language,
+  kind: PageKind,
+  file: string,
+): { prev: TocEntry | null; next: TocEntry | null } | null {
+  if (kind === 'page') {
+    if (file !== 'index') return null;
+    const next = webBookToc(lang)[0] ?? null;
+    return next ? { prev: null, next } : null;
+  }
+  const { prev, next } = chapterNeighbours(lang, file);
+  if (!prev && !next) return null;
+  return { prev, next };
+}

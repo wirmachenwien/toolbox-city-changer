@@ -10,6 +10,7 @@ import AboutPage from '../components/AboutPage.astro';
 import ContentsPage from '../components/ContentsPage.astro';
 import { settings } from '../data/settings';
 import { bookCrumbs } from '../lib/nav';
+import { paginationNeighbours } from '../data/works';
 import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
@@ -28,8 +29,7 @@ const { lang, file, title, description, layout, currentUrl } = Astro.props;
 const displayTitle = smartQuotes(title, lang);
 const crumbs = bookCrumbs(lang, displayTitle);
 const isChapter = layout === 'chapter';
-// About and contents are reading-order pages too, so they paginate.
-const showPagination = isChapter || layout === 'about' || layout === 'contents';
+const neighbours = paginationNeighbours(lang, 'book', file);
 ---
 <BaseLayout
   lang={lang}
@@ -48,5 +48,5 @@ const showPagination = isChapter || layout === 'about' || layout === 'contents';
     <slot />
   </div>
   {isChapter && <Share lang={lang} url={currentUrl} title={displayTitle} />}
-  {showPagination && settings.web.pagination && <Pagination lang={lang} file={file} />}
+  {neighbours && settings.web.pagination && <Pagination lang={lang} prev={neighbours.prev} next={neighbours.next} />}
 </BaseLayout>

@@ -6,6 +6,7 @@ import OpenerImage from '../components/OpenerImage.astro';
 import LastVisit from '../components/LastVisit.astro';
 import Pagination from '../components/Pagination.astro';
 import { settings } from '../data/settings';
+import { paginationNeighbours } from '../data/works';
 import { pageCrumbs } from '../lib/nav';
 import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
@@ -27,6 +28,7 @@ const { lang, file, title, description, layout, currentUrl, openerImage, openerI
 const displayTitle = smartQuotes(title, lang);
 const crumbs = pageCrumbs(lang, displayTitle);
 const isHome = layout === 'home';
+const neighbours = paginationNeighbours(lang, 'page', file);
 ---
 <BaseLayout
   lang={lang}
@@ -42,5 +44,5 @@ const isHome = layout === 'home';
     <slot />
   </div>
   {isHome && <LastVisit lang={lang} />}
-  {isHome && settings.web.pagination && <Pagination lang={lang} file={file} />}
+  {neighbours && settings.web.pagination && <Pagination lang={lang} prev={neighbours.prev} next={neighbours.next} />}
 </BaseLayout>

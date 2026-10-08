@@ -1,7 +1,8 @@
 ---
-// Previous/next chapter pagination. Style follows
+// Previous/next pagination. Dumb renderer: the "which pages paginate" rule
+// lives in `paginationNeighbours` (src/data/works.ts); layouts pass the
+// resolved prev/next in. Style follows
 // settings.web.paginationType: direction | titles | title-arrows | arrows.
-import { chapterNeighbours, webBookToc } from '../data/works';
 import { settings } from '../data/settings';
 import { t } from '../lib/i18n';
 import { bookUrl } from '../lib/site';
@@ -10,15 +11,11 @@ import type { TocEntry } from '../data/works';
 
 interface Props {
   lang: Language;
-  file: string;
+  prev: TocEntry | null;
+  next: TocEntry | null;
 }
 
-const { lang, file } = Astro.props;
-let { prev, next } = chapterNeighbours(lang, file);
-if (!prev && !next && file === 'index') {
-  // Home page: lead into the front of the book (About).
-  next = webBookToc(lang)[0] ?? null;
-}
+const { lang, prev, next } = Astro.props;
 const type = settings.web.paginationType;
 
 function label(entry: TocEntry, direction: 'prev' | 'next'): string {
