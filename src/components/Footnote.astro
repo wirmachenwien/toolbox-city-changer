@@ -1,0 +1,25 @@
+---
+interface Props {
+  id?: string;
+  number?: number;
+  text: string;
+}
+
+const { id, number, text } = Astro.props;
+const counterKey = '__wmwFootnoteCounter';
+const globalState = globalThis as typeof globalThis & Record<string, number | undefined>;
+const next = (globalState[counterKey] ?? 0) + 1;
+globalState[counterKey] = next;
+const noteId = id ?? `footnote-${next}`;
+---
+<button
+  type="button"
+  class="footnote-ref"
+  data-footnote-ref
+  data-footnote-number={number}
+  id={`ref-${noteId}`}
+  aria-describedby={noteId}
+>
+  <sup>{number}</sup>
+</button>
+<span id={noteId} class="footnote-inline" hidden>{text}</span>

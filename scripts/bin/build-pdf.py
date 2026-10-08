@@ -15,6 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import re
 import sys
@@ -35,6 +36,7 @@ from handbook.book import (
     find_asset,
     front_opener,
     glossary_data,
+    locale_text,
     load_works,
     markdown_to_html,
     read_chapter_mdx,
@@ -52,11 +54,12 @@ from handbook.mdx import (
     QUESTION_RE,
     QUIZ_RE,
     VIDEO_RE,
+    attrs,
     chapter_lists,
     feature_open_html,
+    footnote_attrs,
     glossary_html,
     glossary_lang_html,
-    parse_endnotes,
     pullquote_html,
     question_html,
     quiz_html,
@@ -64,6 +67,16 @@ from handbook.mdx import (
 )
 
 PRINT_CSS = ROOT / "src" / "styles" / "print.css"
+SETTINGS = ROOT / "src" / "data" / "settings.json"
+BOOK_FOOTNOTES: list[tuple[str, str, str]] = []
+
+
+def pdf_notes_mode() -> str:
+    try:
+        data = json.loads(SETTINGS.read_text(encoding="utf-8"))
+    except Exception:
+        return "footnotes"
+    return data.get("pdf", {}).get("notes", "footnotes")
 
 
 def image_uri(filename: str) -> str:
@@ -147,34 +160,48 @@ def print_css() -> str:
 
 
 def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
+    mode = pdf_notes_mode()
+    footnotes_title = locale_text(lang, "footnotes.notes", "Notes")
+    answers_label = locale_text(lang, "questions.correct-answers", "Correct answers")
+    chapter_notes: list[tuple[str, str, str]] = []
+    footnote_count = 0
     text = FRONTMATTER_RE.sub("", text, count=1)
 
     def figure(match: re.Match[str]) -> str:
-        src, alt, caption = match.group(1), match.group(2), (match.group(3) or "").strip()
+        values = attrs(match.group(1) or match.group(2))
+        src, alt = values.get("src", ""), values.get("alt", "")
+        caption = (values.get("caption") or match.group(3) or "").strip()
         caption_html = f"<figcaption>{caption}</figcaption>" if caption else ""
         return (
             f'<figure><img src="{image_uri(src)}" alt="{alt}"/>{caption_html}</figure>'
         )
 
     text = FIGURE_RE.sub(figure, text)
-    text = VIDEO_RE.sub(
-        lambda m: f"\n\n*Video: {m.group(2)} (https://www.youtube.com/watch?v={m.group(1)})*\n",
-        text,
-    )
+    def video(match: re.Match[str]) -> str:
+        values = attrs(match.group(1) or match.group(2))
+        return f"\n\n*Video: {values.get('caption', '')} (https://www.youtube.com/watch?v={values.get('id', '')})*\n"
+
+    text = VIDEO_RE.sub(video, text)
     text = strip_static_handlers(text)
     text = CCBADGE_RE.sub(cc_badge_html(), text)
-    text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(m.group(1)), text)
+    text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(attrs(m.group(1)).get("title")), text)
     text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
     text = PULLQUOTE_RE.sub(pullquote_html, text)
-    # Footnotes: PDF side of the divergence documented in handbook.mdx —
-    # collect Endnotes, drop the section, attach float:footnote spans.
-    text, notes = parse_endnotes(text)
+    # Footnotes: attach inline notes to page, chapter end, or book end.
 
     def footnote(match: re.Match[str]) -> str:
-        note_id, number = match.group(1), match.group(2)
-        note_text = notes.get(note_id)
+        nonlocal footnote_count
+        footnote_count += 1
+        note_id, number, inline_text = footnote_attrs(match.group(1), footnote_count)
+        note_text = inline_text
         if note_text is None:
-            print(f"warning: footnote ref without note: {note_id}", file=sys.stderr)
+            print(f"warning: footnote without text: {note_id}", file=sys.stderr)
+            return f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
+        if mode == "chapter-footnotes":
+            chapter_notes.append((note_id, number, note_text))
+            return f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
+        if mode == "book-footnotes":
+            BOOK_FOOTNOTES.append((note_id, number, note_text))
             return f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
         return (
             f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
@@ -183,11 +210,19 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
         )
 
     text = FOOTNOTE_RE.sub(footnote, text)
+    if chapter_notes:
+        items = ''.join(f'<li id="note-{note_id}">{note_text}</li>' for note_id, _, note_text in chapter_notes)
+        text += f'\n\n<section class="footnotes"><h2>{footnotes_title}</h2><ol>{items}</ol></section>\n'
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
     text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1), glossary_data()), text)
-    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang, DEFAULT_LANG), text)
+    text = QUIZ_RE.sub(lambda m: quiz_html(attrs(m.group(1)).get("question", ""), m.group(2), answers_label), text)
     text = QUESTION_RE.sub(
-        lambda m: question_html(m.group(1), m.group(2), m.group(3), lang, DEFAULT_LANG), text
+        lambda m: question_html(
+            attrs(m.group(1)).get("question", ""),
+            m.group(2),
+            attrs(m.group(1) + m.group(3)).get("answer", "0"),
+            answers_label,
+        ), text
     )
     return text.strip() + "\n"
 
@@ -205,6 +240,7 @@ def toc_html(entries: list[dict]) -> str:
 
 
 def build_document(lang: str) -> str:
+    BOOK_FOOTNOTES.clear()
     works = load_works()[lang]
     files, toc = chapter_lists(works)
     title = works["title"]
@@ -276,6 +312,10 @@ def build_document(lang: str) -> str:
             )
         else:
             parts.append(chapter_html(slug, md_text, lang))
+    if pdf_notes_mode() == "book-footnotes" and BOOK_FOOTNOTES:
+        items = ''.join(f'<li id="note-{note_id}">{note_text}</li>' for note_id, _, note_text in BOOK_FOOTNOTES)
+        footnotes_title = locale_text(lang, "footnotes.notes", "Notes")
+        parts.append(f'<section class="chapter footnotes" id="book-footnotes"><h1>{footnotes_title}</h1><ol>{items}</ol></section>')
     parts.append("</body></html>")
     parts.insert(
         2,

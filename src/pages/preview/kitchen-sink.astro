@@ -18,11 +18,10 @@ import CopyText from '../../components/CopyText.astro';
 import Cover from '../../components/Cover.astro';
 import DefinitionTerm from '../../components/DefinitionTerm.astro';
 import DownloadLink from '../../components/DownloadLink.astro';
-import Endnotes from '../../components/Endnotes.astro';
 import ExpandableBox from '../../components/ExpandableBox.astro';
 import FeatureBox from '../../components/FeatureBox.astro';
 import Figure from '../../components/Figure.astro';
-import FootnoteRef from '../../components/FootnoteRef.astro';
+import Footnote from '../../components/Footnote.astro';
 import Glossary from '../../components/Glossary.astro';
 import Icon from '../../components/Icon.astro';
 import LanguageMenu from '../../components/LanguageMenu.astro';
@@ -127,10 +126,9 @@ const pagination = paginationNeighbours('de', 'book', '02');
       </Figure>
     </div>
 
-    <h2 class="sink-label">FootnoteRef + Endnotes</h2>
+    <h2 class="sink-label">Footnote</h2>
     <div class="sink-demo">
-      <p>Eine Aussage mit Beleg<FootnoteRef id="sink-1" number={1} />.</p>
-      <Endnotes notes={[{ id: 'sink-1', text: 'Quellenangabe zum Beleg.' }]} />
+      <p>Eine Aussage mit Inline-Fußnote<Footnote text="Quellenangabe direkt an der Stelle." />.</p>
     </div>
 
     <h2 class="sink-label">Glossary</h2>

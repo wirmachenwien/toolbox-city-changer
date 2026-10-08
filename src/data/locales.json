@@ -32,6 +32,7 @@
     },
     "questions": {
       "check-answers-button": "Antworten prüfen",
+      "correct-answers": "Richtige Antworten",
       "feedback-correct": "Richtig!",
       "feedback-incorrect": "Falsch",
       "feedback-unfinished": "Fast – du hast noch nicht alle richtigen Antworten ausgewählt."
@@ -92,9 +93,11 @@
     "headings": {
       "link-to-section": "Link zu diesem Abschnitt"
     },
-    "endnotes": {
+    "footnotes": {
       "notes": "Anmerkungen",
-      "back-to-text": "Zurück zum Text"
+      "back-to-text": "Zurück zum Text",
+      "open": "Fußnote öffnen",
+      "close": "Fußnote schließen"
     },
     "slideshow": {
       "slides": "Folien"
@@ -136,6 +139,7 @@
     },
     "questions": {
       "check-answers-button": "Check my answers",
+      "correct-answers": "Correct answers",
       "feedback-correct": "Correct!",
       "feedback-incorrect": "Incorrect",
       "feedback-unfinished": "Almost – you haven't selected all the correct answers yet."
@@ -196,9 +200,11 @@
     "headings": {
       "link-to-section": "Link to this section"
     },
-    "endnotes": {
+    "footnotes": {
       "notes": "Notes",
-      "back-to-text": "Back to text"
+      "back-to-text": "Back to text",
+      "open": "Open footnote",
+      "close": "Close footnote"
     },
     "slideshow": {
       "slides": "Slides"
@@ -235,6 +241,7 @@
     },
     "questions": {
       "check-answers-button": "Preveri odgovore",
+      "correct-answers": "Pravilni odgovori",
       "feedback-correct": "Pravilno!",
       "feedback-incorrect": "Napačno",
       "feedback-unfinished": "Skoraj – še nisi izbral vseh pravilnih odgovorov."
@@ -295,9 +302,11 @@
     "headings": {
       "link-to-section": "Povezava do tega razdelka"
     },
-    "endnotes": {
+    "footnotes": {
       "notes": "Opombe",
-      "back-to-text": "Nazaj na besedilo"
+      "back-to-text": "Nazaj na besedilo",
+      "open": "Odpri opombo",
+      "close": "Zapri opombo"
     },
     "slideshow": {
       "slides": "Diapozitivi"

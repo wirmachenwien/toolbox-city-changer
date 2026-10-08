@@ -11,9 +11,10 @@
 // - web.search.jumpBoxLocation
 // - web.titleDivider
 // - web.indexing.development / web.indexing.live ("index" | "noindex")
-// - pdf.notes ("endnotes" | "footnotes")
+// - pdf.notes ("footnotes" | "chapter-footnotes" | "book-footnotes")
 // - pdf.page.size / pdf.page.margin
 import { z } from 'zod';
+import raw from './settings.json';
 
 const toggleSchema = z.object({
   math: z
@@ -73,7 +74,7 @@ const toggleSchema = z.object({
     }),
   pdf: z
     .object({
-      notes: z.enum(['endnotes', 'footnotes']).default('endnotes'),
+      notes: z.enum(['footnotes', 'chapter-footnotes', 'book-footnotes']).default('footnotes'),
       page: z
         .object({
           size: z.string().default('A4'),
@@ -82,30 +83,11 @@ const toggleSchema = z.object({
         .default({ size: 'A4', margin: '20mm 16mm 22mm 16mm' }),
     })
     .default({
-      notes: 'endnotes',
+      notes: 'footnotes',
       page: { size: 'A4', margin: '20mm 16mm 22mm 16mm' },
     }),
 });
 
 export type Settings = z.infer<typeof toggleSchema>;
 
-export const settings: Settings = toggleSchema.parse({
-  math: { enabled: true, source: 'cdn' },
-    web: {
-      pagination: true,
-      paginationType: 'title-arrows',
-      accordion: false,
-    accordionLevel: 'h3',
-    svgInject: true,
-    lazyload: true,
-    bookmarks: { enabled: true, noteMaxLength: 5000 },
-    nav: { expandBooks: true, projectNavPosition: 'before' },
-    search: { jumpBoxLocation: 'mainHeading', param: 'query' },
-    titleDivider: ' – ',
-    indexing: { development: 'index', live: 'index' },
-  },
-  pdf: {
-    notes: 'endnotes',
-    page: { size: 'A4', margin: '20mm 16mm 22mm 16mm' },
-  },
-});
+export const settings: Settings = toggleSchema.parse(raw);
