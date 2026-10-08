@@ -1,9 +1,12 @@
 ---
 // Fallback page for unknown URLs (GitHub Pages serves dist/404.html).
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { t } from '../lib/i18n';
 import { pageUrl, withBase } from '../lib/site';
 import { languages } from '../data/locales';
 import { nav } from '../data/nav';
+
+const title = t('en', 'errors.page-not-found', 'Page not found');
 
 const homes = languages.map((lang) => ({
   lang,
@@ -12,9 +15,9 @@ const homes = languages.map((lang) => ({
   label: nav[lang][0]?.label ?? lang,
 }));
 ---
-<BaseLayout lang="en" title="Page not found" kind="page" file="index" currentUrl={withBase('/404.html')} noindex hreflang={false}>
+<BaseLayout lang="en" title={title} kind="page" file="index" currentUrl={withBase('/404.html')} noindex hreflang={false}>
   <div class="prose">
-    <h1>Page not found</h1>
+    <h1>{title}</h1>
     <p>
       {homes.map((home, index) => (
         <>

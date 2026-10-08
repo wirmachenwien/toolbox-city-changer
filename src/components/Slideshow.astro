@@ -2,17 +2,18 @@
 // Minimal slideshow: figures grouped as slides with prev/next controls.
 // Without JavaScript every slide is listed in order.
 import { smartQuotes } from '../lib/smart-quotes';
+import { t } from '../lib/i18n';
 import type { Language } from '../data/locales';
 
 interface Props {
   label?: string;
   lang?: Language;
 }
-const { label = 'Slides', lang } = Astro.props;
+const { label, lang } = Astro.props;
 // Author-supplied labels bypass the markdown pipeline, so quotes are
 // localised here to match the hast-transformed prose (only when lang is
 // known).
-const displayLabel = lang ? smartQuotes(label, lang) : label;
+const displayLabel = lang ? smartQuotes(label ?? t(lang, 'slideshow.slides', 'Slides'), lang) : (label ?? 'Slides');
 ---
 <div class="slides" data-slides role="group" aria-label={displayLabel}>
   <div class="slide-stage">

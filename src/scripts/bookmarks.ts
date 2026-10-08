@@ -6,7 +6,8 @@
 // bookmark to that line. Saved pins swap their icon to an x icon on hover and
 // delete on click. The sidebar lists stay in sync via renderBookmarkLists.
 import { DEFAULT_LANG } from '../lib/site';
-import { languages } from '../data/locales';
+import { languages, type Language } from '../data/locales';
+import { t } from '../lib/i18n';
 const VISITS_KEY = 'toolbox.last-visit';
 const DISMISSED_KEY = 'toolbox.last-visit-dismissed';
 const MARKS_KEY = 'toolbox.bookmarks';
@@ -66,6 +67,11 @@ function markLang(url: string): string {
   return DEFAULT_LANG;
 }
 
+function currentLanguage(): Language {
+  const lang = document.documentElement.lang as Language;
+  return languages.includes(lang) ? lang : 'en';
+}
+
 function collapseText(value: string): string {
   return value.replace(/\s+/g, ' ').trim();
 }
@@ -121,7 +127,8 @@ function renderBookmarkLists(): void {
       continue;
     }
     if (section instanceof HTMLElement) section.hidden = false;
-    const deleteLabel = list.dataset.deleteLabel ?? 'Delete';
+    const deleteLang = languages.includes(listLang as Language) ? (listLang as Language) : currentLanguage();
+    const deleteLabel = list.dataset.deleteLabel ?? t(deleteLang, 'bookmarks.delete-bookmark', 'Delete');
     for (const item of items) {
       const entry = document.createElement('li');
       const link = document.createElement('a');
@@ -222,8 +229,9 @@ function initBookmarkGutter(): void {
   const proseEl: HTMLElement = prose;
   const pendingBtn: HTMLButtonElement = pending;
   const gutterEl: HTMLElement = gutter;
-  const addLabel = gutter.dataset.addLabel ?? 'Bookmark';
-  const deleteLabel = gutter.dataset.deleteLabel ?? 'Delete';
+  const lang = currentLanguage();
+  const addLabel = gutter.dataset.addLabel ?? t(lang, 'bookmarks.bookmark', 'Bookmark');
+  const deleteLabel = gutter.dataset.deleteLabel ?? t(lang, 'bookmarks.delete-bookmark', 'Delete');
 
   let targets = collectTargets(proseEl);
   let pendingIndex: number | null = null;
@@ -605,11 +613,11 @@ export function initBookmarks(): void {
   } catch {
     /* storage unavailable */
   }
-  const prompt = toast?.dataset.prompt ?? 'Continue from your last visit?';
+  const prompt = toast?.dataset.prompt ?? t(currentLanguage(), 'bookmarks.last-location-prompt', 'Continue from your last visit?');
   const text = toast?.querySelector('[data-last-visit-text]');
   const link = toast?.querySelector<HTMLAnchorElement>('[data-last-visit-link]');
   const close = toast?.querySelector<HTMLButtonElement>('[data-last-visit-close]');
-  const currentLang = document.documentElement.lang || 'en';
+  const currentLang = currentLanguage();
   if (
     toast &&
     link &&
