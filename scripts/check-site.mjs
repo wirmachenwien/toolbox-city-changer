@@ -5,13 +5,26 @@
 // link/image/form target resolves to a built file, the contents page links
 // every chapter, and every language has searchable content for a
 // representative query term.
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, posix } from 'node:path';
 import { site, base, defaultLang, languages } from '../handbook.config.ts';
 
 const DIST = 'dist';
 const BASE = base.endsWith('/') ? base.slice(0, -1) : base;
 const LANGS = [...languages];
+// PDF/EPUB downloads are optional locally (`npm run build` skips them with a
+// warning when Python is unavailable), so missing download targets only warn
+// instead of failing. A present downloads dir is still checked strictly (a
+// wrong filename stem must fail), and CI always builds downloads, so release
+// builds stay strict.
+function downloadsBuilt() {
+  try {
+    return readdirSync(join(DIST, 'downloads')).some((name) => /\.(pdf|epub)$/i.test(name));
+  } catch {
+    return false;
+  }
+}
+const HAS_DOWNLOADS = downloadsBuilt();
 // Cover/title sheets are print-only; the web book starts at the about
 // page and the "index" entry is a redirect to the contents page. Reading
 // order comes from works.json (same source the site renders from).
@@ -127,7 +140,11 @@ for (const lang of LANGS) {
       if (!existsSync(join(DIST, local)) && !existsSync(join(DIST, `${local}.html`))) {
         // Allow pagefind runtime + hashed asset URLs (checked separately below).
         if (!local.startsWith('_astro/') && !local.startsWith('pagefind/')) {
-          fail(`${rel}: broken local link ${raw} (-> ${local})`);
+          if (local.startsWith('downloads/') && !HAS_DOWNLOADS) {
+            console.warn(`WARN: ${rel}: download not built: ${raw} (run npm run build:downloads)`);
+          } else {
+            fail(`${rel}: broken local link ${raw} (-> ${local})`);
+          }
         }
       }
     }

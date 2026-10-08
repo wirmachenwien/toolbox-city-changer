@@ -16,7 +16,9 @@ npm run preview    # serve the production build locally
 
 Downloads and search need a build first (`npm run build` or
 `npm run build:downloads`): under `astro dev` alone, downloads 404 and
-search comes back empty.
+search comes back empty. Without Python, the build skips the PDF/EPUB
+downloads with a warning and still succeeds (CI always has Python and
+stays strict).
 
 ## Checks
 
