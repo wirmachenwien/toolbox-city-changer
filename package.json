@@ -13,7 +13,7 @@
     "build:downloads": "node scripts/build-downloads.mjs",
     "build:pdf": "python3 scripts/build-pdf.py --all",
     "build:epub": "python3 scripts/build-epub.py --all",
-    "build:search": "pagefind --site dist",
+    "build:search": "pagefind --site dist --root-selector 'main[data-pagefind-body]'",
     "preview": "astro preview",
     "astro": "astro",
     "sync:config": "node scripts/sync-config.mjs",
