@@ -181,7 +181,8 @@ function readVisit(): StoredVisit | null {
 }
 
 /** Block-level lines a bookmark can pin to: direct prose children, with
- *  lists expanded to their items so each bullet is its own line. */
+ *  lists and description lists expanded to their items so each bullet and
+ *  each glossary term/definition is its own line. */
 function collectTargets(prose: HTMLElement): HTMLElement[] {
   const targets: HTMLElement[] = [];
   for (const child of prose.children) {
@@ -189,7 +190,7 @@ function collectTargets(prose: HTMLElement): HTMLElement[] {
     if (child.hasAttribute('data-bookmark-gutter')) continue;
     const tag = child.tagName;
     if (tag === 'SCRIPT' || tag === 'STYLE') continue;
-    if (tag === 'UL' || tag === 'OL') {
+    if (tag === 'UL' || tag === 'OL' || tag === 'DL') {
       let any = false;
       for (const item of child.children) {
         if (item instanceof HTMLElement && collapseText(item.textContent ?? '')) {
