@@ -10,6 +10,7 @@
 // `npm run check:config` (--check) to make sure the committed files are
 // in sync.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { parseDocument } from 'yaml';
 import { site, base, languages, languageNames } from '../../handbook.config.ts';
 import { normalizeBase } from '../lib/paths.mjs';
 
@@ -734,6 +735,79 @@ const targets = [
   { path: 'public/site.webmanifest', render: webmanifest },
 ];
 
+function fail(message) {
+  console.error(message);
+  return 1;
+}
+
+function validatePagesYml() {
+  const source = readFileSync('.pages.yml', 'utf8');
+  const doc = parseDocument(source, { prettyErrors: true, uniqueKeys: true });
+  if (doc.errors.length > 0) {
+    for (const error of doc.errors) console.error(error.message);
+    return 1;
+  }
+  const config = doc.toJSON();
+  if (!Array.isArray(config?.content)) return fail('.pages.yml: content must be a list');
+
+  const names = [];
+  const contentPaths = [];
+  let mdxFiles = 0;
+  let mdxFrontmatterEditors = 0;
+  let hasImageField = false;
+  let hasMdxCodeBody = false;
+
+  function visitFields(fields) {
+    if (!Array.isArray(fields)) return;
+    for (const field of fields) {
+      if (field?.type === 'image') hasImageField = true;
+      if (field?.name === 'body' && field?.component === 'markdown_body') hasMdxCodeBody = true;
+      visitFields(field?.fields);
+    }
+  }
+
+  function visitItems(items) {
+    for (const item of items) {
+      if (!item?.name) return fail('.pages.yml: every content item needs a name');
+      names.push(item.name);
+      if (typeof item.path === 'string') {
+        if (item.path.startsWith('src/content/') || item.path.startsWith('src/data/')) {
+          contentPaths.push(item.path);
+        }
+        if (item.path.startsWith('src/content/') && item.path.endsWith('.mdx')) {
+          mdxFiles += 1;
+          if (item.format === 'yaml-frontmatter') mdxFrontmatterEditors += 1;
+        }
+      }
+      visitFields(item.fields);
+      if (Array.isArray(item.items)) {
+        const nested = visitItems(item.items);
+        if (nested) return nested;
+      }
+    }
+    return 0;
+  }
+
+  const itemError = visitItems(config.content);
+  if (itemError) return itemError;
+
+  const duplicateNames = [...new Set(names.filter((name, index) => names.indexOf(name) !== index))];
+  if (duplicateNames.length > 0) return fail(`.pages.yml: duplicate content item name(s): ${duplicateNames.join(', ')}`);
+
+  const duplicatePaths = [...new Set(contentPaths.filter((path, index) => contentPaths.indexOf(path) !== index))];
+  if (duplicatePaths.length > 0) {
+    console.warn(`.pages.yml: repeated content/data path(s): ${duplicatePaths.join(', ')}`);
+  }
+  if (mdxFiles === 0) return fail('.pages.yml: no MDX content files configured');
+  if (mdxFiles !== mdxFrontmatterEditors) {
+    return fail(`.pages.yml: expected all ${mdxFiles} MDX files to use yaml-frontmatter, got ${mdxFrontmatterEditors}`);
+  }
+  if (!hasImageField) return fail('.pages.yml: no image field configured');
+  if (!hasMdxCodeBody) return fail('.pages.yml: no MDX body field configured');
+  console.log(`valid: .pages.yml (${names.length} content items, ${mdxFiles} MDX editors)`);
+  return 0;
+}
+
 const checkOnly = process.argv.includes('--check');
 let dirty = 0;
 for (const { path, render } of targets) {
@@ -751,4 +825,5 @@ for (const { path, render } of targets) {
     console.log(`wrote ${path}`);
   }
 }
+if (checkOnly) dirty += validatePagesYml();
 if (checkOnly && dirty > 0) process.exit(1);
