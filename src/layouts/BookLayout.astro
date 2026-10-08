@@ -30,6 +30,9 @@ const { lang, file, title, description, layout, currentUrl } = Astro.props;
 const displayTitle = smartQuotes(title, lang);
 const crumbs = bookCrumbs(lang, displayTitle);
 const isChapter = layout === 'chapter';
+// About and contents are reading-order pages too, so they paginate like
+// chapters (cover/title sheets have no web version and never reach this).
+const showPagination = isChapter || layout === 'about' || layout === 'contents';
 ---
 <BaseLayout
   lang={lang}
@@ -50,5 +53,5 @@ const isChapter = layout === 'chapter';
     <slot />
   </div>
   {isChapter && <Share lang={lang} url={currentUrl} title={displayTitle} />}
-  {isChapter && settings.web.pagination && <Pagination lang={lang} file={file} />}
+  {showPagination && settings.web.pagination && <Pagination lang={lang} file={file} />}
 </BaseLayout>

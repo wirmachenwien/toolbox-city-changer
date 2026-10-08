@@ -1623,7 +1623,6 @@ html:not(.js-fold) .accordion-content {
 }
 
 .contents-list .frontmatter-entry {
-  font-size: 1.02rem;
   color: var(--ink-soft);
 }
 

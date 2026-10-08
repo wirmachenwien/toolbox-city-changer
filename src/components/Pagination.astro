@@ -1,7 +1,7 @@
 ---
 // Previous/next chapter pagination. Style follows
 // settings.web.paginationType: direction | titles | title-arrows | arrows.
-import { chapterNeighbours } from '../data/works';
+import { chapterNeighbours, webBookToc } from '../data/works';
 import { settings } from '../data/settings';
 import { t } from '../lib/i18n';
 import { bookUrl } from '../lib/site';
@@ -14,7 +14,11 @@ interface Props {
 }
 
 const { lang, file } = Astro.props;
-const { prev, next } = chapterNeighbours(lang, file);
+let { prev, next } = chapterNeighbours(lang, file);
+if (!prev && !next && file === 'index') {
+  // Home page: lead into the front of the book (About).
+  next = webBookToc(lang)[0] ?? null;
+}
 const type = settings.web.paginationType;
 
 function label(entry: TocEntry, direction: 'prev' | 'next'): string {

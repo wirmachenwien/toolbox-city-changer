@@ -4,6 +4,8 @@ import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import OpenerImage from '../components/OpenerImage.astro';
 import LastVisit from '../components/LastVisit.astro';
+import Pagination from '../components/Pagination.astro';
+import { settings } from '../data/settings';
 import { pageCrumbs } from '../lib/nav';
 import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
@@ -40,4 +42,5 @@ const isHome = layout === 'home';
     <slot />
   </div>
   {isHome && <LastVisit lang={lang} />}
+  {isHome && settings.web.pagination && <Pagination lang={lang} file={file} />}
 </BaseLayout>
