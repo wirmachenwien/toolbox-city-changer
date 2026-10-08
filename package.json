@@ -10,13 +10,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && npm run build:downloads && node scripts/fix-dist.mjs && npm run build:search",
-    "build:search": "pagefind --site dist",
+    "build:downloads": "npm run build:pdf && npm run build:epub",
     "build:pdf": "python3 scripts/build-pdf.py --all",
     "build:epub": "python3 scripts/build-epub.py --all",
-    "build:downloads": "npm run build:pdf && npm run build:epub",
+    "build:search": "pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro",
-    "check:i18n": "node scripts/check-i18n.mjs",
+    "sync:config": "node scripts/sync-config.mjs",
+    "check:config": "node scripts/sync-config.mjs --check",
+    "check:site": "node scripts/check-site.mjs",
     "check:glossary": "node scripts/verify-glossary.mjs"
   },
   "dependencies": {

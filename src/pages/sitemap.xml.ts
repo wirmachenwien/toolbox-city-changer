@@ -1,16 +1,14 @@
 import type { APIRoute } from 'astro';
 import { getWork, webBookToc } from '../data/works';
 import { pageUrl, bookUrl, canonical } from '../lib/site';
-import type { Language } from '../data/locales';
-
-const LANGS: Language[] = ['en', 'de', 'sl'];
+import { languages } from '../data/locales';
 
 // Sitemap generated from content at build time: home + search pages and
 // every web book chapter per language. Redirect landings (/book/, legacy
-// /en/ URLs), 404 and preview pages are intentionally excluded.
+// default-lang URLs), 404 and preview pages are intentionally excluded.
 export const GET: APIRoute = () => {
   const entries: { loc: string; lastmod: string }[] = [];
-  for (const lang of LANGS) {
+  for (const lang of languages) {
     const lastmod = getWork(lang).modified || getWork(lang).date || '';
     const push = (url: string) => entries.push({ loc: canonical(url), lastmod });
     push(pageUrl(lang, 'index'));

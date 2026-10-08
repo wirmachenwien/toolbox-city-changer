@@ -1,0 +1,61 @@
+---
+// Non-default language books (/book/de/01.html, ...). The contents page is
+// virtual (no MDX source file); its title comes from the book catalogue.
+// The bare landing (/book/<lang>/) redirects to the contents page since the
+// print-only cover/title sheets have no web version.
+import { getCollection } from 'astro:content';
+import BookLayout from '../../../layouts/BookLayout.astro';
+import MdxContent from '../../../components/MdxContent.astro';
+import Redirect from '../../../components/Redirect.astro';
+import { WEB_EXCLUDED_FILES, contentsLabel } from '../../../data/works';
+import { bookUrl } from '../../../lib/site';
+import { defaultLang, languages } from '../../../../handbook.config.ts';
+import type { Language } from '../../../data/locales';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('book');
+  return languages
+    .filter((lang) => lang !== defaultLang)
+    .flatMap((lang) => {
+      const slugs = entries
+        .filter((entry) => entry.id.startsWith(`${lang}/`))
+        .map((entry) => entry.id.slice(lang.length + 1))
+        .filter((slug) => !WEB_EXCLUDED_FILES.includes(slug))
+        .map((slug) => ({ params: { lang, slug } }));
+      return [...slugs, { params: { lang, slug: 'contents' } }, { params: { lang, slug: undefined } }];
+    });
+}
+
+const language = Astro.params.lang as Language;
+const { slug } = Astro.params;
+const file = slug ?? 'index';
+const entries = await getCollection('book');
+const entry = file === 'contents' || file === 'index'
+  ? undefined
+  : entries.find((item) => item.id === `${language}/${file}`);
+if (!entry && file !== 'contents' && file !== 'index') {
+  throw new Error(`Missing ${language} chapter: ${file}`);
+}
+const title = entry?.data.title ?? contentsLabel(language);
+const url = bookUrl(language, file);
+---
+{file === 'index' ? (
+  <Redirect
+    lang={language}
+    kind="book"
+    file="index"
+    target={bookUrl(language, 'contents')}
+    title={contentsLabel(language)}
+  />
+) : (
+  <BookLayout
+    lang={language}
+    file={file}
+    title={title}
+    description={entry?.data.description}
+    layout={entry?.data.template ?? 'contents'}
+    currentUrl={url}
+  >
+    {entry && <MdxContent entry={entry} />}
+  </BookLayout>
+)}

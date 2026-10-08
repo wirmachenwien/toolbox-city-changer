@@ -32,6 +32,15 @@ DATA = ROOT / "src" / "data" / "works.json"
 GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
 PAGES = ROOT / "src" / "content" / "pages"
 
+# Site languages, default language and download stem come from
+# handbook.config.ts (single source of truth).
+from handbook_config import load_config
+
+_CONFIG = load_config()
+LANGS: tuple[str, ...] = tuple(_CONFIG["languages"])
+DEFAULT_LANG: str = _CONFIG["defaultLang"]
+SLUG: str = _CONFIG["slug"]
+
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
 FIGURE_RE = re.compile(
     r'<Figure\s+src="([^"]+)"\s+alt="([^"]*)"(?:\s*/>|>(.*?)</Figure>)', re.DOTALL
@@ -63,7 +72,7 @@ TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
 FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
 ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
-GLOSSARY_LANG_RE = re.compile(r'<Glossary\s+lang="(de|en|sl)"\s*/>')
+GLOSSARY_LANG_RE = re.compile(r'<Glossary\s+lang="(' + "|".join(LANGS) + r')"\s*/>')
 QUIZ_RE = re.compile(
     r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
     re.DOTALL,
@@ -109,10 +118,10 @@ def endnotes_html(source: str) -> str:
 QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
 
 
-def quiz_html(question: str, source: str, lang: str = "de") -> str:
+def quiz_html(question: str, source: str, lang: str = DEFAULT_LANG) -> str:
     options = ''.join(f'<li>{label}</li>' for label, _ in option_entries(source))
     correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(option_entries(source)) if is_correct)
-    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL[DEFAULT_LANG])
     return (
         f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
         f'<ol>{options}</ol>'
@@ -120,11 +129,11 @@ def quiz_html(question: str, source: str, lang: str = "de") -> str:
     )
 
 
-def question_html(question: str, source: str, answer: str, lang: str = "de") -> str:
+def question_html(question: str, source: str, answer: str, lang: str = DEFAULT_LANG) -> str:
     """Single-choice Question: plain string options plus a 0-based answer index."""
     options = re.findall(r'"([^"]+)"', source)
     items = ''.join(f'<li>{label}</li>' for label in options)
-    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
+    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL[DEFAULT_LANG])
     return (
         f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
         f'<ol>{items}</ol>'
@@ -173,7 +182,7 @@ class EpubBook:
         self.lang = lang
         self.works = works
         self.out_path = out_path
-        self.uid = works.get("identifier") or f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, f'toolbox-city-changer-{lang}')}"
+        self.uid = works.get("identifier") or f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, f'{SLUG}-{lang}')}"
         self.images: dict[str, str] = {}
         self.fonts: dict[str, str] = {}
         self.chapters: list[dict[str, str]] = []
@@ -539,20 +548,20 @@ figcaption {
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build handbook EPUBs.")
-    parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
+    parser.add_argument("--lang", choices=list(LANGS), default=DEFAULT_LANG)
     parser.add_argument(
         "--out",
         default="dist/downloads",
         help="output directory (served from dist/ by the site)",
     )
-    parser.add_argument("--all", action="store_true", help="build EPUBs for de/en/sl")
+    parser.add_argument("--all", action="store_true", help=f"build EPUBs for {'/'.join(LANGS)}")
     args = parser.parse_args()
 
     works_data = json.loads(DATA.read_text(encoding="utf-8"))
-    jobs = ("en", "de", "sl") if args.all else (args.lang,)
+    jobs = (DEFAULT_LANG, *[lang for lang in LANGS if lang != DEFAULT_LANG]) if args.all else (args.lang,)
     out_dir = ROOT / args.out
     for lang in jobs:
-        stem = f"toolbox-city-changer-{lang}"
+        stem = f"{SLUG}-{lang}"
         out_path = out_dir / f"{stem}.epub"
         EpubBook(lang, works_data[lang], out_path).write()
         print(f"wrote {out_path}")

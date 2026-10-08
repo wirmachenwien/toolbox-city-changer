@@ -1,3 +1,5 @@
+# GENERATED from handbook.config.ts — do not edit by hand.
+# Run `npm run sync:config` to regenerate.
 media:
   - name: book_images
     label: Book images

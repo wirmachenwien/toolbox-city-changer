@@ -1,22 +1,27 @@
-// Translation + site-integrity checks against the static build (dist/).
-// Port of the legacy translation and search-language checks:
-// - every expected page exists per language, with the right <html lang>
-// - the search form on every page routes to the language-local search page
-// - every page links to its equivalents in the other two languages
-// - every local link/image/form target resolves to a built file
-// - the contents page links every chapter
-// - every language has searchable content for a representative query term
+// Built-site integrity checks against the static build (dist/).
+// Covers every language: each expected page exists with the right
+// <html lang>, the search form routes to the language-local search page,
+// every page links to its equivalents in the other languages, every local
+// link/image/form target resolves to a built file, the contents page links
+// every chapter, and every language has searchable content for a
+// representative query term.
 import { readFileSync, existsSync } from 'node:fs';
 import { join, posix } from 'node:path';
+import { site, base, defaultLang, languages } from '../handbook.config.ts';
 
 const DIST = 'dist';
-const BASE = '/toolbox-city-changer';
-const LANGS = ['de', 'en', 'sl'];
+const BASE = base.endsWith('/') ? base.slice(0, -1) : base;
+const LANGS = [...languages];
 // Cover/title sheets are print-only; the web book starts at the about
-// page and the "index" entry is a redirect to the contents page.
-const BOOK_FILES = ['about', 'contents', '01', '02', '03', '04', '05', '06', 'glossary', 'index'];
+// page and the "index" entry is a redirect to the contents page. Reading
+// order comes from works.json (same source the site renders from).
+const WORKS = JSON.parse(readFileSync('src/data/works.json', 'utf8'));
 const PAGE_FILES = ['index', 'search'];
 const SEARCH_TERMS = { de: 'Superblocks', en: 'superblocks', sl: 'superbloki' };
+
+function bookFiles(lang) {
+  return [...(WORKS[lang]?.products?.web?.files ?? []), 'index'];
+}
 
 let failures = 0;
 function fail(message) {
@@ -26,11 +31,11 @@ function fail(message) {
 
 function pagePath(lang, kind, file) {
   if (kind === 'book') {
-    const folder = lang === 'en' ? 'book' : `book/${lang}`;
+    const folder = lang === defaultLang ? 'book' : `book/${lang}`;
     return file === 'index' ? `${folder}/index.html` : `${folder}/${file}.html`;
   }
-  if (file === 'index') return lang === 'en' ? 'index.html' : `${lang}/index.html`;
-  return lang === 'en' ? `${file}.html` : `${lang}/${file}.html`;
+  if (file === 'index') return lang === defaultLang ? 'index.html' : `${lang}/index.html`;
+  return lang === defaultLang ? `${file}.html` : `${lang}/${file}.html`;
 }
 
 function readPage(rel) {
@@ -73,7 +78,7 @@ let checked = 0;
 for (const lang of LANGS) {
   const expected = [
     ...PAGE_FILES.map((file) => ({ kind: 'page', file })),
-    ...BOOK_FILES.map((file) => ({ kind: 'book', file })),
+    ...bookFiles(lang).map((file) => ({ kind: 'book', file })),
   ];
   for (const { kind, file } of expected) {
     const rel = pagePath(lang, kind, file);
@@ -88,7 +93,7 @@ for (const lang of LANGS) {
 
     // Search form routes to the language-local search page.
     if (!isRedirect) {
-      const expectedSearch = `${BASE}/${lang === 'en' ? '' : `${lang}/`}search.html`.replace(/\/+/g, '/');
+      const expectedSearch = `${BASE}/${lang === defaultLang ? '' : `${lang}/`}search.html`.replace(/\/+/g, '/');
       const action = searchFormAction(html);
       if (!action) {
         fail(`${rel}: no search form found`);
@@ -100,8 +105,8 @@ for (const lang of LANGS) {
     // Language switcher: links to the same page in the other languages.
     const expectedAlt = (other) => {
       if (file === 'index') {
-        if (kind === 'book') return `${BASE}/${other === 'en' ? 'book/' : `book/${other}/`}`;
-        return `${BASE}/${other === 'en' ? '' : `${other}/`}`;
+        if (kind === 'book') return `${BASE}/${other === defaultLang ? 'book/' : `book/${other}/`}`;
+        return `${BASE}/${other === defaultLang ? '' : `${other}/`}`;
       }
       const target = kind === 'book' ? pagePath(other, kind, file) : pagePath(other, kind, file);
       return `${BASE}/${target}`;
@@ -129,10 +134,10 @@ for (const lang of LANGS) {
 
     if (file === 'contents') {
       for (let chapter = 1; chapter <= 6; chapter += 1) {
-        const target = `${BASE}/${lang === 'en' ? 'book' : `book/${lang}`}/${String(chapter).padStart(2, '0')}.html`;
+        const target = `${BASE}/${lang === defaultLang ? 'book' : `book/${lang}`}/${String(chapter).padStart(2, '0')}.html`;
         if (!hrefs.includes(target)) fail(`${rel}: contents missing chapter link ${target}`);
       }
-      const glossaryTarget = `${BASE}/${lang === 'en' ? 'book' : `book/${lang}`}/glossary.html`;
+      const glossaryTarget = `${BASE}/${lang === defaultLang ? 'book' : `book/${lang}`}/glossary.html`;
       if (!hrefs.includes(glossaryTarget)) fail(`${rel}: contents missing chapter link ${glossaryTarget}`);
     }
   }
@@ -141,7 +146,7 @@ for (const lang of LANGS) {
   // target pages must exist in dist/.
   const term = SEARCH_TERMS[lang];
   const hits = [];
-  for (const file of [...PAGE_FILES, ...BOOK_FILES]) {
+  for (const file of [...PAGE_FILES, ...bookFiles(lang)]) {
     for (const kind of ['pages', 'book']) {
       const src = kind === 'pages'
         ? `src/content/pages/${lang}/${file}.mdx`
@@ -182,11 +187,11 @@ if (!existsSync(sitemapFile)) {
   const expected = [];
   const canonical = (rel) => {
     const clean = rel.replace(/(^|\/)index\.html$/, '/').replace(/^\/+/, '');
-    return `https://wirmachenwien.github.io${BASE}/${clean}`;
+    return `${site}${BASE}/${clean}`;
   };
   for (const lang of LANGS) {
     for (const file of PAGE_FILES) expected.push(canonical(pagePath(lang, 'page', file)));
-    for (const file of BOOK_FILES.filter((file) => file !== 'index')) {
+    for (const file of bookFiles(lang).filter((file) => file !== 'index')) {
       expected.push(canonical(pagePath(lang, 'book', file)));
     }
   }

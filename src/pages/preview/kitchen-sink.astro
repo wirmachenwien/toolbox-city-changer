@@ -48,6 +48,7 @@ import Toc from '../../components/Toc.astro';
 import Video from '../../components/Video.astro';
 import VisualToc from '../../components/VisualToc.astro';
 import { withBase } from '../../lib/site';
+import { slug } from '../../../handbook.config.ts';
 
 const url = withBase('/preview/kitchen-sink.html');
 const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'download', 'check', 'copy', 'bluesky', 'facebook', 'linkedin', 'reddit', 'x', 'whatsapp'] as const;
@@ -107,8 +108,8 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
 
     <h2 class="sink-label">DownloadLink</h2>
     <div class="sink-demo">
-      <DownloadLink href="/downloads/toolbox-city-changer-de.pdf">PDF ansehen</DownloadLink>
-      <DownloadLink href="/downloads/toolbox-city-changer-de.epub">EPUB herunterladen</DownloadLink>
+      <DownloadLink href={`/downloads/${slug}-de.pdf`}>PDF ansehen</DownloadLink>
+      <DownloadLink href={`/downloads/${slug}-de.epub`}>EPUB herunterladen</DownloadLink>
     </div>
 
     <h2 class="sink-label">ExpandableBox</h2>

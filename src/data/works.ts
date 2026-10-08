@@ -3,6 +3,7 @@
 // by the WeasyPrint PDF pipeline); this module validates it and exposes
 // typed helpers for routes and navigation.
 import { z } from 'zod';
+import { languages } from '../../handbook.config.ts';
 import raw from './works.json';
 import type { Language } from './locales';
 
@@ -36,9 +37,11 @@ const workSchema = z.object({
 export type Work = z.infer<typeof workSchema>;
 export type TocEntry = z.infer<typeof tocEntrySchema>;
 
-const works = z
-  .object({ de: workSchema, en: workSchema, sl: workSchema })
-  .parse(raw as Record<Language, unknown>);
+const parsedWorks = z.record(z.string(), workSchema).parse(raw) as Record<string, Work>;
+for (const lang of languages) {
+  if (!parsedWorks[lang]) throw new Error(`works.json: missing work "${lang}" (see handbook.config.ts)`);
+}
+const works = parsedWorks as Record<Language, Work>;
 
 // Chapter counters must consistently include a trailing dot, e.g. "2. Title".
 // This keeps generated navigation, pagination, TOCs and any future metadata

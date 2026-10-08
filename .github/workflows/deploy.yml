@@ -30,11 +30,14 @@ jobs:
       - name: Set up GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Check derived config files are in sync
+        run: npm run check:config
+
       - name: Build static site, PDFs, EPUBs and search index
         run: npm run build
 
       - name: Check translations, links, sitemap and search index
-        run: npm run check:i18n
+        run: npm run check:site
 
       - name: Check glossary term coverage and dictionary sync
         run: npm run check:glossary

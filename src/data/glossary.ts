@@ -8,6 +8,7 @@ import { z } from 'zod';
 // Import attribute so the module also loads in plain Node (verify script)
 // and bundlers; TS infers the JSON shape from resolveJsonModule.
 import raw from './glossary.json' with { type: 'json' };
+import { languages } from '../../handbook.config.ts';
 import type { Language } from './locales';
 
 const glossaryEntrySchema = z.object({
@@ -22,13 +23,10 @@ export interface GlossaryTerm {
   forms: string[];
 }
 
-const parsed = z
-  .object({
-    de: z.array(glossaryEntrySchema),
-    en: z.array(glossaryEntrySchema),
-    sl: z.array(glossaryEntrySchema),
-  })
-  .parse(raw as Record<Language, unknown>);
+const parsed = z.record(z.string(), z.array(glossaryEntrySchema)).parse(raw) as Record<string, z.infer<typeof glossaryEntrySchema>[]>;
+for (const lang of languages) {
+  if (!parsed[lang]) throw new Error(`glossary.json: missing glossary "${lang}" (see handbook.config.ts)`);
+}
 
 function withDefaultForms(entry: z.infer<typeof glossaryEntrySchema>): GlossaryTerm {
   return {
@@ -38,11 +36,9 @@ function withDefaultForms(entry: z.infer<typeof glossaryEntrySchema>): GlossaryT
   };
 }
 
-export const glossaryTerms: Record<Language, GlossaryTerm[]> = {
-  de: parsed.de.map(withDefaultForms),
-  en: parsed.en.map(withDefaultForms),
-  sl: parsed.sl.map(withDefaultForms),
-};
+export const glossaryTerms: Record<Language, GlossaryTerm[]> = Object.fromEntries(
+  languages.map((lang) => [lang, parsed[lang].map(withDefaultForms)]),
+) as Record<Language, GlossaryTerm[]>;
 
 // --- Matcher (pure logic shared by the browser highlighter and tests) ---
 

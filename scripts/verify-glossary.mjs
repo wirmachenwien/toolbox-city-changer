@@ -5,6 +5,7 @@
 // chapter-01 recap terms exist in it, and term coverage across chapters.
 import { readFileSync, readdirSync } from 'node:fs';
 import { buildGlossaryMatcher, glossaryTerms } from '../src/data/glossary.ts';
+import { languages } from '../handbook.config.ts';
 
 const BOOK = 'src/content/book';
 let failures = 0;
@@ -21,7 +22,7 @@ function pseudoRender(mdx) {
   return text.replace(/[ \t]+/g, ' ');
 }
 
-for (const lang of ['de', 'en', 'sl']) {
+for (const lang of languages) {
   const { pattern, lookup } = buildGlossaryMatcher(lang);
   const entries = glossaryTerms[lang];
 
@@ -74,7 +75,7 @@ for (const lang of ['de', 'en', 'sl']) {
     de: [['02.mdx', 'superblock'], ['02.mdx', 'modalfilter'], ['04.mdx', 'narrativ'], ['04.mdx', 'framing']],
     en: [['02.mdx', 'superblock'], ['04.mdx', 'theories of change'], ['02.mdx', 'modal filter']],
     sl: [['02.mdx', 'superbloki'], ['02.mdx', 'tranzitni promet'], ['04.mdx', 'teorije sprememb']],
-  }[lang];
+  }[lang] ?? [];
   for (const [file, needle] of mustFind) {
     const text = pseudoRender(readFileSync(`${BOOK}/${lang}/${file}`, 'utf8'));
     pattern.lastIndex = 0;

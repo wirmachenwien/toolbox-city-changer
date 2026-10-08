@@ -5,6 +5,8 @@
 // snaps to the nearest text line and highlights it; clicking pins a saved
 // bookmark to that line. Saved pins swap their icon to an x icon on hover and
 // delete on click. The sidebar lists stay in sync via renderBookmarkLists.
+import { DEFAULT_LANG } from '../lib/site';
+import { languages } from '../data/locales';
 const VISITS_KEY = 'toolbox.last-visit';
 const DISMISSED_KEY = 'toolbox.last-visit-dismissed';
 const MARKS_KEY = 'toolbox.bookmarks';
@@ -54,12 +56,14 @@ function writeMarks(marks: StoredMark[]): void {
   }
 }
 
-/** Language of a stored URL by path segment (en has no language prefix). */
+/** Language of a stored URL by path segment (the default language has
+ *  no language prefix). */
 function markLang(url: string): string {
   const segments = url.split(/[?#]/)[0].split('/');
-  if (segments.includes('sl')) return 'sl';
-  if (segments.includes('de')) return 'de';
-  return 'en';
+  for (const lang of languages) {
+    if (lang !== DEFAULT_LANG && segments.includes(lang)) return lang;
+  }
+  return DEFAULT_LANG;
 }
 
 function collapseText(value: string): string {
@@ -72,7 +76,11 @@ function formatChapterTitle(title: string): string {
 
 function isChapterUrl(url: string): boolean {
   const pathname = withoutTextFragment(url).split(/[?#]/)[0];
-  return /\/book\/(?:de\/|sl\/)?\d+\.html$/.test(pathname);
+  const prefixes = languages
+    .filter((lang) => lang !== DEFAULT_LANG)
+    .map((lang) => `${lang}/`)
+    .join('|');
+  return new RegExp(`\\/book\\/(?:${prefixes})?\\d+\\.html$`).test(pathname);
 }
 
 /** Drop browser text-fragment directives (`#:~:text=...`) to avoid the

@@ -1,7 +1,8 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { languages } from '../handbook.config.ts';
 
-const lang = z.enum(['de', 'en', 'sl']);
+const lang = z.enum(languages);
 
 const book = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/book' }),

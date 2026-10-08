@@ -1,14 +1,18 @@
 // Site-wide URL helpers. All internal links go through these so the
-// project subpath (base) and the trilingual scheme stay consistent.
-// English is the default language: it lives at the root (no prefix),
-// German and Slovene live under /de/ and /sl/.
-import type { Language } from '../data/locales';
+// project subpath (base) and the multilingual scheme stay consistent.
+// The default language lives at the root (no prefix); every other language
+// lives under /<lang>/ and /book/<lang>/.
+import { site, base, defaultLang, languages } from '../../handbook.config.ts';
+import type { Language } from '../../handbook.config.ts';
 
-export const SITE_URL = 'https://wirmachenwien.github.io';
-export const BASE_PATH = '/toolbox-city-changer';
+export const SITE_URL = site;
+export const BASE_PATH = base.endsWith('/') ? base.slice(0, -1) : base;
 
 /** Default language, served without a URL prefix. */
-export const DEFAULT_LANG: Language = 'en';
+export const DEFAULT_LANG: Language = defaultLang;
+
+/** Every handbook language, in config order. */
+export const LANGUAGES: readonly Language[] = languages;
 
 /** Prefix a root-relative path with the project subpath. */
 export function withBase(path: string): string {
@@ -37,9 +41,14 @@ export function bookUrl(lang: Language, file: string): string {
 /** Resolve a nav "file" value (e.g. "index" or "book/contents") to a URL. */
 export function navFileUrl(lang: Language, file: string, fallbackLang: Language = DEFAULT_LANG): string {
   if (file.startsWith('book/')) {
-    const slug = file.replace(/^book\//, '').replace(/^(de|sl)\//, '');
-    const target = file.startsWith('book/de/') ? 'de' : file.startsWith('book/sl/') ? 'sl' : fallbackLang;
-    return bookUrl(target, slug);
+    // A leading "book/<lang>/" segment pins the target language (legacy CMS
+    // values); bare "book/<file>" resolves in the fallback language.
+    const match = file.match(/^book\/([^/]+)\//);
+    const pinned = match && (languages as readonly string[]).includes(match[1])
+      ? (match[1] as Language)
+      : null;
+    const slug = pinned ? file.slice(`book/${pinned}/`.length) : file.slice('book/'.length);
+    return bookUrl(pinned ?? fallbackLang, slug);
   }
   return pageUrl(lang, file);
 }
@@ -51,8 +60,7 @@ export function canonical(url: string): string {
 
 /** Same-page URLs in every language (for the language switcher + hreflang). */
 export function alternates(kind: 'page' | 'book', file: string): { lang: Language; url: string }[] {
-  const langs: Language[] = ['en', 'de', 'sl'];
-  return langs.map((lang) => ({
+  return languages.map((lang) => ({
     lang,
     url: kind === 'book' ? bookUrl(lang, file) : pageUrl(lang, file),
   }));

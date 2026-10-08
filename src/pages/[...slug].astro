@@ -1,24 +1,25 @@
 ---
-// English project pages (default language, no prefix): / via index.
+// Default-language project pages (no prefix): / via index.
 import { getCollection } from 'astro:content';
 import PageLayout from '../layouts/PageLayout.astro';
 import MdxContent from '../components/MdxContent.astro';
 import { pageUrl } from '../lib/site';
+import { defaultLang } from '../../handbook.config.ts';
 
 export async function getStaticPaths() {
   return ['index'].map((name) => ({ params: { slug: name === 'index' ? undefined : name } }));
-  // NOTE: collection ids strip the "/index" suffix (id "en" == en/index.mdx).
+  // NOTE: collection ids strip the "/index" suffix (id "<default>" == <default>/index.mdx).
 }
 
 const { slug } = Astro.params;
 const name = slug ?? 'index';
 const entries = await getCollection('pages');
-const entry = entries.find((item) => item.id === (name === 'index' ? 'en' : `en/${name}`));
-if (!entry) throw new Error(`Missing English page: ${name}`);
-const url = pageUrl('en', name);
+const entry = entries.find((item) => item.id === (name === 'index' ? defaultLang : `${defaultLang}/${name}`));
+if (!entry) throw new Error(`Missing ${defaultLang} page: ${name}`);
+const url = pageUrl(defaultLang, name);
 ---
 <PageLayout
-  lang="en"
+  lang={defaultLang}
   file={name}
   title={entry.data.title}
   description={entry.data.description}

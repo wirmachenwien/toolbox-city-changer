@@ -1,10 +1,10 @@
 // Client search UI powered by the static Pagefind index.
 // Reads the ?query= parameter, searches the prebuilt index, and renders
 // locale-aware result counts. Results are filtered to the active language
-// by URL prefix (de: no prefix, en: /en/, sl: /sl/).
+// by URL prefix (default language: no prefix, others: /<lang>/).
 import { t } from '../lib/i18n';
 import { DEFAULT_LANG } from '../lib/site';
-import type { Language } from '../data/locales';
+import { languages, type Language } from '../data/locales';
 
 interface PagefindResult {
   url: string;
@@ -37,7 +37,9 @@ function inLanguage(url: string, lang: Language): boolean {
   if (!url.startsWith(prefix)) return false;
   if (lang !== DEFAULT_LANG) return true;
   const rest = url.slice(prefix.length);
-  return !rest.startsWith('de/') && !rest.startsWith('sl/');
+  return !languages
+    .filter((other) => other !== DEFAULT_LANG)
+    .some((other) => rest.startsWith(`${other}/`));
 }
 
 /** Pagefind records site-root-relative URLs; rebase them under the subpath. */

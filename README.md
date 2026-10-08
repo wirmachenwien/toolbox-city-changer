@@ -1,57 +1,55 @@
 # Toolbox for City Changers
 
-Trilingual handbook site (German, English, Slovene) for the Erasmus+
-Toolbox for City Changers project. Built with Astro 7 as pure static files
-and hosted on GitHub Pages.
+Trilingual handbook site (German, English, Slovene) for the Erasmus+ Toolbox
+for City Changers project. Static Astro site, hosted on GitHub Pages.
 
-The code for this site is inspired by [Electric Book Works](https://electricbookworks.com)
-and its [Electric Book workflow](https://github.com/electricbookworks/electric-book)
-— shout out! — and is licensed under the [AGPL-3.0](LICENSE) (see `LICENSE`).
+## Quickstart
 
-Unless stated otherwise, the contents of this handbook are licensed under
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) Wir machen Wien, Changing Cities & Prostorož.
-You may share and adapt the contents as long as you give appropriate credit
-to the authors.
-
-## Development
+Requires Node ≥ 22.12 (plus Python ≥ 3.12 with `pip install -r requirements.txt` to build PDFs).
 
 ```sh
 npm ci
-npm run dev
+npm run dev        # dev server with hot reload
+npm run build      # site + PDF/EPUB downloads + search index
+npm run preview    # serve the production build locally
 ```
 
-The dev server builds any missing PDF/EPUB downloads on startup and
-rebuilds them in the background whenever handbook content changes.
+Downloads and search need a build first (`npm run build` or
+`npm run build:downloads`): under `astro dev` alone, downloads 404 and
+search comes back empty.
 
-## Build & preview
+## Checks
 
 ```sh
-npm run build    # site + PDF/EPUB downloads + index fixups + Pagefind index
-npm run preview
-npm run check:i18n    # translation, link, search-index and sitemap checks on dist/
+npm run check:site      # built-site integrity: translations, links, sitemap, search index
+npm run check:glossary  # glossary coverage and dictionary sync
+npm run check:config    # derived files (.pages.yml, robots.txt, webmanifest) in sync
 ```
 
-## PDFs
+## Configuration
+
+`handbook.config.ts` is the single source of truth for site URL, base path,
+download slug, languages, and default language. After changing it:
 
 ```sh
-pip install -r requirements.txt
-npm run build:pdf   # one PDF per language (de/en/sl) into dist/downloads/ (served by the site)
+npm run sync:config  # regenerate .pages.yml, public/robots.txt, public/site.webmanifest
 ```
+
+English is the default language and lives at the root (`/`, `/book/…`);
+other languages live under `/<lang>/` and `/book/<lang>/…` (legacy `/en/`
+URLs redirect to the canonical locations).
 
 ## Project layout
 
-- `src/content/book/{de,en,sl}/` — handbook chapters (MDX content collections)
-- `src/content/pages/{de,en,sl}/` — home and search pages
-- `src/components/` — content components (Figure, Video, Quiz, …)
-- `src/layouts/` — `BaseLayout`, `BookLayout`, `PageLayout`
-- `src/data/` — typed settings, project/nav/locale metadata, book catalogue
-- `src/lib/` — URL, i18n and navigation helpers
-- `src/scripts/` — progressive-enhancement client islands
-- `src/assets/` — bundled images (optimised at build time)
-- `public/` — favicon, logo, app icons, webmanifest, robots.txt, `.nojekyll`
-- `scripts/` — WeasyPrint PDF and EPUB pipelines, build checks
-- `.pages.yml` — PagesCMS configuration for the paths above
+- `src/content/book/<lang>/`, `src/content/pages/<lang>/` — chapters and home/search pages (MDX)
+- `src/components/`, `src/layouts/` — content components and page layouts
+- `src/data/` — book catalogue, nav, locales, glossary (validated JSON)
+- `src/lib/`, `src/scripts/` — URL/i18n helpers and client islands
+- `scripts/` — PDF/EPUB pipelines, build checks, config sync
+- `.pages.yml` — PagesCMS content model (generated, see above)
 
-English is the default language at the root (`/`, `/book/…`); German and
-Slovene live under `/de/`, `/sl/`, `/book/de/…`, `/book/sl/…` (legacy `/en/`
-URLs redirect to the canonical locations).
+## License
+
+Code: [AGPL-3.0](LICENSE). Handbook contents: [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+(Wir machen Wien, Changing Cities & Prostorož), unless stated otherwise.
+Site code inspired by [Electric Book Works](https://electricbookworks.com).
