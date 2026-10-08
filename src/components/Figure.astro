@@ -9,14 +9,16 @@ import type { Language } from '../data/locales';
 interface Props {
   src: string;
   alt: string;
+  caption?: string;
   eager?: boolean;
   lang?: Language;
 }
 
-const { src, alt, eager = false, lang } = Astro.props;
-// The alt text bypasses the markdown pipeline, so quotes are localised
+const { src, alt, caption, eager = false, lang } = Astro.props;
+// Prop-supplied text bypasses the markdown pipeline, so quotes are localised
 // here to match the hast-transformed prose (only when lang is known).
 const displayAlt = lang ? smartQuotes(alt, lang) : alt;
+const displayCaption = caption && lang ? smartQuotes(caption, lang) : caption;
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
@@ -30,7 +32,7 @@ if (!match) {
   throw new Error(`Figure: unknown image "${src}"`);
 }
 const image = match[1].default;
-const hasCaption = await Astro.slots.has('default');
+const hasCaption = displayCaption || await Astro.slots.has('default');
 ---
 <figure class="figure">
   <Image
@@ -42,5 +44,5 @@ const hasCaption = await Astro.slots.has('default');
     loading={eager ? 'eager' : 'lazy'}
     decoding="async"
   />
-  {hasCaption && <figcaption><slot /></figcaption>}
+  {hasCaption && <figcaption>{displayCaption ?? <slot />}</figcaption>}
 </figure>
