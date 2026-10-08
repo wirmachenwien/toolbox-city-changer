@@ -21,6 +21,7 @@ const NAV = JSON.parse(readFileSync('src/data/nav.json', 'utf8'));
 
 const displayName = (lang) => languageNames[lang] ?? lang;
 const nativeName = (lang) => LOCALES[lang]?.['local-name'] ?? displayName(lang);
+const yamlString = (value) => JSON.stringify(String(value));
 const indentBlock = (text, spaces) => text.split('\n').map((line) => line ? `${' '.repeat(spaces)}${line}` : line).join('\n');
 
 function bookBodyFile(lang, file, label) {
@@ -28,7 +29,7 @@ function bookBodyFile(lang, file, label) {
   if (!existsSync(path)) return '';
   const name = `handbook_${lang}_${file.replace(/[^a-z0-9]+/gi, '_')}`;
   return `          - name: ${name}
-            label: ${label}
+            label: ${yamlString(label)}
             type: file
             path: ${path}
             format: yaml-frontmatter
@@ -67,7 +68,7 @@ function handbookPages(lang) {
 function homePage(lang) {
   const label = NAV[lang]?.[0]?.label ?? 'Home';
   return `          - name: home_${lang}
-            label: ${label}
+            label: ${yamlString(label)}
             type: file
             path: src/content/pages/${lang}/index.mdx
             format: yaml-frontmatter
@@ -258,17 +259,31 @@ function projectMetadata(lang) {
 `;
 }
 
-function localeFile(lang) {
-  return `          - name: locale_strings_${lang}
-            label: UI translations
-            type: file
-            path: src/data/locales.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-${indentBlock(localeStrings(lang), 4)}`;
+function languageSection(lang) {
+  return `  - name: language_${lang}
+    label: ${yamlString(nativeName(lang))}
+    type: group
+    items:
+      - name: project_settings_${lang}
+        label: Project Settings
+        type: group
+        items:
+${projectMetadata(lang)}
+${bookMetadataFile(lang)}
+${navigationFile(lang)}
+${localeFile(lang)}
+${appSettings(lang)}
+${glossaryFile(lang)}
+      - name: pages_${lang}
+        label: Pages
+        type: group
+        items:
+${homePage(lang)}
+      - name: handbook_${lang}
+        label: Handbook
+        type: group
+        items:
+${handbookPages(lang)}`;
 }
 
 function bookMetadataFile(lang) {
@@ -297,6 +312,19 @@ function navigationFile(lang) {
 ${indentBlock(navigation(lang), 4)}`;
 }
 
+function localeFile(lang) {
+  return `          - name: locale_strings_${lang}
+            label: UI translations
+            type: file
+            path: src/data/locales.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+${indentBlock(localeStrings(lang), 4)}`;
+}
+
 function glossaryFile(lang) {
   return `          - name: glossary_terms_${lang}
             label: Glossary terms
@@ -308,33 +336,6 @@ function glossaryFile(lang) {
               delete: false
             fields:
 ${indentBlock(glossary(lang), 4)}`;
-}
-
-function languageSection(lang) {
-  return `  - name: language_${lang}
-    label: ${nativeName(lang)}
-    type: group
-    items:
-      - name: project_settings_${lang}
-        label: Project Settings
-        type: group
-        items:
-${projectMetadata(lang)}
-${bookMetadataFile(lang)}
-${navigationFile(lang)}
-${localeFile(lang)}
-${appSettings(lang)}
-      - name: pages_${lang}
-        label: Pages
-        type: group
-        items:
-${homePage(lang)}
-      - name: handbook_${lang}
-        label: Handbook
-        type: group
-        items:
-${handbookPages(lang)}
-${glossaryFile(lang)}`;
 }
 
 function bookMetadata(lang) {
@@ -633,12 +634,9 @@ function localeStrings(lang) {
 }
 
 function languageOptions() {
-  return LANGS.map((lang) => {
-    const display = nativeName(lang);
-    return `        - name: ${lang}
-          label: ${display}
-`;
-  }).join('');
+  return LANGS.map((lang) => `        - name: ${lang}
+          label: ${yamlString(nativeName(lang))}
+`).join('');
 }
 
 function pagesYml() {

@@ -63,15 +63,15 @@ components:
     options:
       values:
         - name: de
-          label: Deutsch
+          label: "Deutsch"
         - name: en
-          label: English
+          label: "English"
         - name: sl
-          label: Slovenščina
+          label: "Slovenščina"
 
 content:
   - name: language_de
-    label: Deutsch
+    label: "Deutsch"
     type: group
     items:
       - name: project_settings_de
@@ -517,12 +517,40 @@ content:
                       - name: margin
                         type: string
 
+          - name: glossary_terms_de
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: de
+                label: German glossary
+                type: object
+                list: true
+                fields:
+                  - name: term
+                    label: Term
+                    type: string
+                    required: true
+                  - name: definition
+                    label: Definition
+                    type: text
+                    required: true
+                  - name: forms
+                    label: Word forms
+                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                    type: string
+                    list: true
+
       - name: pages_de
         label: Pages
         type: group
         items:
           - name: home_de
-            label: Start
+            label: "Start"
             type: file
             path: src/content/pages/de/index.mdx
             format: yaml-frontmatter
@@ -558,7 +586,7 @@ content:
         type: group
         items:
           - name: handbook_de_about
-            label: Über
+            label: "Über"
             type: file
             path: src/content/book/de/about.mdx
             format: yaml-frontmatter
@@ -585,7 +613,7 @@ content:
                   rename: safe
 
           - name: handbook_de_glossary
-            label: Glossar
+            label: "Glossar"
             type: file
             path: src/content/book/de/glossary.mdx
             format: yaml-frontmatter
@@ -612,7 +640,7 @@ content:
                   rename: safe
 
           - name: handbook_de_01
-            label: 1. Wozu diese Toolbox?
+            label: "1. Wozu diese Toolbox?"
             type: file
             path: src/content/book/de/01.mdx
             format: yaml-frontmatter
@@ -639,7 +667,7 @@ content:
                   rename: safe
 
           - name: handbook_de_02
-            label: 2. Superblocks starten
+            label: "2. Superblocks starten"
             type: file
             path: src/content/book/de/02.mdx
             format: yaml-frontmatter
@@ -666,7 +694,7 @@ content:
                   rename: safe
 
           - name: handbook_de_03
-            label: 3. Tactical Urbanism und Street Design
+            label: "3. Tactical Urbanism und Street Design"
             type: file
             path: src/content/book/de/03.mdx
             format: yaml-frontmatter
@@ -693,7 +721,7 @@ content:
                   rename: safe
 
           - name: handbook_de_04
-            label: 4. Mobilisierung und Strategien des Wandels
+            label: "4. Mobilisierung und Strategien des Wandels"
             type: file
             path: src/content/book/de/04.mdx
             format: yaml-frontmatter
@@ -720,7 +748,7 @@ content:
                   rename: safe
 
           - name: handbook_de_05
-            label: 5. Monitoring: Wirkung sichtbar machen
+            label: "5. Monitoring: Wirkung sichtbar machen"
             type: file
             path: src/content/book/de/05.mdx
             format: yaml-frontmatter
@@ -747,7 +775,7 @@ content:
                   rename: safe
 
           - name: handbook_de_06
-            label: 6. Arbeitsplan und Quellen
+            label: "6. Arbeitsplan und Quellen"
             type: file
             path: src/content/book/de/06.mdx
             format: yaml-frontmatter
@@ -773,36 +801,8 @@ content:
                   path: src/assets/book
                   rename: safe
 
-          - name: glossary_terms_de
-            label: Glossary terms
-            type: file
-            path: src/data/glossary.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: de
-                label: German glossary
-                type: object
-                list: true
-                fields:
-                  - name: term
-                    label: Term
-                    type: string
-                    required: true
-                  - name: definition
-                    label: Definition
-                    type: text
-                    required: true
-                  - name: forms
-                    label: Word forms
-                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
-                    type: string
-                    list: true
-
   - name: language_en
-    label: English
+    label: "English"
     type: group
     items:
       - name: project_settings_en
@@ -1248,12 +1248,40 @@ content:
                       - name: margin
                         type: string
 
+          - name: glossary_terms_en
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: en
+                label: English glossary
+                type: object
+                list: true
+                fields:
+                  - name: term
+                    label: Term
+                    type: string
+                    required: true
+                  - name: definition
+                    label: Definition
+                    type: text
+                    required: true
+                  - name: forms
+                    label: Word forms
+                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                    type: string
+                    list: true
+
       - name: pages_en
         label: Pages
         type: group
         items:
           - name: home_en
-            label: Home
+            label: "Home"
             type: file
             path: src/content/pages/en/index.mdx
             format: yaml-frontmatter
@@ -1289,7 +1317,7 @@ content:
         type: group
         items:
           - name: handbook_en_about
-            label: About
+            label: "About"
             type: file
             path: src/content/book/en/about.mdx
             format: yaml-frontmatter
@@ -1316,7 +1344,7 @@ content:
                   rename: safe
 
           - name: handbook_en_glossary
-            label: Glossary
+            label: "Glossary"
             type: file
             path: src/content/book/en/glossary.mdx
             format: yaml-frontmatter
@@ -1343,7 +1371,7 @@ content:
                   rename: safe
 
           - name: handbook_en_01
-            label: 1. Why this toolbox?
+            label: "1. Why this toolbox?"
             type: file
             path: src/content/book/en/01.mdx
             format: yaml-frontmatter
@@ -1370,7 +1398,7 @@ content:
                   rename: safe
 
           - name: handbook_en_02
-            label: 2. Starting superblocks
+            label: "2. Starting superblocks"
             type: file
             path: src/content/book/en/02.mdx
             format: yaml-frontmatter
@@ -1397,7 +1425,7 @@ content:
                   rename: safe
 
           - name: handbook_en_03
-            label: 3. Tactical urbanism and street design
+            label: "3. Tactical urbanism and street design"
             type: file
             path: src/content/book/en/03.mdx
             format: yaml-frontmatter
@@ -1424,7 +1452,7 @@ content:
                   rename: safe
 
           - name: handbook_en_04
-            label: 4. Mobilisation and strategies for change
+            label: "4. Mobilisation and strategies for change"
             type: file
             path: src/content/book/en/04.mdx
             format: yaml-frontmatter
@@ -1451,7 +1479,7 @@ content:
                   rename: safe
 
           - name: handbook_en_05
-            label: 5. Monitoring: making impact visible
+            label: "5. Monitoring: making impact visible"
             type: file
             path: src/content/book/en/05.mdx
             format: yaml-frontmatter
@@ -1478,7 +1506,7 @@ content:
                   rename: safe
 
           - name: handbook_en_06
-            label: 6. Work plan and sources
+            label: "6. Work plan and sources"
             type: file
             path: src/content/book/en/06.mdx
             format: yaml-frontmatter
@@ -1504,36 +1532,8 @@ content:
                   path: src/assets/book
                   rename: safe
 
-          - name: glossary_terms_en
-            label: Glossary terms
-            type: file
-            path: src/data/glossary.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: en
-                label: English glossary
-                type: object
-                list: true
-                fields:
-                  - name: term
-                    label: Term
-                    type: string
-                    required: true
-                  - name: definition
-                    label: Definition
-                    type: text
-                    required: true
-                  - name: forms
-                    label: Word forms
-                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
-                    type: string
-                    list: true
-
   - name: language_sl
-    label: Slovenščina
+    label: "Slovenščina"
     type: group
     items:
       - name: project_settings_sl
@@ -1979,12 +1979,40 @@ content:
                       - name: margin
                         type: string
 
+          - name: glossary_terms_sl
+            label: Glossary terms
+            type: file
+            path: src/data/glossary.json
+            format: json
+            operations:
+              create: false
+              delete: false
+            fields:
+              - name: sl
+                label: Slovene glossary
+                type: object
+                list: true
+                fields:
+                  - name: term
+                    label: Term
+                    type: string
+                    required: true
+                  - name: definition
+                    label: Definition
+                    type: text
+                    required: true
+                  - name: forms
+                    label: Word forms
+                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
+                    type: string
+                    list: true
+
       - name: pages_sl
         label: Pages
         type: group
         items:
           - name: home_sl
-            label: Domov
+            label: "Domov"
             type: file
             path: src/content/pages/sl/index.mdx
             format: yaml-frontmatter
@@ -2020,7 +2048,7 @@ content:
         type: group
         items:
           - name: handbook_sl_about
-            label: O nas
+            label: "O nas"
             type: file
             path: src/content/book/sl/about.mdx
             format: yaml-frontmatter
@@ -2047,7 +2075,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_glossary
-            label: Glosar
+            label: "Glosar"
             type: file
             path: src/content/book/sl/glossary.mdx
             format: yaml-frontmatter
@@ -2074,7 +2102,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_01
-            label: 1. Zakaj ta zbirka orodij?
+            label: "1. Zakaj ta zbirka orodij?"
             type: file
             path: src/content/book/sl/01.mdx
             format: yaml-frontmatter
@@ -2101,7 +2129,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_02
-            label: 2. Kako začeti s superbloki
+            label: "2. Kako začeti s superbloki"
             type: file
             path: src/content/book/sl/02.mdx
             format: yaml-frontmatter
@@ -2128,7 +2156,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_03
-            label: 3. Taktični urbanizem in oblikovanje ulic
+            label: "3. Taktični urbanizem in oblikovanje ulic"
             type: file
             path: src/content/book/sl/03.mdx
             format: yaml-frontmatter
@@ -2155,7 +2183,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_04
-            label: 4. Mobilizacija in strategije sprememb
+            label: "4. Mobilizacija in strategije sprememb"
             type: file
             path: src/content/book/sl/04.mdx
             format: yaml-frontmatter
@@ -2182,7 +2210,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_05
-            label: 5. Spremljanje: pokažimo učinek
+            label: "5. Spremljanje: pokažimo učinek"
             type: file
             path: src/content/book/sl/05.mdx
             format: yaml-frontmatter
@@ -2209,7 +2237,7 @@ content:
                   rename: safe
 
           - name: handbook_sl_06
-            label: 6. Delovni načrt in viri
+            label: "6. Delovni načrt in viri"
             type: file
             path: src/content/book/sl/06.mdx
             format: yaml-frontmatter
@@ -2234,31 +2262,3 @@ content:
                   media: book_images
                   path: src/assets/book
                   rename: safe
-
-          - name: glossary_terms_sl
-            label: Glossary terms
-            type: file
-            path: src/data/glossary.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: sl
-                label: Slovene glossary
-                type: object
-                list: true
-                fields:
-                  - name: term
-                    label: Term
-                    type: string
-                    required: true
-                  - name: definition
-                    label: Definition
-                    type: text
-                    required: true
-                  - name: forms
-                    label: Word forms
-                    description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
-                    type: string
-                    list: true
