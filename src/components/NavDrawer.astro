@@ -30,7 +30,7 @@ const sections =
         { heading: null as string | null, links: projectLinks },
       ];
 ---
-<div class="drawer" data-drawer role="dialog" aria-modal="true" aria-label={t(lang, 'nav.menu', 'Menu')} hidden>
+<div class="drawer" data-drawer role="dialog" aria-modal="true" aria-label={t(lang, 'nav.menu', 'Menu')} tabindex="-1" hidden>
   <div class="drawer-inner">
     {sections.map(
       (section) =>

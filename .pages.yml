@@ -1,3 +1,5 @@
+# GENERATED from handbook.config.ts — do not edit by hand.
+# Run `npm run sync:config` to regenerate.
 media:
   - name: book_images
     label: Book images
@@ -342,6 +344,7 @@ content:
                 type: text
               - name: language
                 type: string
+
           - name: en
             label: English book metadata
             type: object
@@ -363,6 +366,7 @@ content:
                 type: text
               - name: language
                 type: string
+
           - name: sl
             label: Slovene book metadata
             type: object
@@ -405,6 +409,7 @@ content:
               - name: file
                 type: string
                 required: true
+
           - name: en
             label: English navigation
             type: object
@@ -416,6 +421,7 @@ content:
               - name: file
                 type: string
                 required: true
+
           - name: sl
             label: Slovene navigation
             type: object
@@ -455,6 +461,7 @@ content:
                 description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
                 type: string
                 list: true
+
           - name: en
             label: English glossary
             type: object
@@ -473,6 +480,7 @@ content:
                 description: Additional inflected forms found in the chapters (plurals, cases). Leave empty to match the term itself.
                 type: string
                 list: true
+
           - name: sl
             label: Slovene glossary
             type: object

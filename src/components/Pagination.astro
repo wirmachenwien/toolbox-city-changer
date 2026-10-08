@@ -1,23 +1,28 @@
 ---
-// Previous/next chapter pagination. Style follows
+// Previous/next pagination. Dumb renderer: the "which pages paginate" rule
+// lives in `paginationNeighbours` (src/data/works.ts); layouts pass the
+// resolved prev/next in. Style follows
 // settings.web.paginationType: direction | titles | title-arrows | arrows.
-import { chapterNeighbours } from '../data/works';
 import { settings } from '../data/settings';
 import { t } from '../lib/i18n';
-import { bookUrl } from '../lib/site';
+import { bookUrl, pageUrl } from '../lib/site';
 import type { Language } from '../data/locales';
-import type { TocEntry } from '../data/works';
+import type { NeighbourEntry } from '../data/works';
 
 interface Props {
   lang: Language;
-  file: string;
+  prev: NeighbourEntry | null;
+  next: NeighbourEntry | null;
 }
 
-const { lang, file } = Astro.props;
-const { prev, next } = chapterNeighbours(lang, file);
+const { lang, prev, next } = Astro.props;
 const type = settings.web.paginationType;
 
-function label(entry: TocEntry, direction: 'prev' | 'next'): string {
+function href(entry: NeighbourEntry): string {
+  return entry.kind === 'page' ? pageUrl(lang, entry.file) : bookUrl(lang, entry.file);
+}
+
+function label(entry: NeighbourEntry, direction: 'prev' | 'next'): string {
   const arrow = direction === 'prev' ? '←' : '→';
   const fallback = direction === 'prev' ? t(lang, 'nav.previous', 'Previous') : t(lang, 'nav.next', 'Next');
   if (type === 'arrows') return arrow;
@@ -30,12 +35,12 @@ function label(entry: TocEntry, direction: 'prev' | 'next'): string {
   <div class="pagination">
     <nav aria-label={t(lang, 'nav.toc', 'Contents')}>
       {prev ? (
-        <a class="prev" rel="prev" href={bookUrl(lang, prev.file)}>{label(prev, 'prev')}</a>
+        <a class="prev" rel="prev" href={href(prev)}>{label(prev, 'prev')}</a>
       ) : (
         <span />
       )}
       {next && (
-        <a class="next" rel="next" href={bookUrl(lang, next.file)}>{label(next, 'next')}</a>
+        <a class="next" rel="next" href={href(next)}>{label(next, 'next')}</a>
       )}
     </nav>
   </div>

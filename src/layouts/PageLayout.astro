@@ -4,7 +4,11 @@ import BaseLayout from './BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import OpenerImage from '../components/OpenerImage.astro';
 import LastVisit from '../components/LastVisit.astro';
+import Pagination from '../components/Pagination.astro';
+import { settings } from '../data/settings';
+import { paginationNeighbours } from '../data/works';
 import { pageCrumbs } from '../lib/nav';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -19,8 +23,12 @@ interface Props {
 }
 
 const { lang, file, title, description, layout, currentUrl, openerImage, openerImageAlt } = Astro.props;
-const crumbs = pageCrumbs(lang, title);
+// The frontmatter title bypasses the markdown pipeline, so quotes are
+// localised once here and reused below.
+const displayTitle = smartQuotes(title, lang);
+const crumbs = pageCrumbs(lang, displayTitle);
 const isHome = layout === 'home';
+const neighbours = paginationNeighbours(lang, 'page', file);
 ---
 <BaseLayout
   lang={lang}
@@ -30,10 +38,11 @@ const isHome = layout === 'home';
   file={file}
   currentUrl={currentUrl}
 >
-  {!isHome && <Breadcrumbs items={crumbs} />}
-  {isHome && openerImage && <OpenerImage file={openerImage} alt={openerImageAlt ?? ''} />}
+  {!isHome && <Breadcrumbs items={crumbs} lang={lang} />}
+  {isHome && openerImage && <OpenerImage file={openerImage} alt={openerImageAlt ?? ''} lang={lang} />}
   <div class="prose" data-prose>
     <slot />
   </div>
   {isHome && <LastVisit lang={lang} />}
+  {neighbours && settings.web.pagination && <Pagination lang={lang} prev={neighbours.prev} next={neighbours.next} />}
 </BaseLayout>

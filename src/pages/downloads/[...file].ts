@@ -5,7 +5,7 @@ import path from 'node:path';
 export const prerender = true;
 
 // Delivery for the generated PDF/EPUB handbook files. The builders
-// (scripts/build-pdf.py, scripts/build-epub.py) write into dist/downloads/,
+// (scripts/bin/build-pdf.py, scripts/bin/build-epub.py) write into dist/downloads/,
 // which the static host serves directly in production. The dev server does
 // not serve dist/, so this endpoint reads those files in dev; during
 // `astro build` it prerenders them into the same location. Either way,

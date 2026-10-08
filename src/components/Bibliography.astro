@@ -1,16 +1,26 @@
 ---
 // Source list.
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
 export interface Source {
   label: string;
   href?: string;
 }
 interface Props {
   sources: Source[];
+  lang?: Language;
 }
-const { sources } = Astro.props;
+const { sources, lang } = Astro.props;
+// Author-supplied labels bypass the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose (only when lang is
+// known).
+const displaySources = lang
+  ? sources.map((source) => ({ ...source, label: smartQuotes(source.label, lang) }))
+  : sources;
 ---
 <ul class="bibliography">
-  {sources.map((source) => (
+  {displaySources.map((source) => (
     <li>
       {source.href ? <a href={source.href}>{source.label}</a> : source.label}
     </li>

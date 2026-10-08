@@ -13,126 +13,54 @@
     "type": "Handbuch",
     "subject": "Stadtentwicklung; Aktivismus; Verkehrsberuhigung; Beteiligung",
     "identifier": "",
-    "products": {
-      "pdf": {
-        "files": [
-          "0-0-cover",
-          "0-1-titlepage",
-          "about",
-          "contents",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "glossary"
-        ],
-        "toc": [
-          {
-            "label": "Cover",
-            "file": "0-0-cover",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Titel",
-            "file": "0-1-titlepage",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Über",
-            "file": "about",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Inhalt",
-            "file": "contents",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "1. Wozu diese Toolbox?",
-            "file": "01"
-          },
-          {
-            "label": "2. Superblocks starten",
-            "file": "02"
-          },
-          {
-            "label": "3. Tactical Urbanism und Street Design",
-            "file": "03"
-          },
-          {
-            "label": "4. Mobilisierung und Strategien des Wandels",
-            "file": "04"
-          },
-          {
-            "label": "5. Monitoring: Wirkung sichtbar machen",
-            "file": "05"
-          },
-          {
-            "label": "6. Arbeitsplan und Quellen",
-            "file": "06"
-          },
-          {
-            "label": "Glossar",
-            "file": "glossary"
-          }
-        ]
+    "chapters": [
+      {
+        "file": "0-0-cover",
+        "label": "Cover",
+        "web": false
       },
-      "web": {
-        "files": [
-          "about",
-          "contents",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "glossary"
-        ],
-        "nav": [
-          {
-            "label": "Über",
-            "file": "about",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Inhalt",
-            "file": "contents",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "1. Wozu diese Toolbox?",
-            "file": "01"
-          },
-          {
-            "label": "2. Superblocks starten",
-            "file": "02"
-          },
-          {
-            "label": "3. Tactical Urbanism und Street Design",
-            "file": "03"
-          },
-          {
-            "label": "4. Mobilisierung und Strategien des Wandels",
-            "file": "04"
-          },
-          {
-            "label": "5. Monitoring: Wirkung sichtbar machen",
-            "file": "05"
-          },
-          {
-            "label": "6. Arbeitsplan und Quellen",
-            "file": "06"
-          },
-          {
-            "label": "Glossar",
-            "file": "glossary"
-          }
-        ]
+      {
+        "file": "0-1-titlepage",
+        "label": "Titel",
+        "web": false
+      },
+      {
+        "file": "about",
+        "label": "Über"
+      },
+      {
+        "file": "contents",
+        "label": "Inhalt"
+      },
+      {
+        "file": "glossary",
+        "label": "Glossar"
+      },
+      {
+        "file": "01",
+        "label": "1. Wozu diese Toolbox?"
+      },
+      {
+        "file": "02",
+        "label": "2. Superblocks starten"
+      },
+      {
+        "file": "03",
+        "label": "3. Tactical Urbanism und Street Design"
+      },
+      {
+        "file": "04",
+        "label": "4. Mobilisierung und Strategien des Wandels"
+      },
+      {
+        "file": "05",
+        "label": "5. Monitoring: Wirkung sichtbar machen"
+      },
+      {
+        "file": "06",
+        "label": "6. Arbeitsplan und Quellen"
       }
-    }
+    ]
   },
   "en": {
     "title": "Toolbox for City Changers",
@@ -148,126 +76,54 @@
     "type": "Handbook",
     "subject": "Urban development; activism; traffic calming; participation",
     "identifier": "",
-    "products": {
-      "pdf": {
-        "files": [
-          "0-0-cover",
-          "0-1-titlepage",
-          "about",
-          "contents",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "glossary"
-        ],
-        "toc": [
-          {
-            "label": "Cover",
-            "file": "0-0-cover",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Title page",
-            "file": "0-1-titlepage",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "About",
-            "file": "about",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Contents",
-            "file": "contents",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "1. Why this toolbox?",
-            "file": "01"
-          },
-          {
-            "label": "2. Starting superblocks",
-            "file": "02"
-          },
-          {
-            "label": "3. Tactical urbanism and street design",
-            "file": "03"
-          },
-          {
-            "label": "4. Mobilisation and strategies for change",
-            "file": "04"
-          },
-          {
-            "label": "5. Monitoring: making impact visible",
-            "file": "05"
-          },
-          {
-            "label": "6. Work plan and sources",
-            "file": "06"
-          },
-          {
-            "label": "Glossary",
-            "file": "glossary"
-          }
-        ]
+    "chapters": [
+      {
+        "file": "0-0-cover",
+        "label": "Cover",
+        "web": false
       },
-      "web": {
-        "files": [
-          "about",
-          "contents",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "glossary"
-        ],
-        "nav": [
-          {
-            "label": "About",
-            "file": "about",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Contents",
-            "file": "contents",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "1. Why this toolbox?",
-            "file": "01"
-          },
-          {
-            "label": "2. Starting superblocks",
-            "file": "02"
-          },
-          {
-            "label": "3. Tactical urbanism and street design",
-            "file": "03"
-          },
-          {
-            "label": "4. Mobilisation and strategies for change",
-            "file": "04"
-          },
-          {
-            "label": "5. Monitoring: making impact visible",
-            "file": "05"
-          },
-          {
-            "label": "6. Work plan and sources",
-            "file": "06"
-          },
-          {
-            "label": "Glossary",
-            "file": "glossary"
-          }
-        ]
+      {
+        "file": "0-1-titlepage",
+        "label": "Title page",
+        "web": false
+      },
+      {
+        "file": "about",
+        "label": "About"
+      },
+      {
+        "file": "contents",
+        "label": "Contents"
+      },
+      {
+        "file": "glossary",
+        "label": "Glossary"
+      },
+      {
+        "file": "01",
+        "label": "1. Why this toolbox?"
+      },
+      {
+        "file": "02",
+        "label": "2. Starting superblocks"
+      },
+      {
+        "file": "03",
+        "label": "3. Tactical urbanism and street design"
+      },
+      {
+        "file": "04",
+        "label": "4. Mobilisation and strategies for change"
+      },
+      {
+        "file": "05",
+        "label": "5. Monitoring: making impact visible"
+      },
+      {
+        "file": "06",
+        "label": "6. Work plan and sources"
       }
-    }
+    ]
   },
   "sl": {
     "title": "Zbirka orodij za spreminjanje mest",
@@ -283,125 +139,53 @@
     "type": "Priročnik",
     "subject": "Urbani razvoj; aktivizem; umirjanje prometa; sodelovanje",
     "identifier": "",
-    "products": {
-      "pdf": {
-        "files": [
-          "0-0-cover",
-          "0-1-titlepage",
-          "about",
-          "contents",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "glossary"
-        ],
-        "toc": [
-          {
-            "label": "Naslovnica",
-            "file": "0-0-cover",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Naslovna stran",
-            "file": "0-1-titlepage",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "O nas",
-            "file": "about",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Vsebina",
-            "file": "contents",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "1. Zakaj ta zbirka orodij?",
-            "file": "01"
-          },
-          {
-            "label": "2. Kako začeti s superbloki",
-            "file": "02"
-          },
-          {
-            "label": "3. Taktični urbanizem in oblikovanje ulic",
-            "file": "03"
-          },
-          {
-            "label": "4. Mobilizacija in strategije sprememb",
-            "file": "04"
-          },
-          {
-            "label": "5. Spremljanje: pokažimo učinek",
-            "file": "05"
-          },
-          {
-            "label": "6. Delovni načrt in viri",
-            "file": "06"
-          },
-          {
-            "label": "Glosar",
-            "file": "glossary"
-          }
-        ]
+    "chapters": [
+      {
+        "file": "0-0-cover",
+        "label": "Naslovnica",
+        "web": false
       },
-      "web": {
-        "files": [
-          "about",
-          "contents",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "glossary"
-        ],
-        "nav": [
-          {
-            "label": "O nas",
-            "file": "about",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "Vsebina",
-            "file": "contents",
-            "class": "frontmatter-entry"
-          },
-          {
-            "label": "1. Zakaj ta zbirka orodij?",
-            "file": "01"
-          },
-          {
-            "label": "2. Kako začeti s superbloki",
-            "file": "02"
-          },
-          {
-            "label": "3. Taktični urbanizem in oblikovanje ulic",
-            "file": "03"
-          },
-          {
-            "label": "4. Mobilizacija in strategije sprememb",
-            "file": "04"
-          },
-          {
-            "label": "5. Spremljanje: pokažimo učinek",
-            "file": "05"
-          },
-          {
-            "label": "6. Delovni načrt in viri",
-            "file": "06"
-          },
-          {
-            "label": "Glosar",
-            "file": "glossary"
-          }
-        ]
+      {
+        "file": "0-1-titlepage",
+        "label": "Naslovna stran",
+        "web": false
+      },
+      {
+        "file": "about",
+        "label": "O nas"
+      },
+      {
+        "file": "contents",
+        "label": "Vsebina"
+      },
+      {
+        "file": "glossary",
+        "label": "Glosar"
+      },
+      {
+        "file": "01",
+        "label": "1. Zakaj ta zbirka orodij?"
+      },
+      {
+        "file": "02",
+        "label": "2. Kako začeti s superbloki"
+      },
+      {
+        "file": "03",
+        "label": "3. Taktični urbanizem in oblikovanje ulic"
+      },
+      {
+        "file": "04",
+        "label": "4. Mobilizacija in strategije sprememb"
+      },
+      {
+        "file": "05",
+        "label": "5. Spremljanje: pokažimo učinek"
+      },
+      {
+        "file": "06",
+        "label": "6. Delovni načrt in viri"
       }
-    }
+    ]
   }
 }

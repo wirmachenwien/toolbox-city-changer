@@ -1,4 +1,4 @@
-/* Print stylesheet for the WeasyPrint PDF pipeline (scripts/build-pdf.py).
+/* Print stylesheet for the WeasyPrint PDF pipeline (scripts/bin/build-pdf.py).
    Screen styles live in global.css; this file only ships to print.
    The font url() paths below are logical: build-pdf.py rewrites them to
    file:// URIs of the self-hosted Newsreader files so the PDF embeds
@@ -60,6 +60,10 @@
   @bottom-center {
     content: counter(page);
     font: 8pt "Clarity City", system-ui, sans-serif;
+  }
+  @footnote {
+    border-top: 0.5pt solid #999;
+    padding-top: 4pt;
   }
 }
 
@@ -124,8 +128,18 @@ h1, h2, h3 {
   break-after: avoid;
 }
 
-figure, table, blockquote, .feature-box, .quiz, dl.glossary {
+figure, table, blockquote, .feature-box, .quiz {
   break-inside: avoid;
+}
+
+/* The A–Z glossary is long by design: it may flow across pages, but a term
+   always stays with its own definition. */
+dl.glossary {
+  break-inside: auto;
+}
+
+dl.glossary dt {
+  break-after: avoid;
 }
 
 /* Accordions print fully expanded: the screen collapse animation has no
@@ -232,6 +246,62 @@ blockquote {
   color: #333;
 }
 
+/* Pull quotes read as voices, not asides: larger italic type with a
+   stronger accent bar than plain blockquotes. */
+blockquote.pullquote {
+  font-size: 14pt;
+  line-height: 1.45;
+  font-style: italic;
+  color: #111;
+  border-inline-start-width: 4.5pt;
+  margin: 14pt 0;
+}
+
+blockquote.pullquote footer {
+  font: 9.5pt "Clarity City", system-ui, sans-serif;
+  font-style: normal;
+  color: #444;
+  margin-top: 4pt;
+}
+
+/* Tip boxes mirror the web panel: light green fill with a solid accent
+   bar, so they stand apart from the running text. */
+.feature-box {
+  background: #eef5ef;
+  border: 0.5pt solid #0c6b3c;
+  border-inline-start-width: 4.5pt;
+  padding: 8pt 10pt;
+  margin: 12pt 0;
+}
+
+/* Glossary: term in the UI face, definition flush below it (web parity). */
+dl.glossary {
+  margin: 12pt 0;
+}
+
+dl.glossary dt {
+  font-family: "Clarity City", system-ui, sans-serif;
+  font-weight: 700;
+  margin-top: 8pt;
+}
+
+dl.glossary dd {
+  margin-inline-start: 0;
+  margin-bottom: 4pt;
+}
+
+/* Self-check quizzes print as boxed tasks; the answer key stays
+   upside-down (turn-the-page convention), the box keeps it tidy. */
+.quiz {
+  border: 0.5pt solid #111;
+  padding: 8pt 10pt;
+  margin: 12pt 0;
+}
+
+.quiz ol {
+  margin-bottom: 0;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -245,9 +315,31 @@ th, td {
   text-align: left;
 }
 
+/* Page footnotes: each note floats to the bottom of the page carrying its
+   reference marker (build-pdf.py attaches the note to its FootnoteRef).
+   Both the in-text call and the note marker are set small. */
+.footnote-call {
+  font-size: 8pt;
+  line-height: 1;
+  vertical-align: super;
+}
+
 .footnote {
   float: footnote;
   font-size: 9pt;
+  line-height: 1.4;
+}
+
+.footnote-marker {
+  font-weight: 700;
+  margin-right: 2pt;
+}
+
+/* The note carries its own explicit number, so WeasyPrint's automatic
+   footnote call/marker must stay silent (otherwise every "1" prints twice). */
+.footnote::footnote-call,
+.footnote::footnote-marker {
+  content: none;
 }
 
 .cc-badge {
@@ -275,4 +367,20 @@ th, td {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* External links print with their URL: on paper a bare link text is
+   useless (materials lists, references, licence notes). Internal anchors
+   (TOC page numbers, footnote refs) carry no http prefix and stay clean.
+   No heading ever links out, so the running header stays URL-free too. */
+.chapter a[href^="http"]::after {
+  content: " (" attr(href) ")";
+  font-size: 8.5pt;
+  overflow-wrap: anywhere;
+}
+
+/* The CC badge is self-explanatory (badge image + "CC BY 4.0"): spelling
+   out the licence URL after it only clutters the licence block. */
+.chapter .cc-badge a[href^="http"]::after {
+  content: none;
 }

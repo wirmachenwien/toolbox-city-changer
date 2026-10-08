@@ -1,14 +1,22 @@
 ---
 // Collapsible section built on native <details> (works without JavaScript).
 // Opening one closes its siblings in the same group (see accordion.ts).
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
 interface Props {
   title: string;
   open?: boolean;
+  lang?: Language;
 }
-const { title, open = false } = Astro.props;
+const { title, open = false, lang } = Astro.props;
+// Author-supplied titles bypass the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose (only when lang is
+// known).
+const displayTitle = lang ? smartQuotes(title, lang) : title;
 ---
 <details class="accordion" open={open || undefined}>
-  <summary>{title}</summary>
+  <summary>{displayTitle}</summary>
   <div class="accordion-body">
     <div class="accordion-content">
       <slot />

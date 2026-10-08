@@ -2,6 +2,7 @@
 // Expandable "read more" box: same visuals and exclusive behaviour as
 // Accordion (shared classes), only the default summary label differs.
 import { t } from '../lib/i18n';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -9,9 +10,12 @@ interface Props {
   lang?: Language;
 }
 const { title, lang = 'en' } = Astro.props;
+// Author-supplied titles bypass the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose.
+const displayTitle = title ? smartQuotes(title, lang) : undefined;
 ---
 <details class="accordion">
-  <summary>{title ?? t(lang, 'expandable-box.read-more', 'Expand')}</summary>
+  <summary>{displayTitle ?? t(lang, 'expandable-box.read-more', 'Expand')}</summary>
   <div class="accordion-body">
     <div class="accordion-content">
       <slot />

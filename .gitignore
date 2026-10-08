@@ -18,6 +18,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# python bytecode (scripts/handbook/ is imported by the builders in scripts/bin/)
+__pycache__/
+
 # macOS-specific files
 .DS_Store
 

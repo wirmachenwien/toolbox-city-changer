@@ -177,6 +177,7 @@ a:hover {
   gap: 0.4rem;
   font-family: var(--font-ui);
   font-size: 1.02rem;
+  color: var(--ink);
   background: transparent;
   border: 1px solid var(--ink);
   border-radius: var(--radius);
@@ -265,7 +266,7 @@ a:hover {
 
   .menu-toggle:hover {
     background: transparent;
-    color: inherit;
+    color: var(--ink);
   }
 
   .menu-toggle .menu-label {
@@ -377,6 +378,12 @@ a:hover {
   display: none;
 }
 
+/* Programmatic focus target on open (see drawer.ts): never show a ring on
+   the sheet itself; links inside keep the standard :focus-visible style. */
+.drawer:focus {
+  outline: none;
+}
+
 /* On narrow screens the drawer docks to the inline-end side — the same side
    the menu button sits on (mirrored automatically for RTL) — as a
    full-height sheet covering the sticky masthead. The in-sheet
@@ -431,7 +438,7 @@ a:hover {
 
   body.drawer-open .drawer-toggle-float:hover {
     background: transparent;
-    color: inherit;
+    color: var(--ink);
   }
 }
 
@@ -1225,9 +1232,9 @@ html:not(.js-fold) .accordion-content {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  border-block-start: 2px solid var(--ink);
+  border-block-start: 1px solid var(--line);
   margin-block-start: 2.5rem;
-  padding-block-start: 1rem;
+  padding-block-start: 1.5rem;
   font-family: var(--font-ui);
 }
 
@@ -1603,6 +1610,10 @@ html:not(.js-fold) .accordion-content {
   border-block-end: 1px solid var(--line);
 }
 
+.contents-list li:last-child {
+  border-block-end: none;
+}
+
 .contents-list a {
   display: block;
   padding-block: 0.6rem;
@@ -1616,7 +1627,6 @@ html:not(.js-fold) .accordion-content {
 }
 
 .contents-list .frontmatter-entry {
-  font-size: 1.02rem;
   color: var(--ink-soft);
 }
 

@@ -1,0 +1,31 @@
+---
+// Non-default language search pages (/de/search.html, ...): no MDX source
+// file; the title comes from the locale strings.
+import PageLayout from '../../layouts/PageLayout.astro';
+import SearchForm from '../../components/SearchForm.astro';
+import { t } from '../../lib/i18n';
+import { defaultLang, languages } from '../../../handbook.config.ts';
+import type { Language } from '../../data/locales';
+import { pageUrl } from '../../lib/site';
+
+export async function getStaticPaths() {
+  return languages
+    .filter((lang) => lang !== defaultLang)
+    .map((lang) => ({ params: { lang } }));
+}
+
+const language = Astro.params.lang as Language;
+const title = t(language, 'search.search-title', 'Search');
+const url = pageUrl(language, 'search');
+const query = Astro.url.searchParams.get('query') ?? '';
+---
+<PageLayout lang={language} file="search" title={title} layout="search" currentUrl={url}>
+  <h1>{title}</h1>
+  <SearchForm lang={language} query={query} />
+  <p data-search-status aria-live="polite" />
+  <ol class="search-results" data-search-results />
+</PageLayout>
+<script define:vars={{ lang: language }}>
+  import { initSearchUI } from '../../scripts/search-ui';
+  void initSearchUI(lang);
+</script>

@@ -1,5 +1,8 @@
 ---
 // Endnotes section collecting FootnoteRef targets.
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
 export interface Note {
   id: string;
   text: string;
@@ -7,14 +10,21 @@ export interface Note {
 interface Props {
   notes: Note[];
   backLabel?: string;
+  lang?: Language;
 }
-const { notes, backLabel = 'Back to text' } = Astro.props;
+const { notes, backLabel = 'Back to text', lang } = Astro.props;
+// Notes bypass the markdown pipeline, so quotes are localised here to
+// match the hast-transformed prose (only when lang is known).
+const displayNotes = lang
+  ? notes.map((note) => ({ ...note, text: smartQuotes(note.text, lang) }))
+  : notes;
+const displayBackLabel = lang ? smartQuotes(backLabel, lang) : backLabel;
 ---
 <section class="endnotes" aria-label="Notes">
   <ol>
-    {notes.map((note) => (
+    {displayNotes.map((note) => (
       <li id={`note-${note.id}`}>
-        {note.text} <a href={`#ref-${note.id}`} aria-label={backLabel}>↩</a>
+        {note.text} <a href={`#ref-${note.id}`} aria-label={displayBackLabel}>↩</a>
       </li>
     ))}
   </ol>

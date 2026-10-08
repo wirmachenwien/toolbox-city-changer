@@ -3,6 +3,7 @@
  // Breadcrumbs live with the article heading (single source, no duplication).
 import { project } from '../data/project';
 import { projectText, t } from '../lib/i18n';
+import { smartQuotes } from '../lib/smart-quotes';
 import { withBase, DEFAULT_LANG } from '../lib/site';
 import type { Language } from '../data/locales';
 import Icon from './Icon.astro';
@@ -22,7 +23,7 @@ const text = projectText(lang);
     <div class="site-head-main">
       <a class="brand" href={withBase(lang === DEFAULT_LANG ? '/' : `/${lang}/`)}>
         <img src={withBase('/logo.svg')} alt="" width="32" height="32" loading="eager" decoding="async" />
-        <span>{text.name || project.name}</span>
+        <span>{smartQuotes(text.name || project.name, lang)}</span>
       </a>
       <button type="button" class="menu-toggle" data-drawer-toggle aria-expanded="false" aria-label={t(lang, 'nav.menu', 'Menu')}>
         <span class="menu-icon"><Icon name="menu" /></span>

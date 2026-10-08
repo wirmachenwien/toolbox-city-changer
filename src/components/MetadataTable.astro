@@ -2,6 +2,7 @@
 // Book metadata table (title, creator, publisher, rights, ...).
 import { getWork } from '../data/works';
 import { t } from '../lib/i18n';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -9,14 +10,17 @@ interface Props {
 }
 const { lang } = Astro.props;
 const work = getWork(lang);
+// Catalogue metadata bypasses the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose.
+const sq = (value: string) => smartQuotes(value, lang);
 const rows: [string, string][] = [
-  [t(lang, 'metadata.title', 'Title'), work.title],
-  [t(lang, 'metadata.subtitle', 'Subtitle'), work.subtitle],
-  [t(lang, 'metadata.creator', 'Creator'), work.creator],
-  [t(lang, 'metadata.contributor', 'Contributor'), work.contributor],
-  [t(lang, 'metadata.publisher', 'Publisher'), work.publisher],
-  [t(lang, 'metadata.language', 'Language'), work.language],
-  [t(lang, 'metadata.identifier', 'Identifier'), work.identifier],
+  [t(lang, 'metadata.title', 'Title'), sq(work.title)],
+  [t(lang, 'metadata.subtitle', 'Subtitle'), sq(work.subtitle)],
+  [t(lang, 'metadata.creator', 'Creator'), sq(work.creator)],
+  [t(lang, 'metadata.contributor', 'Contributor'), sq(work.contributor)],
+  [t(lang, 'metadata.publisher', 'Publisher'), sq(work.publisher)],
+  [t(lang, 'metadata.language', 'Language'), sq(work.language)],
+  [t(lang, 'metadata.identifier', 'Identifier'), sq(work.identifier)],
 ].filter((row): row is [string, string] => Boolean(row[1]));
 ---
 <dl class="metadata-table">
@@ -25,5 +29,5 @@ const rows: [string, string][] = [
     <dd>{value}</dd>
   ))}
   <dt>{t(lang, 'metadata.description', 'Description')}</dt>
-  <dd>{work.description}</dd>
+  <dd>{sq(work.description)}</dd>
 </dl>

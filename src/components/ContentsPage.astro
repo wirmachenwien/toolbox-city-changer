@@ -1,5 +1,6 @@
 ---
 // Contents sheet: heading plus the full book table of contents.
+import { smartQuotes } from '../lib/smart-quotes';
 import Toc from './Toc.astro';
 import type { Language } from '../data/locales';
 
@@ -8,8 +9,11 @@ interface Props {
   title: string;
 }
 const { lang, title } = Astro.props;
+// Titles bypass the markdown pipeline, so quotes are localised here to
+// match the hast-transformed prose.
+const displayTitle = smartQuotes(title, lang);
 ---
 <div class="sheet">
-  <h1>{title}</h1>
+  <h1>{displayTitle}</h1>
   <Toc lang={lang} />
 </div>

@@ -1,6 +1,7 @@
 // Navigation model: project nav + expandable book nav + breadcrumbs.
 import { nav } from '../data/nav';
 import { contentsLabel, webBookToc } from '../data/works';
+import { smartQuotes } from './smart-quotes';
 import type { Language } from '../data/locales';
 import { bookUrl, navFileUrl } from './site';
 import { settings } from '../data/settings';
@@ -15,11 +16,14 @@ export interface BookNavEntry extends NavLink {
   slug: string;
 }
 
-/** Project navigation links for a language, with the current page flagged. */
+/** Project navigation links for a language, with the current page flagged.
+ *  Nav labels bypass the markdown pipeline, so quotes are localised here to
+ *  match the hast-transformed prose. (Book labels arrive via webBookToc,
+ *  already localised in works.ts.) */
 export function projectNav(lang: Language, currentUrl: string): NavLink[] {
   return nav[lang].map((item) => {
     const url = navFileUrl(lang, item.file, lang);
-    return { label: item.label, url, current: url === currentUrl };
+    return { label: smartQuotes(item.label, lang), url, current: url === currentUrl };
   });
 }
 

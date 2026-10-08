@@ -9,15 +9,17 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && npm run build:downloads && node scripts/fix-dist.mjs && npm run build:search",
-    "build:search": "pagefind --site dist",
-    "build:pdf": "python3 scripts/build-pdf.py --all",
-    "build:epub": "python3 scripts/build-epub.py --all",
-    "build:downloads": "npm run build:pdf && npm run build:epub",
+    "build": "astro build && npm run build:downloads && node scripts/bin/fix-dist.mjs && npm run build:search",
+    "build:downloads": "node scripts/bin/build-downloads.mjs",
+    "build:pdf": "python3 scripts/bin/build-pdf.py --all",
+    "build:epub": "python3 scripts/bin/build-epub.py --all",
+    "build:search": "pagefind --site dist --root-selector 'main[data-pagefind-body]'",
     "preview": "astro preview",
     "astro": "astro",
-    "check:i18n": "node scripts/check-i18n.mjs",
-    "check:glossary": "node scripts/verify-glossary.mjs"
+    "sync:config": "node scripts/bin/sync-config.mjs",
+    "check:config": "node scripts/bin/sync-config.mjs --check",
+    "check:site": "node scripts/bin/check-site.mjs",
+    "check:glossary": "node scripts/bin/check-glossary.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",

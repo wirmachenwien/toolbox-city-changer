@@ -6,12 +6,12 @@ import Pagination from '../components/Pagination.astro';
 import Share from '../components/Share.astro';
 import BookmarkAdd from '../components/BookmarkAdd.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
-import Cover from '../components/Cover.astro';
-import TitlePage from '../components/TitlePage.astro';
 import AboutPage from '../components/AboutPage.astro';
 import ContentsPage from '../components/ContentsPage.astro';
 import { settings } from '../data/settings';
 import { bookCrumbs } from '../lib/nav';
+import { paginationNeighbours } from '../data/works';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -19,13 +19,17 @@ interface Props {
   file: string;
   title: string;
   description?: string;
-  layout: 'chapter' | 'cover' | 'title' | 'about' | 'contents';
+  layout: 'chapter' | 'about' | 'contents';
   currentUrl: string;
 }
 
 const { lang, file, title, description, layout, currentUrl } = Astro.props;
-const crumbs = bookCrumbs(lang, title);
+// The frontmatter title bypasses the markdown pipeline, so quotes are
+// localised once here; crumbs, share links and sheets reuse it.
+const displayTitle = smartQuotes(title, lang);
+const crumbs = bookCrumbs(lang, displayTitle);
 const isChapter = layout === 'chapter';
+const neighbours = paginationNeighbours(lang, 'book', file);
 ---
 <BaseLayout
   lang={lang}
@@ -36,15 +40,13 @@ const isChapter = layout === 'chapter';
   currentUrl={currentUrl}
 >
   <ReadingProgress />
-  {isChapter && <Breadcrumbs items={crumbs} />}
-  {layout === 'cover' && <Cover lang={lang} />}
-  {layout === 'title' && <TitlePage lang={lang} />}
-  {layout === 'about' && <AboutPage title={title} />}
-  {layout === 'contents' && <ContentsPage lang={lang} title={title} />}
+  {isChapter && <Breadcrumbs items={crumbs} lang={lang} />}
+  {layout === 'about' && <AboutPage title={displayTitle} lang={lang} />}
+  {layout === 'contents' && <ContentsPage lang={lang} title={displayTitle} />}
   {isChapter && <BookmarkAdd lang={lang} />}
   <div class="prose" data-prose data-glossary-terms>
     <slot />
   </div>
-  {isChapter && <Share lang={lang} url={currentUrl} title={title} />}
-  {isChapter && settings.web.pagination && <Pagination lang={lang} file={file} />}
+  {isChapter && <Share lang={lang} url={currentUrl} title={displayTitle} />}
+  {neighbours && settings.web.pagination && <Pagination lang={lang} prev={neighbours.prev} next={neighbours.next} />}
 </BaseLayout>

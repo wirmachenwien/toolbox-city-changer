@@ -1,39 +1,55 @@
 ---
-// English book (default language): /book/01.html ... The contents page is
-// virtual (no MDX source file); its title comes from the book catalogue.
+// Default-language book (/book/01.html, ...). The contents page is virtual
+// (no MDX source file); its title comes from the book catalogue. The bare
+// /book/ landing redirects to the contents page since the print-only
+// cover/title sheets have no web version.
 import { getCollection } from 'astro:content';
 import BookLayout from '../../layouts/BookLayout.astro';
 import MdxContent from '../../components/MdxContent.astro';
+import Redirect from '../../components/Redirect.astro';
 import { WEB_EXCLUDED_FILES, contentsLabel } from '../../data/works';
 import { bookUrl } from '../../lib/site';
+import { defaultLang } from '../../../handbook.config.ts';
 
 export async function getStaticPaths() {
   const entries = await getCollection('book');
   const slugs = entries
-    .filter((entry) => entry.id.startsWith('en/'))
-    .map((entry) => entry.id.slice(3))
+    .filter((entry) => entry.id.startsWith(`${defaultLang}/`))
+    .map((entry) => entry.id.slice(defaultLang.length + 1))
     .filter((slug) => !WEB_EXCLUDED_FILES.includes(slug))
     .map((slug) => ({ params: { slug } }));
-  return [...slugs, { params: { slug: 'contents' } }];
+  return [...slugs, { params: { slug: 'contents' } }, { params: { slug: undefined } }];
 }
 
 const { slug } = Astro.params;
-const file = slug ?? 'contents';
+const file = slug ?? 'index';
 const entries = await getCollection('book');
-const entry = file === 'contents'
+const entry = file === 'contents' || file === 'index'
   ? undefined
-  : entries.find((item) => item.id === `en/${file}`);
-if (!entry && file !== 'contents') throw new Error(`Missing English chapter: ${file}`);
-const title = entry?.data.title ?? contentsLabel('en');
-const url = bookUrl('en', file);
+  : entries.find((item) => item.id === `${defaultLang}/${file}`);
+if (!entry && file !== 'contents' && file !== 'index') {
+  throw new Error(`Missing ${defaultLang} chapter: ${file}`);
+}
+const title = entry?.data.title ?? contentsLabel(defaultLang);
+const url = bookUrl(defaultLang, file);
 ---
-<BookLayout
-  lang="en"
-  file={file}
-  title={title}
-  description={entry?.data.description}
-  layout={entry?.data.template ?? 'contents'}
-  currentUrl={url}
->
-  {entry && <MdxContent entry={entry} />}
-</BookLayout>
+{file === 'index' ? (
+  <Redirect
+    lang={defaultLang}
+    kind="book"
+    file="index"
+    target={bookUrl(defaultLang, 'contents')}
+    title={contentsLabel(defaultLang)}
+  />
+) : (
+  <BookLayout
+    lang={defaultLang}
+    file={file}
+    title={title}
+    description={entry?.data.description}
+    layout={entry?.data.template ?? 'contents'}
+    currentUrl={url}
+  >
+    {entry && <MdxContent entry={entry} />}
+  </BookLayout>
+)}

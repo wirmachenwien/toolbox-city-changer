@@ -3,14 +3,20 @@
 // by filename across the book and site asset folders and renders an
 // optimised srcset; captions come from the default slot.
 import { Image } from 'astro:assets';
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
 
 interface Props {
   src: string;
   alt: string;
   eager?: boolean;
+  lang?: Language;
 }
 
-const { src, alt, eager = false } = Astro.props;
+const { src, alt, eager = false, lang } = Astro.props;
+// The alt text bypasses the markdown pipeline, so quotes are localised
+// here to match the hast-transformed prose (only when lang is known).
+const displayAlt = lang ? smartQuotes(alt, lang) : alt;
 
 const images = import.meta.glob<{ default: ImageMetadata }>(
   '/src/assets/**/*.{jpg,jpeg,png,webp,avif,gif}',
@@ -29,8 +35,8 @@ const hasCaption = await Astro.slots.has('default');
 <figure class="figure">
   <Image
     src={image}
-    alt={alt}
-    title={alt || undefined}
+    alt={displayAlt}
+    title={displayAlt || undefined}
     widths={[400, 800, 1200]}
     sizes="(max-width: 44rem) 100vw, 44rem"
     loading={eager ? 'eager' : 'lazy'}

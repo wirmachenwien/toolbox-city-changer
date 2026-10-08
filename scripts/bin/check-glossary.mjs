@@ -1,14 +1,17 @@
-// Verification for the glossary auto-highlighter (run: node scripts/verify-glossary.mjs).
+#!/usr/bin/env node
+// Verification for the glossary auto-highlighter (run: node scripts/bin/check-glossary.mjs).
 // The single source of truth is src/data/glossary.json (validated on import
 // via src/data/glossary.ts); this script asserts dictionary quality, that
 // the glossary chapters render from it (no duplicated inline entries), that
 // chapter-01 recap terms exist in it, and term coverage across chapters.
 import { readFileSync, readdirSync } from 'node:fs';
-import { buildGlossaryMatcher, glossaryTerms } from '../src/data/glossary.ts';
+import { buildGlossaryMatcher, glossaryTerms } from '../../src/data/glossary.ts';
+import { languages } from '../../handbook.config.ts';
+import { createReporter } from '../lib/reporter.mjs';
 
 const BOOK = 'src/content/book';
-let failures = 0;
-const fail = (msg) => { failures += 1; console.error(`FAIL: ${msg}`); };
+const reporter = createReporter();
+const fail = (msg) => reporter.fail(msg);
 
 // Pseudo-render: approximate what the browser sees (link texts live inside
 // <a> and are skipped by the highlighter, so drop them; keep other text).
@@ -21,7 +24,7 @@ function pseudoRender(mdx) {
   return text.replace(/[ \t]+/g, ' ');
 }
 
-for (const lang of ['de', 'en', 'sl']) {
+for (const lang of languages) {
   const { pattern, lookup } = buildGlossaryMatcher(lang);
   const entries = glossaryTerms[lang];
 
@@ -74,7 +77,7 @@ for (const lang of ['de', 'en', 'sl']) {
     de: [['02.mdx', 'superblock'], ['02.mdx', 'modalfilter'], ['04.mdx', 'narrativ'], ['04.mdx', 'framing']],
     en: [['02.mdx', 'superblock'], ['04.mdx', 'theories of change'], ['02.mdx', 'modal filter']],
     sl: [['02.mdx', 'superbloki'], ['02.mdx', 'tranzitni promet'], ['04.mdx', 'teorije sprememb']],
-  }[lang];
+  }[lang] ?? [];
   for (const [file, needle] of mustFind) {
     const text = pseudoRender(readFileSync(`${BOOK}/${lang}/${file}`, 'utf8'));
     pattern.lastIndex = 0;
@@ -82,15 +85,16 @@ for (const lang of ['de', 'en', 'sl']) {
     if (!hits.some((h) => h.includes(needle.toLowerCase()))) fail(`${lang}/${file}: expected a "${needle}" mark`);
   }
 
-  // Boundary safety: compounds must NOT match.
-  for (const [probe, why] of [['Medienmonitoring zeigt Wirkung', 'compound prefix'], ['Bellermannkiezblock in Berlin', 'compound suffix']]) {
-    if (lang !== 'de') continue;
-    pattern.lastIndex = 0;
-    if (pattern.test(probe)) fail(`de: matched inside compound "${probe}" (${why})`);
+  // Boundary safety: compounds must NOT match (German-only probes).
+  if (lang === 'de') {
+    for (const [probe, why] of [['Medienmonitoring zeigt Wirkung', 'compound prefix'], ['Bellermannkiezblock in Berlin', 'compound suffix']]) {
+      pattern.lastIndex = 0;
+      if (pattern.test(probe)) fail(`de: matched inside compound "${probe}" (${why})`);
+    }
   }
 
   console.log(`${lang}: dictionary OK (${entries.length} entries)`);
 }
 
-if (failures > 0) { console.error(`${failures} check(s) failed`); process.exit(1); }
+if (reporter.hasFailures()) { console.error(`${reporter.failures} check(s) failed`); process.exit(1); }
 console.log('All glossary checks passed.');

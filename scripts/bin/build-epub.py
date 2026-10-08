@@ -1,48 +1,80 @@
 #!/usr/bin/env python3
 """Build one EPUB per language from the book content collections.
 
-The source of truth matches scripts/build-pdf.py: metadata and reading order
+The source of truth matches scripts/bin/build-pdf.py: metadata and reading order
 come from src/data/works.json, prose comes from src/content/book/<lang>/*.mdx.
 Project-specific MDX components are converted into static, reader-safe XHTML.
 
 Usage:
-    python3 scripts/build-epub.py --all
-    python3 scripts/build-epub.py --lang de --out dist/downloads
+    python3 scripts/bin/build-epub.py --all
+    python3 scripts/bin/build-epub.py --lang de --out dist/downloads
 """
 
 from __future__ import annotations
 
 import argparse
 import html
-import json
 import mimetypes
 import posixpath
 import re
 import shutil
+import sys
 import tempfile
 import uuid
 import zipfile
 from pathlib import Path
 from xml.sax.saxutils import escape as xml_escape
 
-ROOT = Path(__file__).resolve().parent.parent
-CONTENT = ROOT / "src" / "content" / "book"
-ASSETS = ROOT / "src" / "assets"
-DATA = ROOT / "src" / "data" / "works.json"
-GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
-PAGES = ROOT / "src" / "content" / "pages"
+# Entry point in scripts/bin/: add scripts/ to sys.path so the handbook
+# package imports work regardless of where Python is invoked from.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
-FIGURE_RE = re.compile(
-    r'<Figure\s+src="([^"]+)"\s+alt="([^"]*)"(?:\s*/>|>(.*?)</Figure>)', re.DOTALL
+from handbook.book import (
+    ASSETS,
+    CONTENT,
+    DEFAULT_LANG,
+    GLOSSARY_LANG_RE,
+    ROOT,
+    add_common_arguments,
+    download_stem,
+    find_asset,
+    front_opener,
+    glossary_data,
+    load_works,
+    markdown_to_html,
+    read_chapter_mdx,
+    resolve_jobs,
 )
-VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>)')
-BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
-COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
-TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
-SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
-CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
-OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
+from handbook.mdx import (
+    CCBADGE_RE,
+    ENDNOTES_RE,
+    FEATURE_CLOSE_RE,
+    FEATURE_OPEN_RE,
+    FIGURE_RE,
+    FOOTNOTE_RE,
+    FRONTMATTER_RE,
+    GLOSSARY_RE,
+    PULLQUOTE_RE,
+    QUESTION_RE,
+    QUIZ_RE,
+    VIDEO_RE,
+    chapter_lists,
+    endnotes_html,
+    feature_open_html,
+    glossary_html,
+    glossary_lang_html,
+    pullquote_html,
+    question_html,
+    quiz_html,
+    strip_static_handlers,
+)
+
+EPUB_CSS_PATH = ROOT / "src" / "styles" / "epub.css"
+
+
+def _attr(text: str) -> str:
+    """Escape a string for use in an id/href/alt attribute value."""
+    return html.escape(text, quote=True)
 
 # Body and title faces embedded in every EPUB so covers and chapters render
 # in Newsreader/Clarity City on any reader.
@@ -54,102 +86,11 @@ EPUB_FONTS = (
     "ClarityCity-Regular.ttf",
     "ClarityCity-Bold.ttf",
 )
-FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
-FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
-PULL_OPEN_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>')
-PULL_CLOSE_RE = re.compile(r'</PullQuote>')
-TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
-TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
-FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
-ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
-GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
-GLOSSARY_LANG_RE = re.compile(r'<Glossary\s+lang="(de|en|sl)"\s*/>')
-QUIZ_RE = re.compile(
-    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
-    re.DOTALL,
-)
-QUESTION_RE = re.compile(
-    r'<Question\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}[^>]*?answer=\{(\d+)\}[^>]*/?>',
-    re.DOTALL,
-)
 
 
-def object_entries(source: str) -> list[tuple[str, str]]:
-    return re.findall(r'\{\s*term:\s*"([^"]+)",\s*definition:\s*"([^"]+)"\s*\}', source)
-
-
-def note_entries(source: str) -> list[tuple[str, str]]:
-    return re.findall(r'\{\s*id:\s*"([^"]+)",\s*text:\s*"([^"]+)"\s*\}', source)
-
-
-def option_entries(source: str) -> list[tuple[str, bool]]:
-    return [(label, 'correct: true' in rest) for label, rest in re.findall(r'\{\s*label:\s*"([^"]+)"([^}]*)\}', source)]
-
-
-def glossary_html(source: str) -> str:
-    items = ''.join(f'<dt>{html.escape(term)}</dt><dd>{html.escape(definition)}</dd>' for term, definition in object_entries(source))
-    return f'\n\n<dl class="glossary">{items}</dl>\n'
-
-
-def glossary_lang_html(lang: str) -> str:
-    """Full shared glossary for a language (src/data/glossary.json)."""
-    data = json.loads(GLOSSARY_DATA.read_text(encoding="utf-8"))
-    items = ''.join(
-        f'<dt>{html.escape(entry["term"])}</dt><dd>{html.escape(entry["definition"])}</dd>'
-        for entry in data.get(lang, [])
-    )
-    return f'\n\n<dl class="glossary">{items}</dl>\n'
-
-
-def endnotes_html(source: str) -> str:
-    items = ''.join(f'<li id="note-{html.escape(note_id, quote=True)}">{html.escape(text)}</li>' for note_id, text in note_entries(source))
-    return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
-
-
-QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
-
-
-def quiz_html(question: str, source: str, lang: str = "de") -> str:
-    options = ''.join(f'<li>{label}</li>' for label, _ in option_entries(source))
-    correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(option_entries(source)) if is_correct)
-    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
-    return (
-        f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
-        f'<ol>{options}</ol>'
-        f'<p style="transform: rotate(180deg);">{label}: {correct}</p></div>\n'
-    )
-
-
-def question_html(question: str, source: str, answer: str, lang: str = "de") -> str:
-    """Single-choice Question: plain string options plus a 0-based answer index."""
-    options = re.findall(r'"([^"]+)"', source)
-    items = ''.join(f'<li>{label}</li>' for label in options)
-    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
-    return (
-        f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
-        f'<ol>{items}</ol>'
-        f'<p style="transform: rotate(180deg);">{label}: {int(answer) + 1}</p></div>\n'
-    )
-
-def front_opener(lang: str) -> str:
-    index = PAGES / lang / "index.mdx"
-    if not index.exists():
-        return ""
-    match = OPENER_RE.search(index.read_text(encoding="utf-8"))
-    return match.group(1) if match else ""
-
-
-def source_image(filename: str) -> Path | None:
-    # The CMS image picker may store a repo-relative path; match by basename.
-    name = filename.rsplit("/", 1)[-1]
-    for folder in ("book", "site"):
-        candidate = ASSETS / folder / name
-        if candidate.exists():
-            return candidate
-    candidate = ROOT / "public" / "images" / name
-    if candidate.exists():
-        return candidate
-    return None
+def epub_pullquote_html(match: re.Match[str]) -> str:
+    """Pull quote keeping an optional citation (cite escaped for XML)."""
+    return pullquote_html(match, html.escape)
 
 
 def media_type(path: Path) -> str:
@@ -168,19 +109,23 @@ def as_xhtml(body: str) -> str:
     return body
 
 
+# Chapter slugs styled as front matter + print order live in handbook.mdx
+# (mirrors src/data/works.ts); EPUB packaging below is reader-specific.
+
+
 class EpubBook:
     def __init__(self, lang: str, works: dict, out_path: Path):
         self.lang = lang
         self.works = works
         self.out_path = out_path
-        self.uid = works.get("identifier") or f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, f'toolbox-city-changer-{lang}')}"
+        self.uid = works.get("identifier") or f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, download_stem(lang))}"
         self.images: dict[str, str] = {}
         self.fonts: dict[str, str] = {}
         self.chapters: list[dict[str, str]] = []
         self.cover_image: str | None = None
 
     def add_image(self, filename: str) -> str:
-        source = source_image(filename)
+        source = find_asset(filename)
         if source is None:
             print(f"warning: image not found: {filename}")
             return filename
@@ -214,40 +159,34 @@ class EpubBook:
             lambda m: f'\n\n*Video: [{m.group(2)}](https://www.youtube.com/watch?v={m.group(1)})*\n',
             text,
         )
-        text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
-        text = COPY_RE.sub("", text)
-        text = TOC_RE.sub("", text)
-        text = SPOILER_RE.sub(lambda m: m.group(1), text)
+        text = strip_static_handlers(text)
         text = CCBADGE_RE.sub(
             '<p><a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> Wir machen Wien, Changing Cities &amp; Prostorož</p>',
             text,
         )
-        text = FEATURE_OPEN_RE.sub(lambda m: f'\n\n<div class="feature-box"><p><strong>{html.escape(m.group(1))}</strong></p>\n' if m.group(1) else '\n\n<div class="feature-box">\n', text)
+        text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(m.group(1), html.escape), text)
         text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
-        text = PULL_OPEN_RE.sub('\n\n<blockquote class="pullquote">\n', text)
-        text = PULL_CLOSE_RE.sub('\n</blockquote>\n', text)
-        text = TABLE_OPEN_RE.sub('\n\n', text)
-        text = TABLE_CLOSE_RE.sub('\n\n', text)
-        text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{html.escape(m.group(1), quote=True)}">{m.group(2)}</sup>', text)
-        text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
-        text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
-        text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1)), text)
-        text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), self.lang), text)
-        text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), self.lang), text)
+        text = PULLQUOTE_RE.sub(epub_pullquote_html, text)
+        # Footnotes: EPUB side of the divergence documented in handbook.mdx —
+        # linked <a href="#note-id"> refs plus an endnotes section.
+        text = FOOTNOTE_RE.sub(lambda m: f'<a href="#note-{_attr(m.group(1))}"><sup id="ref-{_attr(m.group(1))}">{m.group(2)}</sup></a>', text)
+        text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1), _attr), text)
+        text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1), html.escape), text)
+        text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1), glossary_data(), html.escape), text)
+        text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), self.lang, DEFAULT_LANG), text)
+        text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), self.lang, DEFAULT_LANG), text)
         return text.strip() + "\n"
 
     def render_markdown(self, md_text: str) -> str:
-        import markdown  # pip: markdown
-
-        return as_xhtml(markdown.markdown(self.convert_mdx(md_text), extensions=["extra"]))
+        # Render-time typographic quotes (source keeps straight quotes).
+        return as_xhtml(markdown_to_html(self.convert_mdx(md_text), self.lang))
 
     def add_chapter(self, slug: str, title: str, body: str) -> None:
         filename = f"{slug}.xhtml"
         self.chapters.append({"slug": slug, "title": title, "filename": filename, "body": body})
 
     def build_chapters(self) -> None:
-        files: list[str] = self.works["products"]["pdf"]["files"]
-        toc: list[dict] = self.works["products"]["pdf"]["toc"]
+        files, toc = chapter_lists(self.works)
         labels = {entry["file"]: entry["label"] for entry in toc}
 
         for filename in EPUB_FONTS:
@@ -293,16 +232,15 @@ class EpubBook:
                 items = "".join(
                     f'<li><a href="{entry["file"]}.xhtml">{html.escape(entry["label"])}</a></li>'
                     for entry in toc
-                    if entry["file"] != "0-0-cover"
                 )
                 body = f'<section><h1>{html.escape(title)}</h1><ol>{items}</ol></section>'
                 self.add_chapter(slug, title, body)
                 continue
             path = CONTENT / self.lang / f"{slug}.mdx"
-            if not path.exists():
+            md_text = read_chapter_mdx(self.lang, slug)
+            if md_text is None:
                 print(f"warning: missing chapter {path}")
                 continue
-            md_text = path.read_text(encoding="utf-8")
             body = f'<section>{self.render_markdown(md_text)}</section>'
             self.add_chapter(slug, title, body)
 
@@ -344,7 +282,7 @@ class EpubBook:
         image_items = []
         for index, href in enumerate(self.images.values(), start=1):
             source_name = posixpath.basename(href)
-            source = source_image(source_name)
+            source = find_asset(source_name)
             properties = ' properties="cover-image"' if href == self.cover_image else ""
             image_items.append(
                 f'<item id="image-{index}" href="{xml_escape(href)}" media-type="{media_type(source or Path(source_name))}"{properties}/>'
@@ -415,7 +353,7 @@ class EpubBook:
                 '</rootfiles></container>\n',
                 encoding="utf-8",
             )
-            (oebps / "styles" / "epub.css").write_text(EPUB_CSS, encoding="utf-8")
+            (oebps / "styles" / "epub.css").write_text(EPUB_CSS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
             (oebps / "nav.xhtml").write_text(self.nav_document(), encoding="utf-8")
             (oebps / "content.opf").write_text(self.opf_document(), encoding="utf-8")
 
@@ -436,123 +374,16 @@ class EpubBook:
                         epub.write(path, path.relative_to(base).as_posix(), compress_type=zipfile.ZIP_DEFLATED)
 
 
-EPUB_CSS = """@font-face {
-  font-family: "Newsreader";
-  font-style: normal;
-  font-weight: 400;
-  src: url("../fonts/NewsreaderText-Regular.ttf");
-}
-@font-face {
-  font-family: "Newsreader";
-  font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/NewsreaderText-Bold.ttf");
-}
-@font-face {
-  font-family: "Newsreader";
-  font-style: italic;
-  font-weight: 400;
-  src: url("../fonts/NewsreaderText-Italic.ttf");
-}
-@font-face {
-  font-family: "Newsreader";
-  font-style: italic;
-  font-weight: 700;
-  src: url("../fonts/NewsreaderText-BoldItalic.ttf");
-}
-@font-face {
-  font-family: "Clarity City";
-  font-style: normal;
-  font-weight: 400;
-  src: url("../fonts/ClarityCity-Regular.ttf");
-}
-@font-face {
-  font-family: "Clarity City";
-  font-style: normal;
-  font-weight: 700;
-  src: url("../fonts/ClarityCity-Bold.ttf");
-}
-body {
-  font-family: "Newsreader", Georgia, serif;
-  line-height: 1.45;
-}
-h1, h2, h3 {
-  font-family: "Clarity City", Helvetica, sans-serif;
-  font-weight: 700;
-  line-height: 1.15;
-}
-img {
-  display: block;
-  height: auto;
-  max-width: 100%;
-}
-figure {
-  margin: 1.5em 0;
-}
-figcaption {
-  font-size: 0.9em;
-  margin-top: 0.5em;
-}
-/* Full-bleed cover: the hero photo fills the whole page with no margins or
-   frames; the metadata sits on top in a bottom-anchored scrim. */
-.cover-full {
-  margin: 0;
-  padding: 0;
-  position: relative;
-  height: 100vh;
-  color: #fff;
-}
-.cover-full img.cover-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.cover-full .cover-scrim {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.45) 40%, rgba(0, 0, 0, 0.05) 70%, rgba(0, 0, 0, 0.25) 100%);
-}
-.cover-full .cover-text {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 8% 6%;
-}
-.cover-full h1 {
-  font-size: 2em;
-  color: #fff;
-  margin: 0 0 0.3em;
-}
-.cover-full .cover-sub {
-  font-size: 1.1em;
-  margin: 0;
-}
-"""
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build handbook EPUBs.")
-    parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
-    parser.add_argument(
-        "--out",
-        default="dist/downloads",
-        help="output directory (served from dist/ by the site)",
-    )
-    parser.add_argument("--all", action="store_true", help="build EPUBs for de/en/sl")
+    add_common_arguments(parser, "EPUBs")
     args = parser.parse_args()
 
-    works_data = json.loads(DATA.read_text(encoding="utf-8"))
-    jobs = ("en", "de", "sl") if args.all else (args.lang,)
+    works_data = load_works()
+    jobs = resolve_jobs(args)
     out_dir = ROOT / args.out
     for lang in jobs:
-        stem = f"toolbox-city-changer-{lang}"
+        stem = download_stem(lang)
         out_path = out_dir / f"{stem}.epub"
         EpubBook(lang, works_data[lang], out_path).write()
         print(f"wrote {out_path}")

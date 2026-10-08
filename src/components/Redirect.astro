@@ -1,0 +1,37 @@
+---
+// Static redirect page (meta refresh + canonical + hreflang alternates):
+// used for the book landings (/book/, /book/<lang>/), which have no content
+// of their own since the print-only cover/title sheets have no web version.
+import { alternates, canonical } from '../lib/site';
+import { smartQuotes } from '../lib/smart-quotes';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+  kind: 'page' | 'book';
+  file: string;
+  target: string;
+  title: string;
+}
+
+const { lang, kind, file, target, title } = Astro.props;
+const alternateLinks = alternates(kind, file);
+// Catalogue/frontmatter titles bypass the markdown pipeline, so quotes
+// are localised here to match the hast-transformed prose.
+const displayTitle = smartQuotes(title, lang);
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0; url=${target}`} />
+    <link rel="canonical" href={canonical(target)} />
+    {alternateLinks.map((entry) => (
+      <link rel="alternate" hreflang={entry.lang} href={entry.url} />
+    ))}
+    <title>{displayTitle}</title>
+  </head>
+  <body>
+    <p><a href={target}>{displayTitle}</a></p>
+  </body>
+</html>

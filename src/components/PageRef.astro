@@ -2,6 +2,7 @@
 // Cross-reference to another book page, with the localised page-wording.
 import { t } from '../lib/i18n';
 import { bookUrl } from '../lib/site';
+import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
 interface Props {
@@ -11,7 +12,10 @@ interface Props {
   page?: string;
 }
 const { lang, file, label, page } = Astro.props;
+// Author-supplied labels bypass the markdown pipeline, so quotes are
+// localised here to match the hast-transformed prose.
+const displayLabel = smartQuotes(label, lang);
 ---
 <a href={bookUrl(lang, file)}>
-  {label}{page && ` ${t(lang, 'cross-references.pre-page-number', '(page ')}${page}${t(lang, 'cross-references.post-page-number', ')')}`}
+  {displayLabel}{page && ` ${t(lang, 'cross-references.pre-page-number', '(page ')}${page}${t(lang, 'cross-references.post-page-number', ')')}`}
 </a>

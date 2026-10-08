@@ -48,9 +48,12 @@ import Toc from '../../components/Toc.astro';
 import Video from '../../components/Video.astro';
 import VisualToc from '../../components/VisualToc.astro';
 import { withBase } from '../../lib/site';
+import { paginationNeighbours } from '../../data/works';
+import { slug } from '../../../handbook.config.ts';
 
 const url = withBase('/preview/kitchen-sink.html');
 const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'download', 'check', 'copy', 'bluesky', 'facebook', 'linkedin', 'reddit', 'x', 'whatsapp'] as const;
+const pagination = paginationNeighbours('de', 'book', '02');
 ---
 <BaseLayout lang="de" title="Komponenten-Showcase" kind="page" file="index" currentUrl={url} noindex hreflang={false}>
   <div class="prose" data-prose>
@@ -107,8 +110,8 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
 
     <h2 class="sink-label">DownloadLink</h2>
     <div class="sink-demo">
-      <DownloadLink href="/downloads/toolbox-city-changer-de.pdf">PDF ansehen</DownloadLink>
-      <DownloadLink href="/downloads/toolbox-city-changer-de.epub">EPUB herunterladen</DownloadLink>
+      <DownloadLink href={`/downloads/${slug}-de.pdf`}>PDF ansehen</DownloadLink>
+      <DownloadLink href={`/downloads/${slug}-de.epub`}>EPUB herunterladen</DownloadLink>
     </div>
 
     <h2 class="sink-label">ExpandableBox</h2>
@@ -165,7 +168,7 @@ const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'downl
     <div class="sink-demo"><PageRef lang="de" file="02" label="Weiter zu Kapitel 2." /></div>
 
     <h2 class="sink-label">Pagination</h2>
-    <div class="sink-demo"><Pagination lang="de" file="02" /></div>
+    <div class="sink-demo">{pagination && <Pagination lang="de" prev={pagination.prev} next={pagination.next} />}</div>
 
     <h2 class="sink-label">PullQuote</h2>
     <div class="sink-demo"><PullQuote cite="Toolbox">Wie können wir unsere Stadt lebenswerter machen?</PullQuote></div>

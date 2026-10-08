@@ -7,83 +7,63 @@ authors (Figure, Video, ButtonLink, CopyText, Toc) into print-safe markup,
 and renders A4 PDFs with WeasyPrint (no license keys, no proprietary tools).
 
 Usage:
-    python3 scripts/build-pdf.py --all
-    python3 scripts/build-pdf.py --lang de --out dist/downloads
-    python3 scripts/build-pdf.py --lang sl --html-only
+    python3 scripts/bin/build-pdf.py --all
+    python3 scripts/bin/build-pdf.py --lang de --out dist/downloads
+    python3 scripts/bin/build-pdf.py --lang sl --html-only
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import math
 import re
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-CONTENT = ROOT / "src" / "content" / "book"
-ASSETS = ROOT / "src" / "assets"
-DATA = ROOT / "src" / "data" / "works.json"
-GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
+# Entry point in scripts/bin/: add scripts/ to sys.path so the handbook
+# package imports work regardless of where Python is invoked from.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from handbook.book import (
+    ASSETS,
+    CONTENT,
+    DEFAULT_LANG,
+    GLOSSARY_LANG_RE,
+    ROOT,
+    add_common_arguments,
+    download_stem,
+    find_asset,
+    front_opener,
+    glossary_data,
+    load_works,
+    markdown_to_html,
+    read_chapter_mdx,
+    resolve_jobs,
+)
+from handbook.mdx import (
+    CCBADGE_RE,
+    FEATURE_CLOSE_RE,
+    FEATURE_OPEN_RE,
+    FIGURE_RE,
+    FOOTNOTE_RE,
+    FRONTMATTER_RE,
+    GLOSSARY_RE,
+    PULLQUOTE_RE,
+    QUESTION_RE,
+    QUIZ_RE,
+    VIDEO_RE,
+    chapter_lists,
+    feature_open_html,
+    glossary_html,
+    glossary_lang_html,
+    parse_endnotes,
+    pullquote_html,
+    question_html,
+    quiz_html,
+    strip_static_handlers,
+)
+
 PRINT_CSS = ROOT / "src" / "styles" / "print.css"
-
-FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
-FIGURE_RE = re.compile(
-    r'<Figure\s+src="([^"]+)"\s+alt="([^"]*)"(?:\s*/>|>(.*?)</Figure>)', re.DOTALL
-)
-VIDEO_RE = re.compile(r'<Video\s+id="([^"]+)"\s+caption="([^"]*)"(?:\s*/>|[^>]*>)')
-BUTTON_RE = re.compile(r'<ButtonLink\s+href="([^"]+)">([^<]+)</ButtonLink>')
-COPY_RE = re.compile(r'<CopyText\s+[^>]*/>')
-TOC_RE = re.compile(r'<Toc\s+[^>]*/>')
-SPOILER_RE = re.compile(r'<Spoiler\b[^>]*>(.*?)</Spoiler>', re.DOTALL)
-CCBADGE_RE = re.compile(r'<CcBadge\s*/>')
-OPENER_RE = re.compile(r'^openerImage:\s*"([^"]+)"', re.MULTILINE)
-FEATURE_OPEN_RE = re.compile(r'<FeatureBox(?:\s+title="([^"]*)")?\s*>')
-FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
-PULL_OPEN_RE = re.compile(r'<PullQuote(?:\s+cite="([^"]*)")?\s*>')
-PULL_CLOSE_RE = re.compile(r'</PullQuote>')
-TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
-TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
-FOOTNOTE_RE = re.compile(r'<FootnoteRef\s+id="([^"]+)"\s+number=\{(\d+)\}\s*/>')
-ENDNOTES_RE = re.compile(r'<Endnotes\s+notes=\{\[(.*?)\]\}(?:\s+backLabel="[^"]*")?\s*/>', re.DOTALL)
-GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
-GLOSSARY_LANG_RE = re.compile(r'<Glossary\s+lang="(de|en|sl)"\s*/>')
-QUIZ_RE = re.compile(
-    r'<Quiz\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}\s*/>',
-    re.DOTALL,
-)
-QUESTION_RE = re.compile(
-    r'<Question\s+id="[^"]+"\s+lang="[^"]+"\s+question="([^"]+)"[^>]*?options=\{\[(.*?)\]\}[^>]*?answer=\{(\d+)\}[^>]*/?>',
-    re.DOTALL,
-)
-
-PAGES = ROOT / "src" / "content" / "pages"
-
-
-def front_opener(lang: str) -> str:
-    """Hero image of the language start page (source of the print cover)."""
-    index = PAGES / lang / "index.mdx"
-    if not index.exists():
-        return ""
-    match = OPENER_RE.search(index.read_text(encoding="utf-8"))
-    return match.group(1) if match else ""
-
-
-def find_asset(filename: str) -> Path | None:
-    """Repo file backing a content image name (book, site, then public)."""
-    # The CMS image picker may store a repo-relative path; match by basename.
-    name = filename.rsplit("/", 1)[-1]
-    for folder in ("book", "site"):
-        candidate = ASSETS / folder / name
-        if candidate.exists():
-            return candidate
-    # Site chrome lives in public/ (e.g. the official CC badge PNG, which
-    # WeasyPrint can embed; SVG is not a supported image format for print).
-    candidate = ROOT / "public" / "images" / name
-    if candidate.exists():
-        return candidate
-    return None
 
 
 def image_uri(filename: str) -> str:
@@ -166,7 +146,7 @@ def print_css() -> str:
     return FONT_RE.sub(lambda m: f'url("{font_uri(m.group(1))}")', css)
 
 
-def convert_mdx(text: str, lang: str = "de") -> str:
+def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
     text = FRONTMATTER_RE.sub("", text, count=1)
 
     def figure(match: re.Match[str]) -> str:
@@ -181,88 +161,39 @@ def convert_mdx(text: str, lang: str = "de") -> str:
         lambda m: f"\n\n*Video: {m.group(2)} (https://www.youtube.com/watch?v={m.group(1)})*\n",
         text,
     )
-    text = BUTTON_RE.sub(lambda m: f"[{m.group(2)}]({m.group(1)})", text)
-    text = COPY_RE.sub("", text)
-    text = TOC_RE.sub("", text)
-    text = SPOILER_RE.sub(lambda m: m.group(1), text)
+    text = strip_static_handlers(text)
     text = CCBADGE_RE.sub(cc_badge_html(), text)
-    text = FEATURE_OPEN_RE.sub(lambda m: f'\n\n<div class="feature-box"><p><strong>{m.group(1)}</strong></p>\n' if m.group(1) else '\n\n<div class="feature-box">\n', text)
+    text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(m.group(1)), text)
     text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
-    text = PULL_OPEN_RE.sub('\n\n<blockquote class="pullquote">\n', text)
-    text = PULL_CLOSE_RE.sub('\n</blockquote>\n', text)
-    text = TABLE_OPEN_RE.sub('\n\n', text)
-    text = TABLE_CLOSE_RE.sub('\n\n', text)
-    text = FOOTNOTE_RE.sub(lambda m: f'<sup id="ref-{m.group(1)}">{m.group(2)}</sup>', text)
-    text = ENDNOTES_RE.sub(lambda m: endnotes_html(m.group(1)), text)
+    text = PULLQUOTE_RE.sub(pullquote_html, text)
+    # Footnotes: PDF side of the divergence documented in handbook.mdx —
+    # collect Endnotes, drop the section, attach float:footnote spans.
+    text, notes = parse_endnotes(text)
+
+    def footnote(match: re.Match[str]) -> str:
+        note_id, number = match.group(1), match.group(2)
+        note_text = notes.get(note_id)
+        if note_text is None:
+            print(f"warning: footnote ref without note: {note_id}", file=sys.stderr)
+            return f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
+        return (
+            f'<sup class="footnote-call" id="ref-{note_id}">{number}</sup>'
+            f'<span class="footnote">'
+            f'<span class="footnote-marker">{number}</span> {note_text}</span>'
+        )
+
+    text = FOOTNOTE_RE.sub(footnote, text)
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
-    text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1)), text)
-    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang), text)
-    text = QUESTION_RE.sub(lambda m: question_html(m.group(1), m.group(2), m.group(3), lang), text)
+    text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1), glossary_data()), text)
+    text = QUIZ_RE.sub(lambda m: quiz_html(m.group(1), m.group(2), lang, DEFAULT_LANG), text)
+    text = QUESTION_RE.sub(
+        lambda m: question_html(m.group(1), m.group(2), m.group(3), lang, DEFAULT_LANG), text
+    )
     return text.strip() + "\n"
 
 
-def object_entries(source: str) -> list[tuple[str, str]]:
-    return re.findall(r'\{\s*term:\s*"([^"]+)",\s*definition:\s*"([^"]+)"\s*\}', source)
-
-
-def note_entries(source: str) -> list[tuple[str, str]]:
-    return re.findall(r'\{\s*id:\s*"([^"]+)",\s*text:\s*"([^"]+)"\s*\}', source)
-
-
-def option_entries(source: str) -> list[tuple[str, bool]]:
-    return [(label, 'correct: true' in rest) for label, rest in re.findall(r'\{\s*label:\s*"([^"]+)"([^}]*)\}', source)]
-
-
-def glossary_html(source: str) -> str:
-    items = ''.join(f'<dt>{term}</dt><dd>{definition}</dd>' for term, definition in object_entries(source))
-    return f'\n\n<dl class="glossary">{items}</dl>\n'
-
-
-def glossary_lang_html(lang: str) -> str:
-    """Full shared glossary for a language (src/data/glossary.json)."""
-    data = json.loads(GLOSSARY_DATA.read_text(encoding="utf-8"))
-    items = ''.join(
-        f'<dt>{entry["term"]}</dt><dd>{entry["definition"]}</dd>'
-        for entry in data.get(lang, [])
-    )
-    return f'\n\n<dl class="glossary">{items}</dl>\n'
-
-
-def endnotes_html(source: str) -> str:
-    items = ''.join(f'<li id="note-{note_id}">{text}</li>' for note_id, text in note_entries(source))
-    return f'\n\n<section class="endnotes"><ol>{items}</ol></section>\n'
-
-
-QUIZ_ANSWERS_LABEL = {"de": "Richtige Antworten", "en": "Correct answers", "sl": "Pravilni odgovori"}
-
-
-def quiz_html(question: str, source: str, lang: str = "de") -> str:
-    options = ''.join(f'<li>{label}</li>' for label, _ in option_entries(source))
-    correct = ', '.join(str(i + 1) for i, (_, is_correct) in enumerate(option_entries(source)) if is_correct)
-    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
-    return (
-        f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
-        f'<ol>{options}</ol>'
-        f'<p style="transform: rotate(180deg);">{label}: {correct}</p></div>\n'
-    )
-
-
-def question_html(question: str, source: str, answer: str, lang: str = "de") -> str:
-    """Single-choice Question: plain string options plus a 0-based answer index."""
-    options = re.findall(r'"([^"]+)"', source)
-    items = ''.join(f'<li>{label}</li>' for label in options)
-    label = QUIZ_ANSWERS_LABEL.get(lang, QUIZ_ANSWERS_LABEL["de"])
-    return (
-        f'\n\n<div class="quiz"><p><strong>Quiz: {question}</strong></p>'
-        f'<ol>{items}</ol>'
-        f'<p style="transform: rotate(180deg);">{label}: {int(answer) + 1}</p></div>\n'
-    )
-
-
-def chapter_html(slug: str, md_text: str, lang: str = "de") -> str:
-    import markdown  # pip: markdown
-
-    body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
+def chapter_html(slug: str, md_text: str, lang: str = DEFAULT_LANG) -> str:
+    body = markdown_to_html(convert_mdx(md_text, lang), lang)
     return f'<section class="chapter" id="file-{slug}">\n{body}\n</section>'
 
 
@@ -274,11 +205,8 @@ def toc_html(entries: list[dict]) -> str:
 
 
 def build_document(lang: str) -> str:
-    import markdown  # pip: markdown
-
-    works = json.loads(DATA.read_text(encoding="utf-8"))[lang]
-    files: list[str] = works["products"]["pdf"]["files"]
-    toc: list[dict] = works["products"]["pdf"]["toc"]
+    works = load_works()[lang]
+    files, toc = chapter_lists(works)
     title = works["title"]
     # The cover is generated from the start-page hero image + metadata.
     cover_file = front_opener(lang) or works.get("image") or ""
@@ -300,7 +228,7 @@ def build_document(lang: str) -> str:
         if slug == "0-0-cover":
             style_attr = f' style="{cover_style}"' if cover_style else ""
             parts.append(
-                f'<section class="cover-sheet"{style_attr}>'
+                f'<section class="cover-sheet" id="file-0-0-cover"{style_attr}>'
                 '<div class="cover-scrim"></div>'
                 '<div class="cover-text">'
                 f"<h1>{title}</h1><p class=\"cover-sub\">{works.get('subtitle', '')}</p>"
@@ -309,7 +237,7 @@ def build_document(lang: str) -> str:
             continue
         if slug == "0-1-titlepage":
             parts.append(
-                '<section class="chapter frontmatter-sheet">'
+                '<section class="chapter frontmatter-sheet" id="file-0-1-titlepage">'
                 f"<h1>{title}</h1><p>{works.get('subtitle', '')}</p>"
                 f"<p>{works.get('creator', '')}</p>"
                 f"<p>{works.get('contributor', '')}</p>"
@@ -323,18 +251,17 @@ def build_document(lang: str) -> str:
                 "Contents",
             )
             parts.append(
-                '<section class="chapter frontmatter-sheet">'
+                '<section class="chapter frontmatter-sheet" id="file-contents">'
                 f"<h1>{contents_title}</h1>"
                 f"{toc_html(toc)}</section>"
             )
             continue
-        path = CONTENT / lang / f"{slug}.mdx"
-        if not path.exists():
-            print(f"warning: missing chapter {path}", file=sys.stderr)
+        md_text = read_chapter_mdx(lang, slug)
+        if md_text is None:
+            print(f"warning: missing chapter {CONTENT / lang / f'{slug}.mdx'}", file=sys.stderr)
             continue
-        md_text = path.read_text(encoding="utf-8")
         if slug == "about":
-            body = markdown.markdown(convert_mdx(md_text, lang), extensions=["extra"])
+            body = markdown_to_html(convert_mdx(md_text, lang), lang)
             about_label = next(
                 (entry["label"] for entry in toc if entry["file"] == "about"),
                 "About",
@@ -344,7 +271,7 @@ def build_document(lang: str) -> str:
             # (the body opens with plain intro paragraphs).
             body = body.replace("</h2>", f"</h2>{cc_badge_html()}", 1)
             parts.append(
-                '<section class="chapter frontmatter-sheet">'
+                '<section class="chapter frontmatter-sheet" id="file-about">'
                 f"<h1>{about_label}</h1>{body}</section>"
             )
         else:
@@ -359,23 +286,17 @@ def build_document(lang: str) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build handbook PDFs with WeasyPrint.")
-    parser.add_argument("--lang", choices=["de", "en", "sl"], default="en")
-    parser.add_argument(
-        "--out",
-        default="dist/downloads",
-        help="output directory (served from dist/ by the site)",
-    )
-    parser.add_argument("--all", action="store_true", help="build PDFs for de/en/sl")
+    add_common_arguments(parser, "PDFs")
     parser.add_argument("--html-only", action="store_true", help="skip WeasyPrint, emit HTML")
     args = parser.parse_args()
 
-    jobs = ("en", "de", "sl") if args.all else (args.lang,)
+    jobs = resolve_jobs(args)
     out_dir = ROOT / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
 
     for lang in jobs:
         html = build_document(lang)
-        stem = f"toolbox-city-changer-{lang}"
+        stem = download_stem(lang)
         html_path = out_dir / f"{stem}.html"
         html_path.write_text(html, encoding="utf-8")
         print(f"wrote {html_path}")
