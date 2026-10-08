@@ -312,7 +312,7 @@ def build_document(lang: str) -> str:
         if slug == "0-0-cover":
             style_attr = f' style="{cover_style}"' if cover_style else ""
             parts.append(
-                f'<section class="cover-sheet"{style_attr}>'
+                f'<section class="cover-sheet" id="file-0-0-cover"{style_attr}>'
                 '<div class="cover-scrim"></div>'
                 '<div class="cover-text">'
                 f"<h1>{title}</h1><p class=\"cover-sub\">{works.get('subtitle', '')}</p>"
@@ -321,7 +321,7 @@ def build_document(lang: str) -> str:
             continue
         if slug == "0-1-titlepage":
             parts.append(
-                '<section class="chapter frontmatter-sheet">'
+                '<section class="chapter frontmatter-sheet" id="file-0-1-titlepage">'
                 f"<h1>{title}</h1><p>{works.get('subtitle', '')}</p>"
                 f"<p>{works.get('creator', '')}</p>"
                 f"<p>{works.get('contributor', '')}</p>"
@@ -335,7 +335,7 @@ def build_document(lang: str) -> str:
                 "Contents",
             )
             parts.append(
-                '<section class="chapter frontmatter-sheet">'
+                '<section class="chapter frontmatter-sheet" id="file-contents">'
                 f"<h1>{contents_title}</h1>"
                 f"{toc_html(toc)}</section>"
             )
@@ -358,7 +358,7 @@ def build_document(lang: str) -> str:
             # (the body opens with plain intro paragraphs).
             body = body.replace("</h2>", f"</h2>{cc_badge_html()}", 1)
             parts.append(
-                '<section class="chapter frontmatter-sheet">'
+                '<section class="chapter frontmatter-sheet" id="file-about">'
                 f"<h1>{about_label}</h1>{body}</section>"
             )
         else:

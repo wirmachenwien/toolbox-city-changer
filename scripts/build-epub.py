@@ -305,7 +305,6 @@ class EpubBook:
                 items = "".join(
                     f'<li><a href="{entry["file"]}.xhtml">{html.escape(entry["label"])}</a></li>'
                     for entry in toc
-                    if entry["file"] != "0-0-cover"
                 )
                 body = f'<section><h1>{html.escape(title)}</h1><ol>{items}</ol></section>'
                 self.add_chapter(slug, title, body)
