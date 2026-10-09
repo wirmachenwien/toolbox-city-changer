@@ -6,8 +6,13 @@ import { satteri } from '@astrojs/markdown-satteri';
 import { smartQuotesHastPlugin } from './src/lib/satteri-smart-quotes.ts';
 import { site, base, defaultLang } from './handbook.config.ts';
 
-const works = JSON.parse(readFileSync(new URL('./src/data/works.json', import.meta.url), 'utf8'));
-const legacyDefaultBookRedirects = Object.fromEntries(
+/** @typedef {{ file: string, web?: boolean }} Chapter */
+/** @typedef {{ chapters?: Chapter[] }} Work */
+
+const works = /** @type {Record<string, Work>} */ (
+  JSON.parse(readFileSync(new URL('./src/data/works.json', import.meta.url), 'utf8'))
+);
+const defaultLanguageBookRedirects = Object.fromEntries(
   [...new Set([...(works[defaultLang]?.chapters ?? [])
     .filter((chapter) => chapter.web !== false)
     .map((chapter) => chapter.file), 'contents'])]
@@ -23,14 +28,13 @@ export default defineConfig({
     // book/01 -> book/01.html (no trailing-slash directories).
     format: 'file',
   },
-  // Legacy default-language prefix: the default language lives at the root
-  // (/ and /book/), so the old /<lang>/ and /book/<lang>/ URLs redirect to
-  // their canonical equivalents (emitted as static redirect pages).
+  // The default language is canonical at the root (/ and /book/), but the
+  // prefixed form should still resolve and redirect consistently.
   redirects: {
     [`/${defaultLang}`]: '/',
     [`/${defaultLang}/search`]: '/search',
     [`/book/${defaultLang}`]: '/book',
-    ...legacyDefaultBookRedirects,
+    ...defaultLanguageBookRedirects,
   },
   integrations: [mdx()],
   markdown: {

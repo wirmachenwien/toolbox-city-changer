@@ -2,7 +2,7 @@
 //
 // site, base, slug, languages and defaultLang are defined exactly once here.
 // Everything else derives from them:
-// - astro.config.mjs (site, base, legacy default-lang redirects)
+// - astro.config.mjs (site, base, default-language redirects)
 // - src/lib/site.ts (SITE_URL, BASE_PATH, DEFAULT_LANG, URL helpers)
 // - src/data/locales.ts (languages, Language)
 // - src/content.config.ts (content language enum)

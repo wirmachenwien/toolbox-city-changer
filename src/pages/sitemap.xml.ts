@@ -4,8 +4,8 @@ import { pageUrl, bookUrl, canonical } from '../lib/site';
 import { languages } from '../data/locales';
 
 // Sitemap generated from content at build time: home + search pages and
-// every web book chapter per language. Redirect landings (/book/, legacy
-// default-lang URLs), 404 and preview pages are intentionally excluded.
+// every web book chapter per language. Redirect landings, default-language
+// prefixed URLs, 404 and preview pages are intentionally excluded.
 export const GET: APIRoute = () => {
   const entries: { loc: string; lastmod: string }[] = [];
   for (const lang of languages) {

@@ -199,7 +199,7 @@ if (!existsSync(entryFile)) {
 }
 
 // Content-generated sitemap must list every expected page exactly once,
-// with canonical absolute URLs and no redirect/legacy entries.
+// with canonical absolute URLs and no redirect entries.
 const sitemapFile = join(DIST_DIR, 'sitemap.xml');
 if (!existsSync(sitemapFile)) {
   fail('sitemap.xml missing (src/pages/sitemap.xml.ts)');

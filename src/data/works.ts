@@ -45,13 +45,8 @@ const workSchema = z.object({
   type: z.string().optional().default(''),
   subject: z.string().optional().default(''),
   identifier: z.string().optional().default(''),
-  products: z.object({
-    pdf: z.object({ files: z.array(z.string()), toc: z.array(tocEntrySchema) }),
-    web: z.object({ files: z.array(z.string()), nav: z.array(tocEntrySchema) }),
-  }).optional(),
   /** Single ordered chapter list per language (single source of truth for
-   *  reading order). `files`/`nav`/`toc` are derived from it below. Any
-   *  legacy `products` block is ignored. */
+   *  reading order). `files`/`nav`/`toc` are derived from it below. */
   chapters: z.array(chapterSchema).min(1),
 });
 

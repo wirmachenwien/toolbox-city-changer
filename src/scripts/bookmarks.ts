@@ -167,7 +167,7 @@ interface StoredVisit {
   title: string;
 }
 
-/** Read the stored visit (new {url, title} shape, legacy plain string). */
+/** Read the stored visit. */
 function readVisit(): StoredVisit | null {
   let raw: string | null = null;
   try {
@@ -182,9 +182,9 @@ function readVisit(): StoredVisit | null {
       return { url: parsed.url, title: typeof parsed.title === 'string' ? parsed.title : '' };
     }
   } catch {
-    /* legacy plain-string format falls through */
+    return null;
   }
-  return { url: raw, title: '' };
+  return null;
 }
 
 /** Block-level lines a bookmark can pin to: direct prose children, with
