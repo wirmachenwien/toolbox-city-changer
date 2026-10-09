@@ -1920,15 +1920,6 @@ html:not(.js-fold) .accordion-content {
   transform: rotate(180deg);
 }
 
-/* ---------- Annotation (opt-in only) ---------- */
-
-.annotation-note {
-  font-size: 0.91rem;
-  color: var(--ink-soft);
-  border-inline-start: 3px solid var(--warn);
-  padding-inline-start: 0.75rem;
-}
-
 /* ---------- Utilities ---------- */
 
 .visually-hidden {
