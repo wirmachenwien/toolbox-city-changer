@@ -1,0 +1,18 @@
+---
+// Mathematics (TeX) rendered at build time with KaTeX: no client runtime.
+// `source` is the TeX string; `display` selects display vs. inline mode.
+import katex from 'katex';
+
+interface Props {
+  source: string;
+  display?: boolean;
+}
+
+const { source, display = false } = Astro.props;
+const html = katex.renderToString(source, {
+  displayMode: display,
+  output: 'html',
+  throwOnError: false,
+});
+---
+{display ? <div set:html={html} /> : <span set:html={html} />}

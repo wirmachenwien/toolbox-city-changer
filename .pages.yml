@@ -1331,10 +1331,16 @@ content:
   - name: kitchen_sink
     label: Kitchen Sink
     type: file
-    path: src/pages/preview/kitchen-sink.astro
-    format: code
-    options:
-      format: mdx
+    path: src/content/preview/kitchen-sink.mdx
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: lang
+        component: language
+      - name: body
+        component: markdown_body
     operations:
       create: false
       delete: false

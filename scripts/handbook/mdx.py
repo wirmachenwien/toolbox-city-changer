@@ -8,7 +8,7 @@ of redefining: common regexes, entry parsers, glossary/quiz/question/
 pullquote converters, and the strip-style handlers (CopyText, Toc,
 Spoiler, ButtonLink, DownloadLink, TableWrap, SideBySideButtons,
 Accordion, ExpandableBox, Slideshow, Bibliography, ColorPanel,
-DefinitionTerm, PageRef, SelectList).
+DefinitionTerm, PageRef, SelectList, Math).
 
 Deliberately NOT shared (kept in each builder):
 - PDF: figure -> file-URI <img>, CC badge with embedded PNG, WeasyPrint
@@ -77,6 +77,7 @@ COLOR_CLOSE_RE = re.compile(r'</ColorPanel>')
 DEFINITION_RE = re.compile(r'<DefinitionTerm\b([^>]*)\s*/>')
 PAGEREF_RE = re.compile(r'<PageRef\b([^>]*)\s*/>')
 SELECT_RE = re.compile(r'<SelectList\b[^>]*options=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
+MATH_RE = re.compile(r'<Math\b([^>]*)\s*/>')
 FOOTNOTE_RE = re.compile(r'<Footnote\b([^>]*)\s*/>', re.DOTALL)
 # Inline Markdown links with absolute http(s) targets (image `![...]` links
 # excluded). The PDF builder turns these into lettered URL footnotes; anything
@@ -198,6 +199,18 @@ def details_open_md(attr_source: str | None) -> str:
     return f"\n\n**{title}**\n\n" if title else "\n\n"
 
 
+def math_md(attr_source: str | None) -> str:
+    """Print delimiters for <Math source display?>: double backslashes survive
+    the Python-Markdown pass as single ones, which the KaTeX post-processor
+    (scripts/bin/render-math.mjs) then renders."""
+    source = attrs(attr_source).get("source", "")
+    if not source:
+        return "\n\n"
+    if attr_source and re.search(r"(?:^|\s)display(?:\s|/|$)", attr_source):
+        return f"\n\n\\\\[{source}\\\\]\n\n"
+    return f"\\\\({source}\\\\)"
+
+
 def glossary_html(source: str, escape_fn: EscapeFn = _identity) -> str:
     seen: dict[str, int] = {}
     items = ''.join(
@@ -262,8 +275,8 @@ def question_html(question: str, source: str, answer: str, answers_label: str) -
 def strip_static_handlers(text: str) -> str:
     """Handlers identical in PDF and EPUB: Button/Download links, CopyText, Toc, Spoiler, TableWrap,
     plus the collapsible/grouping wrappers (Accordion, ExpandableBox, Slideshow, ColorPanel),
-    link-list components (SideBySideButtons, Bibliography, SelectList) and inline
-    aids (DefinitionTerm, PageRef).
+    link-list components (SideBySideButtons, Bibliography, SelectList), inline
+    aids (DefinitionTerm, PageRef) and TeX formulas (Math).
 
     Everything emitted here is plain Markdown (bold titles, bullet lists,
     unwrapped bodies), so downstream link-footnoting (PDF) and rendering
@@ -304,4 +317,6 @@ def strip_static_handlers(text: str) -> str:
     )
     # Cross-references keep their label; print page numbers don't transfer.
     text = PAGEREF_RE.sub(lambda m: attrs(m.group(1)).get("label", ""), text)
+    # TeX formulas become delimiters for the KaTeX post-processor.
+    text = MATH_RE.sub(lambda m: math_md(m.group(1)), text)
     return text

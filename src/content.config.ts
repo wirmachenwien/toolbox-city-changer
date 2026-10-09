@@ -35,4 +35,14 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { book, pages };
+// Preview pages (component showcase): MDX source rendered through the shared
+// MdxContent scope, so demos use exactly the author-facing component set.
+const preview = defineCollection({
+  loader: glob({ pattern: '**/*.mdx', base: './src/content/preview' }),
+  schema: z.object({
+    title: z.string(),
+    lang,
+  }),
+});
+
+export const collections = { book, pages, preview };

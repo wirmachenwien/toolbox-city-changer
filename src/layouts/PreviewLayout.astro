@@ -1,0 +1,20 @@
+---
+// Preview shell for preview collection pages: same BaseLayout wiring the old
+// kitchen-sink route used (German, unindexed, no hreflang alternates), so
+// preview pages stay out of the sitemap and search index.
+import BaseLayout from './BaseLayout.astro';
+import { withBase } from '../lib/site';
+
+interface Props {
+  title?: string;
+}
+
+const { frontmatter, title: titleProp } = Astro.props as Props & { frontmatter?: { title?: string } };
+const title = titleProp ?? frontmatter?.title ?? 'Preview';
+const url = withBase('/preview/kitchen-sink.html');
+---
+<BaseLayout lang="de" title={title} kind="page" file="index" currentUrl={url} noindex hreflang={false}>
+  <div class="prose" data-prose>
+    <slot />
+  </div>
+</BaseLayout>

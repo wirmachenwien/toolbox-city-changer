@@ -1,0 +1,255 @@
+---
+title: Komponenten-Showcase
+lang: de
+---
+
+# Komponenten-Showcase
+
+Diese Seite demonstriert jede Inhaltskomponente. Sie ist von Sitemap und Suche ausgeschlossen.
+
+{/* Accordion — collapsible sections on native details; opening one closes its siblings. */}
+<h2 class="sink-label">Accordion</h2>
+<div class="sink-demo">
+  <Accordion title="Erster Abschnitt">Inhalt des ersten Abschnitts.</Accordion>
+  <Accordion title="Zweiter Abschnitt">Inhalt des zweiten Abschnitts.</Accordion>
+</div>
+
+{/* Annotation — editorial note, only renders when explicitly enabled. */}
+<h2 class="sink-label">Annotation</h2>
+<div class="sink-demo"><Annotation enabled>Redaktionelle Notiz (nur sichtbar, wenn aktiviert).</Annotation></div>
+
+{/* Bibliography — source list with links. */}
+<h2 class="sink-label">Bibliography</h2>
+<div class="sink-demo">
+  <Bibliography sources={[{ label: 'Tactical Urbanism Guide', href: 'https://tacticalurbanismguide.com/' }, { label: 'Changing Cities', href: 'https://changing-cities.org/' }]} />
+</div>
+
+{/* BookmarkAdd — bookmark gutter overlay for saving the reading position. */}
+<h2 class="sink-label">BookmarkAdd</h2>
+<div class="sink-demo"><BookmarkAdd lang="de" /></div>
+
+{/* Breadcrumbs — trail showing the path to the current page. */}
+<h2 class="sink-label">Breadcrumbs</h2>
+<div class="sink-demo">
+  <Breadcrumbs items={[{ label: 'Start', url: '/toolbox-city-changer/', current: false }, { label: 'Showcase', url: '', current: true }]} />
+</div>
+
+{/* ButtonLink — link styled as a button. */}
+<h2 class="sink-label">ButtonLink</h2>
+<div class="sink-demo"><ButtonLink href="/toolbox-city-changer/book/contents.html">Handbuch öffnen</ButtonLink></div>
+
+{/* CcBadge — CC BY licence badge linking to the licence deed. */}
+<h2 class="sink-label">CcBadge</h2>
+<div class="sink-demo"><p class="cc-line"><CcBadge /> Dieses Handbuch steht unter der Lizenz CC BY 4.0.</p></div>
+
+{/* ColorPanel — tinted panel marking important content. */}
+<h2 class="sink-label">ColorPanel</h2>
+<div class="sink-demo"><ColorPanel tone="warm">Eine farbige Markierung für wichtige Inhalte.</ColorPanel></div>
+
+{/* ContentsPage — contents sheet with the full book table of contents. */}
+<h2 class="sink-label">ContentsPage</h2>
+<div class="sink-demo"><ContentsPage lang="de" title="Inhalt" /></div>
+
+{/* CopyText — copy-to-clipboard button with visual feedback. */}
+<h2 class="sink-label">CopyText</h2>
+<div class="sink-demo">info@wirmachen.wien <CopyText value="info@wirmachen.wien" lang="de" /></div>
+
+{/* Cover — book cover sheet generated from the hero image plus metadata. */}
+<h2 class="sink-label">Cover</h2>
+<div class="sink-demo"><Cover lang="de" /></div>
+
+{/* DefinitionTerm — term with an inline definition popup. */}
+<h2 class="sink-label">DefinitionTerm</h2>
+<div class="sink-demo">
+  <p>Ein <DefinitionTerm term="Modalfilter" definition="Bauliche Maßnahme, die Durchzugsverkehr verhindert." /> leitet Verkehr um.</p>
+</div>
+
+{/* DownloadLink — download link for the generated PDF/EPUB files. */}
+<h2 class="sink-label">DownloadLink</h2>
+<div class="sink-demo">
+  <DownloadLink href="/downloads/toolbox-city-changer-de.pdf">PDF ansehen</DownloadLink>
+  <DownloadLink href="/downloads/toolbox-city-changer-de.epub">EPUB herunterladen</DownloadLink>
+</div>
+
+{/* ExpandableBox — read-more box; Accordion behaviour with a different default label. */}
+<h2 class="sink-label">ExpandableBox</h2>
+<div class="sink-demo"><ExpandableBox lang="de">Ausführliche Zusatzinformationen zum Aufklappen.</ExpandableBox></div>
+
+{/* FeatureBox — highlighted tip box with an optional title. */}
+<h2 class="sink-label">FeatureBox</h2>
+<div class="sink-demo"><FeatureBox title="Hinweis">Ein hervorgehobener Hinweis für Leserinnen und Leser.</FeatureBox></div>
+
+{/* Figure — responsive figure with optimised images and a caption. */}
+<h2 class="sink-label">Figure</h2>
+<div class="sink-demo">
+  <Figure src="berlin-kiezblock-bellermann.jpg" alt="Temporäre Sperre und Aufenthaltsraum im Bellermannkiezblock.">
+    Bellermannkiezblock in Berlin-Mitte. Foto: BA SGA Mitte, L. Fritsche.
+  </Figure>
+</div>
+
+{/* Footnote — inline footnote reference with a popup on screen. */}
+<h2 class="sink-label">Footnote</h2>
+<div class="sink-demo">
+  <p>Eine Aussage mit Inline-Fußnote<Footnote text="Quellenangabe direkt an der Stelle." />.</p>
+</div>
+
+{/* Glossary — description list of terms plus definitions. */}
+<h2 class="sink-label">Glossary</h2>
+<div class="sink-demo">
+  <Glossary entries={[{ term: 'Superblock', definition: 'Verkehrsberuhigtes Grätzl.' }, { term: 'Kiezblock', definition: 'Berliner Variante des Superblocks.' }]} />
+</div>
+
+{/* Icon — inline SVG icon set (decorative, always aria-hidden). */}
+<h2 class="sink-label">Icon</h2>
+<div class="sink-demo">
+  <ul class="sink-icons">
+    <li><Icon name="search" /><span class="sink-icon-name">search</span></li>
+    <li><Icon name="globe" /><span class="sink-icon-name">globe</span></li>
+    <li><Icon name="menu" /><span class="sink-icon-name">menu</span></li>
+    <li><Icon name="link" /><span class="sink-icon-name">link</span></li>
+    <li><Icon name="mail" /><span class="sink-icon-name">mail</span></li>
+    <li><Icon name="bookmark" /><span class="sink-icon-name">bookmark</span></li>
+    <li><Icon name="download" /><span class="sink-icon-name">download</span></li>
+    <li><Icon name="check" /><span class="sink-icon-name">check</span></li>
+    <li><Icon name="copy" /><span class="sink-icon-name">copy</span></li>
+    <li><Icon name="bluesky" /><span class="sink-icon-name">bluesky</span></li>
+    <li><Icon name="facebook" /><span class="sink-icon-name">facebook</span></li>
+    <li><Icon name="linkedin" /><span class="sink-icon-name">linkedin</span></li>
+    <li><Icon name="reddit" /><span class="sink-icon-name">reddit</span></li>
+    <li><Icon name="x" /><span class="sink-icon-name">x</span></li>
+    <li><Icon name="whatsapp" /><span class="sink-icon-name">whatsapp</span></li>
+  </ul>
+</div>
+
+{/* LanguageMenu — compact language dropdown for the masthead. */}
+<h2 class="sink-label">LanguageMenu</h2>
+<div class="sink-demo"><LanguageMenu lang="de" kind="page" file="index" /></div>
+
+{/* LanguageSwitcher — same-page language switcher (DE / EN / SL). */}
+<h2 class="sink-label">LanguageSwitcher</h2>
+<div class="sink-demo"><LanguageSwitcher lang="de" kind="page" file="index" /></div>
+
+{/* Math — inline and display formulas rendered at build time with KaTeX. */}
+<h2 class="sink-label">Math</h2>
+<div class="sink-demo">
+  <p><code>{'\\(E = mc^2\\)'}</code> renders inline: <Math source="E = mc^2" /></p>
+  <p>Display:</p>
+  <pre><code>{'\\[a^2 + b^2 = c^2\\]'}</code></pre>
+  <Math source="a^2 + b^2 = c^2" display />
+</div>
+
+{/* MetadataTable — book metadata table (title, creator, publisher, rights, ...). */}
+<h2 class="sink-label">MetadataTable</h2>
+<div class="sink-demo"><MetadataTable lang="de" /></div>
+
+{/* OpenerImage — large opening image for home pages. */}
+<h2 class="sink-label">OpenerImage</h2>
+<div class="sink-demo">
+  <OpenerImage file="supergraetzel-favoriten-poller.jpg" alt="Poller und junge Bäume im Supergrätzl Favoriten" />
+</div>
+
+{/* PageRef — cross-reference link to another book page. */}
+<h2 class="sink-label">PageRef</h2>
+<div class="sink-demo"><PageRef lang="de" file="02" label="Weiter zu Kapitel 2." /></div>
+
+{/* Pagination — previous/next page navigation. */}
+<h2 class="sink-label">Pagination</h2>
+<div class="sink-demo"><Pagination lang="de" prev={{ label: '1. Wozu diese Toolbox?', file: '01', kind: 'book' }} next={{ label: '3. Tactical Urbanism und Street Design', file: '03', kind: 'book' }} /></div>
+
+{/* PullQuote — large quote with an optional citation. */}
+<h2 class="sink-label">PullQuote</h2>
+<div class="sink-demo"><PullQuote cite="Toolbox">Wie können wir unsere Stadt lebenswerter machen?</PullQuote></div>
+
+{/* QrCode — QR code of the page URL, rendered server-side as inline SVG. */}
+<h2 class="sink-label">QrCode</h2>
+<div class="sink-demo"><QrCode url="/toolbox-city-changer/book/01.html" label="Kapitel 1." /></div>
+
+{/* Question — single-question radio check with client-side marking. */}
+<h2 class="sink-label">Question</h2>
+<div class="sink-demo">
+  <Question
+    id="sink-question"
+    lang="de"
+    question="Was ist ein Superblock?"
+    options={['Eine Möblierung', 'Ein verkehrsberuhigtes Grätzl', 'Ein Parkhaus']}
+    answer={1}
+  />
+</div>
+
+{/* Quiz — self-grading multiple-choice quiz. */}
+<h2 class="sink-label">Quiz</h2>
+<div class="sink-demo">
+  <Quiz
+    id="sink-quiz"
+    lang="de"
+    question="Welche Hebel verändern Durchzugsverkehr?"
+    options={[{ label: 'Modalfilter', correct: true }, { label: 'Mehr Parkplätze' }, { label: 'Poller', correct: true }]}
+  />
+</div>
+
+{/* Rotate — rotated content wrapper for sideways labels. */}
+<h2 class="sink-label">Rotate</h2>
+<div class="sink-demo"><Rotate angle={90}>Seitliche Notiz</Rotate></div>
+
+{/* SearchForm — search form pointing at the language-local search page. */}
+<h2 class="sink-label">SearchForm</h2>
+<div class="sink-demo"><SearchForm lang="de" /></div>
+
+{/* SelectList — dropdown revealing linked content on change. */}
+<h2 class="sink-label">SelectList</h2>
+<div class="sink-demo">
+  <SelectList
+    id="sink-select"
+    lang="de"
+    options={[{ label: 'Kapitel 1.', href: '/toolbox-city-changer/book/01.html' }, { label: 'Kapitel 2.', href: '/toolbox-city-changer/book/02.html' }]}
+  />
+</div>
+
+{/* Share — share links for social networks and email. */}
+<h2 class="sink-label">Share</h2>
+<div class="sink-demo"><Share lang="de" url="/toolbox-city-changer/preview/kitchen-sink.html" title="Komponenten-Showcase" /></div>
+
+{/* Slideshow — figures grouped as slides with prev/next controls. */}
+<h2 class="sink-label">Slideshow</h2>
+<div class="sink-demo">
+  <Slideshow label="Beispielbilder">
+    <Figure src="lendplatz-graz-tactical-urbanism.jpg" alt="Lendplatz Graz">Lendplatz in Graz.</Figure>
+    <Figure src="galileigasse-tactical-urbanism.jpg" alt="Galileigasse Wien">Galileigasse in Wien.</Figure>
+  </Slideshow>
+</div>
+
+{/* Spoiler — inline content masked until the reader clicks to reveal it. */}
+<h2 class="sink-label">Spoiler</h2>
+<div class="sink-demo"><p>Der Schatz liegt <Spoiler lang="de">unter der alten Eiche</Spoiler> vergraben.</p></div>
+
+{/* TableWrap — scrollable wrapper keeping wide tables readable. */}
+<h2 class="sink-label">TableWrap</h2>
+<div class="sink-demo">
+  <TableWrap>
+    <table>
+      <thead><tr><th>Indikator</th><th>Methode</th></tr></thead>
+      <tbody>
+        <tr><td>Verkehrsmengen</td><td>Zählung</td></tr>
+        <tr><td>Aufenthalt</td><td>Beobachtung</td></tr>
+      </tbody>
+    </table>
+  </TableWrap>
+</div>
+
+{/* TitlePage — title sheet for front matter. */}
+<h2 class="sink-label">TitlePage</h2>
+<div class="sink-demo"><TitlePage lang="de" /></div>
+
+{/* Toc — book table of contents in web order. */}
+<h2 class="sink-label">Toc</h2>
+<div class="sink-demo"><Toc lang="de" /></div>
+
+{/* Video — privacy-friendly click-to-load embed; only touches the provider on play. */}
+<h2 class="sink-label">Video</h2>
+<div class="sink-demo">
+  <Video id="87JUbbq48r8" caption="Prostorož Ljubljana: Öffentlicher Raum ist gemeinsamer Raum." lang="de" />
+</div>
+
+{/* VisualToc — card-style visual table of contents for chapter overviews. */}
+<h2 class="sink-label">VisualToc</h2>
+<div class="sink-demo"><VisualToc lang="de" /></div>
