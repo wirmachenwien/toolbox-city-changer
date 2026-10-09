@@ -1,6 +1,7 @@
 ---
 // Shared MDX renderer: renders a content-collection entry with the project
-// component scope (Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, and content aids).
+// component scope (all author-usable content components; chrome like
+// Masthead, SideNav, Footer, Breadcrumbs, Pagination stays in the layouts).
 import { render, type CollectionEntry } from 'astro:content';
 import Figure from './Figure.astro';
 import Video from './Video.astro';
@@ -18,6 +19,14 @@ import Quiz from './Quiz.astro';
 import Question from './Question.astro';
 import Footnote from './Footnote.astro';
 import Spoiler from './Spoiler.astro';
+import Accordion from './Accordion.astro';
+import ExpandableBox from './ExpandableBox.astro';
+import Slideshow from './Slideshow.astro';
+import Bibliography from './Bibliography.astro';
+import ColorPanel from './ColorPanel.astro';
+import DefinitionTerm from './DefinitionTerm.astro';
+import PageRef from './PageRef.astro';
+import SelectList from './SelectList.astro';
 
 interface Props {
   entry: CollectionEntry<'book'> | CollectionEntry<'pages'>;
@@ -26,4 +35,4 @@ interface Props {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
-<Content components={{ Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, Footnote, Spoiler }} />
+<Content components={{ Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, Footnote, Spoiler, Accordion, ExpandableBox, Slideshow, Bibliography, ColorPanel, DefinitionTerm, PageRef, SelectList }} />

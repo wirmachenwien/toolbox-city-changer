@@ -6,7 +6,9 @@ src/content/book/<lang>/*.mdx, previously duplicated between
 scripts/bin/build-pdf.py and scripts/bin/build-epub.py. Import from here instead
 of redefining: common regexes, entry parsers, glossary/quiz/question/
 pullquote converters, and the strip-style handlers (CopyText, Toc,
-Spoiler, ButtonLink, DownloadLink, TableWrap).
+Spoiler, ButtonLink, DownloadLink, TableWrap, SideBySideButtons,
+Accordion, ExpandableBox, Slideshow, Bibliography, ColorPanel,
+DefinitionTerm, PageRef, SelectList).
 
 Deliberately NOT shared (kept in each builder):
 - PDF: figure -> file-URI <img>, CC badge with embedded PNG, WeasyPrint
@@ -62,6 +64,19 @@ FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
 PULLQUOTE_RE = re.compile(r'<PullQuote\b([^>]*)>(.*?)</PullQuote>', re.DOTALL)
 TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
 TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
+SIDEBYSIDE_RE = re.compile(r'<SideBySideButtons\b[^>]*links=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
+ACCORDION_OPEN_RE = re.compile(r'<Accordion\b([^>]*)>')
+ACCORDION_CLOSE_RE = re.compile(r'</Accordion>')
+EXPANDABLE_OPEN_RE = re.compile(r'<ExpandableBox\b([^>]*)>')
+EXPANDABLE_CLOSE_RE = re.compile(r'</ExpandableBox>')
+SLIDESHOW_OPEN_RE = re.compile(r'<Slideshow\b[^>]*>')
+SLIDESHOW_CLOSE_RE = re.compile(r'</Slideshow>')
+BIBLIOGRAPHY_RE = re.compile(r'<Bibliography\b[^>]*sources=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
+COLOR_OPEN_RE = re.compile(r'<ColorPanel\b[^>]*>')
+COLOR_CLOSE_RE = re.compile(r'</ColorPanel>')
+DEFINITION_RE = re.compile(r'<DefinitionTerm\b([^>]*)\s*/>')
+PAGEREF_RE = re.compile(r'<PageRef\b([^>]*)\s*/>')
+SELECT_RE = re.compile(r'<SelectList\b[^>]*options=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
 FOOTNOTE_RE = re.compile(r'<Footnote\b([^>]*)\s*/>', re.DOTALL)
 # Inline Markdown links with absolute http(s) targets (image `![...]` links
 # excluded). The PDF builder turns these into lettered URL footnotes; anything
@@ -150,6 +165,39 @@ def option_entries(source: str) -> list[tuple[str, bool]]:
     return [(label, 'correct: true' in rest) for label, rest in re.findall(r'\{\s*label:\s*"([^"]+)"([^}]*)\}', source)]
 
 
+# `{ label: "...", href: "..." }` entries (SideBySideButtons links,
+# Bibliography sources, SelectList options). Both quote styles are accepted:
+# the kitchen sink uses single quotes, chapter MDX double quotes.
+LINK_ENTRY_RE = re.compile(
+    r"""\{\s*label:\s*(?:"([^"]+)"|'([^']+)')\s*"""
+    r"""(?:,\s*href:\s*(?:"([^"]+)"|'([^']+)'))?[^}]*\}"""
+)
+
+
+def link_entries(source: str) -> list[tuple[str, str]]:
+    """(label, href) pairs from a `{ label, href }` object array."""
+    return [
+        (label or other_label, href or other_href)
+        for label, other_label, href, other_href in LINK_ENTRY_RE.findall(source)
+    ]
+
+
+def links_list_md(source: str) -> str:
+    """Print-safe Markdown bullet list for links/sources/options arrays."""
+    lines = [
+        f"- [{label}]({href})" if href else f"- {label}"
+        for label, href in link_entries(source)
+    ]
+    return "\n\n" + "\n".join(lines) + "\n" if lines else "\n\n"
+
+
+def details_open_md(attr_source: str | None) -> str:
+    """Print opening for Accordion/ExpandableBox: title as bold text, then
+    the always-expanded body (paper has no collapse interaction)."""
+    title = attrs(attr_source).get("title")
+    return f"\n\n**{title}**\n\n" if title else "\n\n"
+
+
 def glossary_html(source: str, escape_fn: EscapeFn = _identity) -> str:
     seen: dict[str, int] = {}
     items = ''.join(
@@ -212,12 +260,48 @@ def question_html(question: str, source: str, answer: str, answers_label: str) -
 
 
 def strip_static_handlers(text: str) -> str:
-    """Handlers identical in PDF and EPUB: Button/Download links, CopyText, Toc, Spoiler, TableWrap."""
+    """Handlers identical in PDF and EPUB: Button/Download links, CopyText, Toc, Spoiler, TableWrap,
+    plus the collapsible/grouping wrappers (Accordion, ExpandableBox, Slideshow, ColorPanel),
+    link-list components (SideBySideButtons, Bibliography, SelectList) and inline
+    aids (DefinitionTerm, PageRef).
+
+    Everything emitted here is plain Markdown (bold titles, bullet lists,
+    unwrapped bodies), so downstream link-footnoting (PDF) and rendering
+    (EPUB) treat it like author prose. Ordered before Figure/Video handling
+    is irrelevant (disjoint tags), but must run before the PDF LINK_RE pass
+    so emitted `[label](url)` links become lettered URL notes.
+    """
     text = BUTTON_RE.sub(lambda m: component_link(m.group(1), m.group(2)), text)
     text = DOWNLOAD_RE.sub(lambda m: component_link(m.group(1), m.group(2).strip()), text)
+    text = SIDEBYSIDE_RE.sub(lambda m: links_list_md(m.group(1)), text)
     text = COPY_RE.sub("", text)
     text = TOC_RE.sub("", text)
     text = SPOILER_RE.sub(lambda m: m.group(1), text)
     text = TABLE_OPEN_RE.sub('\n\n', text)
     text = TABLE_CLOSE_RE.sub('\n\n', text)
+    # Collapsible sections print fully expanded with the title kept as bold text.
+    text = ACCORDION_OPEN_RE.sub(lambda m: details_open_md(m.group(1)), text)
+    text = ACCORDION_CLOSE_RE.sub('\n', text)
+    text = EXPANDABLE_OPEN_RE.sub(lambda m: details_open_md(m.group(1)), text)
+    text = EXPANDABLE_CLOSE_RE.sub('\n', text)
+    # Slideshows print as the plain figure sequence (inner Figures convert later).
+    text = SLIDESHOW_OPEN_RE.sub('\n\n', text)
+    text = SLIDESHOW_CLOSE_RE.sub('\n', text)
+    text = BIBLIOGRAPHY_RE.sub(lambda m: links_list_md(m.group(1)), text)
+    text = SELECT_RE.sub(lambda m: links_list_md(m.group(1)), text)
+    text = COLOR_OPEN_RE.sub('\n\n<div class="color-panel">\n', text)
+    text = COLOR_CLOSE_RE.sub('\n</div>\n', text)
+    # Inline definition popups have no hover target on paper: keep term + definition.
+    text = DEFINITION_RE.sub(
+        lambda m: (
+            lambda values: (
+                f"{values.get('term', '')} ({values['definition']})"
+                if values.get("term") and values.get("definition")
+                else values.get("term") or values.get("definition") or ""
+            )
+        )(attrs(m.group(1))),
+        text,
+    )
+    # Cross-references keep their label; print page numbers don't transfer.
+    text = PAGEREF_RE.sub(lambda m: attrs(m.group(1)).get("label", ""), text)
     return text

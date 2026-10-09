@@ -9,7 +9,7 @@ interface Props {
   file: string;
 }
 
-const { lang, kind, file } = Astro.props;
+const { kind, file } = Astro.props;
 const targets = alternates(kind, file);
 const fallback = targets.find((target) => target.lang === DEFAULT_LANG) ?? targets[0];
 ---

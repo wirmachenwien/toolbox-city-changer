@@ -32,7 +32,7 @@ if (!match) {
   throw new Error(`Figure: unknown image "${src}"`);
 }
 const image = match[1].default;
-const hasCaption = displayCaption || await Astro.slots.has('default');
+const hasCaption = displayCaption || Astro.slots.has('default');
 ---
 <figure class="figure">
   <Image

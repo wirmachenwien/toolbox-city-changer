@@ -128,7 +128,7 @@ h1, h2, h3 {
   break-after: avoid;
 }
 
-figure, table, blockquote, .feature-box, .quiz {
+figure, table, blockquote, .feature-box, .color-panel, .quiz {
   break-inside: avoid;
 }
 
@@ -269,6 +269,15 @@ blockquote.pullquote footer {
 .feature-box {
   background: #eef5ef;
   border: 0.5pt solid #0c6b3c;
+  border-inline-start-width: 4.5pt;
+  padding: 8pt 10pt;
+  margin: 12pt 0;
+}
+
+/* Tinted panels mirror the web panel: warm fill with a solid accent bar. */
+.color-panel {
+  background: #faf3e8;
+  border: 0.5pt solid #8a5a00;
   border-inline-start-width: 4.5pt;
   padding: 8pt 10pt;
   margin: 12pt 0;
