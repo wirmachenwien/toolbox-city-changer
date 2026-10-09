@@ -4,7 +4,6 @@
 // search engines and search index (see astro.config filter); reachable only
 // by direct URL, so it is safe to keep unlinked.
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import AboutPage from '../../components/AboutPage.astro';
 import Accordion from '../../components/Accordion.astro';
 import Annotation from '../../components/Annotation.astro';
 import Bibliography from '../../components/Bibliography.astro';
@@ -62,9 +61,6 @@ const displayMath = katex.renderToString(displayMathSource, { displayMode: true,
   <div class="prose" data-prose>
     <h1>Komponenten-Showcase</h1>
     <p>Diese Seite demonstriert jede Inhaltskomponente. Sie ist von Sitemap und Suche ausgeschlossen.</p>
-
-    <h2 class="sink-label">AboutPage</h2>
-    <div class="sink-demo"><AboutPage title="Über" /></div>
 
     <h2 class="sink-label">Accordion</h2>
     <div class="sink-demo">

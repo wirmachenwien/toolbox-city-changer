@@ -310,17 +310,13 @@ def build_document(lang: str) -> str:
             continue
         if slug == "about":
             body = render_math_html(markdown_to_html(convert_mdx(md_text, lang), lang))
-            about_label = next(
-                (entry["label"] for entry in toc if entry["file"] == "about"),
-                "About",
-            )
             # The CC BY badge is print-only (absent from the web page): place
-            # it under the first heading, which is always the licence section
-            # (the body opens with plain intro paragraphs).
+            # it under the first heading after the title, which is always
+            # the licence section (the body opens with the h1 + intro).
             body = body.replace("</h2>", f"</h2>{cc_badge_html()}", 1)
             parts.append(
                 '<section class="chapter frontmatter-sheet" id="file-about">'
-                f"<h1>{about_label}</h1>{body}</section>"
+                f"{body}</section>"
             )
         else:
             parts.append(chapter_html(slug, md_text, lang))

@@ -1,6 +1,6 @@
 // Navigation model: project nav + expandable book nav + breadcrumbs.
 import { nav } from '../data/nav';
-import { contentsLabel, webBookToc } from '../data/works';
+import { webBookToc } from '../data/works';
 import { smartQuotes } from './smart-quotes';
 import type { Language } from '../data/locales';
 import { bookUrl, navFileUrl } from './site';
@@ -48,13 +48,25 @@ export function combinedNav(
   };
 }
 
-/** Breadcrumb trail for a book page: home > contents > chapter. */
-export function bookCrumbs(lang: Language, title: string): NavLink[] {
+/** Breadcrumb trail for a book page: home > chapter (> subchapter)*.
+ *  The parent chain derives from the slash-separated file slug
+ *  ("02/a/b" -> home > 02 > a > b), so flat chapters render two layers
+ *  and future subchapters nest to any depth. Parent labels resolve via
+ *  the book catalogue with a raw-slug fallback. */
+export function bookCrumbs(lang: Language, file: string, title: string): NavLink[] {
   const homeLabel = nav[lang][0]?.label ?? '';
-  const label = contentsLabel(lang);
+  const segments = file.split('/').filter(Boolean);
+  const toc = webBookToc(lang);
+  const parents = segments.slice(0, -1).map((segment, index) => {
+    const path = segments.slice(0, index + 1).join('/');
+    const label = toc.find((entry) => entry.file === path)?.label
+      ?? toc.find((entry) => entry.file === segment)?.label
+      ?? segment;
+    return { label, url: bookUrl(lang, path), current: false };
+  });
   return [
     { label: homeLabel, url: navFileUrl(lang, 'index', lang), current: false },
-    { label, url: bookUrl(lang, 'contents'), current: false },
+    ...parents,
     { label: title, url: '', current: true },
   ];
 }

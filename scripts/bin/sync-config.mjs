@@ -324,16 +324,16 @@ ${indentBlock(localeStrings(lang), 4)}`;
 }
 
 function glossaryFile(lang) {
-  return `          - name: glossary_terms_${lang}
-            label: Glossary terms
-            type: file
-            path: src/data/glossary.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-${indentBlock(glossary(lang), 4)}`;
+  return `      - name: glossary_${lang}
+        label: Glossary
+        type: file
+        path: src/data/glossary.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+${indentBlock(glossary(lang), 0)}`;
 }
 
 function navigation(lang) {
@@ -641,14 +641,8 @@ components:
       values:
         - name: chapter
           label: Chapter
-        - name: cover
-          label: Cover
-        - name: title
-          label: Title page
-        - name: about
-          label: About page
-        - name: contents
-          label: Contents page
+        - name: section
+          label: Section
   page_template:
     label: Template
     type: select

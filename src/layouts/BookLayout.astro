@@ -6,7 +6,6 @@ import Pagination from '../components/Pagination.astro';
 import Share from '../components/Share.astro';
 import BookmarkAdd from '../components/BookmarkAdd.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
-import AboutPage from '../components/AboutPage.astro';
 import ContentsPage from '../components/ContentsPage.astro';
 import { settings } from '../data/settings';
 import { bookCrumbs } from '../lib/nav';
@@ -19,7 +18,7 @@ interface Props {
   file: string;
   title: string;
   description?: string;
-  layout: 'chapter' | 'about' | 'contents';
+  layout: 'chapter' | 'section';
   currentUrl: string;
 }
 
@@ -27,7 +26,7 @@ const { lang, file, title, description, layout, currentUrl } = Astro.props;
 // The frontmatter title bypasses the markdown pipeline, so quotes are
 // localised once here; crumbs, share links and sheets reuse it.
 const displayTitle = smartQuotes(title, lang);
-const crumbs = bookCrumbs(lang, displayTitle);
+const crumbs = bookCrumbs(lang, file, displayTitle);
 const isChapter = layout === 'chapter';
 const neighbours = paginationNeighbours(lang, 'book', file);
 ---
@@ -41,8 +40,7 @@ const neighbours = paginationNeighbours(lang, 'book', file);
 >
   <ReadingProgress />
   {isChapter && <Breadcrumbs items={crumbs} lang={lang} />}
-  {layout === 'about' && <AboutPage title={displayTitle} lang={lang} />}
-  {layout === 'contents' && <ContentsPage lang={lang} title={displayTitle} />}
+  {file === 'contents' && <ContentsPage lang={lang} title={displayTitle} />}
   {isChapter && <BookmarkAdd lang={lang} />}
   <div class="prose" data-prose data-glossary-terms>
     <slot />
