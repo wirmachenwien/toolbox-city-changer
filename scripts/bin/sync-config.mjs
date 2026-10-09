@@ -9,262 +9,274 @@
 // Run `npm run sync:config` after changing handbook.config.ts; CI runs
 // `npm run check:config` (--check) to make sure the committed files are
 // in sync.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { parseDocument } from 'yaml';
-import { site, base, languages, languageNames } from '../../handbook.config.ts';
+import { site, base, languages, languageNames, defaultLang } from '../../handbook.config.ts';
 import { normalizeBase } from '../lib/paths.mjs';
 
 const LANGS = [...languages];
 const BASE_PATH = normalizeBase(base);
 const WORKS = JSON.parse(readFileSync('src/data/works.json', 'utf8'));
 const LOCALES = JSON.parse(readFileSync('src/data/locales.json', 'utf8'));
-const NAV = JSON.parse(readFileSync('src/data/nav.json', 'utf8'));
 
 const displayName = (lang) => languageNames[lang] ?? lang;
 const nativeName = (lang) => LOCALES[lang]?.['local-name'] ?? displayName(lang);
 const yamlString = (value) => JSON.stringify(String(value));
 const indentBlock = (text, spaces) => text.split('\n').map((line) => line ? `${' '.repeat(spaces)}${line}` : line).join('\n');
 
-function bookBodyFile(lang, file, label) {
-  const path = `src/content/book/${lang}/${file}.mdx`;
-  if (!existsSync(path)) return '';
-  const name = `handbook_${lang}_${file.replace(/[^a-z0-9]+/gi, '_')}`;
-  return `          - name: ${name}
-            label: ${yamlString(label)}
-            type: file
-            path: ${path}
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
+function pagesCollection(lang) {
+  return `      - name: pages_${lang}
+        label: Pages
+        type: collection
+        path: src/content/pages/${lang}
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
 `;
 }
 
-function handbookPages(lang) {
-  return WORKS[lang].chapters
-    .filter((chapter) => chapter.web !== false)
-    .map((chapter) => bookBodyFile(lang, chapter.file, chapter.label))
-    .filter(Boolean)
-    .join('\n');
-}
-
-function homePage(lang) {
-  const label = NAV[lang]?.[0]?.label ?? 'Home';
-  return `          - name: home_${lang}
-            label: ${yamlString(label)}
-            type: file
-            path: src/content/pages/${lang}/index.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
+function chaptersCollection(lang) {
+  return `      - name: chapters_${lang}
+        label: Chapters
+        type: collection
+        path: src/content/book/${lang}
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            label: Page title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: book_images
+              path: src/assets/book
+              rename: safe
 `;
 }
 
-function appSettings(lang) {
-  return `          - name: app_settings_${lang}
-            label: Site and PDF settings
-            type: file
-            path: src/data/settings.json
-            format: json
-            operations:
-              create: false
-              delete: false
+function appSettings() {
+  return `      - name: app_settings
+        label: Site and PDF settings
+        type: file
+        path: src/data/settings.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: downloads
+            label: Download settings
+            type: object
             fields:
-              - name: math
-                label: Math rendering
+              - name: pdf
+                label: Generate PDF downloads
+                type: boolean
+              - name: epub
+                label: Generate EPUB downloads
+                type: boolean
+          - name: web
+            label: Website settings
+            type: object
+            fields:
+              - name: pagination
+                type: boolean
+              - name: paginationType
+                label: Pagination type
+                type: select
+                options:
+                  values:
+                    - name: title-arrows
+                      label: Title and arrows
+                    - name: arrows
+                      label: Arrows only
+                    - name: titles
+                      label: Titles only
+                    - name: previous-next
+                      label: Previous and next
+              - name: collapsibleSections
+                label: Collapsible sections
+                type: select
+                options:
+                  values:
+                    - name: none
+                      label: No automatic collapsing
+                    - name: h2
+                      label: Collapse H2 sections
+                    - name: h3
+                      label: Collapse H3 sections
+                    - name: h4
+                      label: Collapse H4 sections
+                    - name: h5
+                      label: Collapse H5 sections
+              - name: bookmarks
                 type: object
                 fields:
                   - name: enabled
                     type: boolean
-                  - name: source
-                    type: select
-                    options:
-                      values:
-                        - name: cdn
-                          label: CDN
-                        - name: local
-                          label: Local
-              - name: web
-                label: Website settings
+              - name: nav
+                label: Navigation behavior
                 type: object
                 fields:
-                  - name: pagination
+                  - name: expandBooks
                     type: boolean
-                  - name: paginationType
-                    label: Pagination type
+                  - name: projectNavPosition
                     type: select
                     options:
                       values:
-                        - name: title-arrows
-                          label: Title and arrows
-                        - name: arrows
-                          label: Arrows only
-                        - name: titles
-                          label: Titles only
-                  - name: accordion
-                    type: boolean
-                  - name: accordionLevel
-                    label: Accordion heading level
-                    type: select
-                    options:
-                      values:
-                        - name: h2
-                          label: H2
-                        - name: h3
-                          label: H3
-                  - name: svgInject
-                    label: Inline SVG injection
-                    type: boolean
-                  - name: lazyload
-                    label: Lazy-load media
-                    type: boolean
-                  - name: bookmarks
-                    type: object
-                    fields:
-                      - name: enabled
-                        type: boolean
-                      - name: noteMaxLength
-                        label: Maximum note length
-                        type: number
-                  - name: nav
-                    label: Navigation behavior
-                    type: object
-                    fields:
-                      - name: expandBooks
-                        type: boolean
-                      - name: projectNavPosition
-                        type: select
-                        options:
-                          values:
-                            - name: before
-                              label: Before book navigation
-                            - name: after
-                              label: After book navigation
-                  - name: search
-                    type: object
-                    fields:
-                      - name: jumpBoxLocation
-                        type: string
-                      - name: param
-                        label: Search query parameter
-                        type: string
-                  - name: titleDivider
-                    label: Title divider
+                        - name: before
+                          label: Before book navigation
+                        - name: after
+                          label: After book navigation
+              - name: search
+                type: object
+                fields:
+                  - name: param
+                    label: Search query parameter
                     type: string
-                  - name: indexing
-                    label: Search engine indexing
-                    type: object
-                    fields:
-                      - name: development
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-                      - name: live
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-              - name: pdf
-                label: PDF settings
+              - name: titleDivider
+                label: Title divider
+                type: string
+              - name: indexing
+                label: Search engine indexing
+                type: boolean
+          - name: pdf
+            label: PDF settings
+            type: object
+            fields:
+              - name: notes
+                label: Note placement
+                type: select
+                options:
+                  values:
+                    - name: footnotes
+                      label: Footnotes, bottom of page
+                    - name: chapter-footnotes
+                      label: End of chapter
+                    - name: book-footnotes
+                      label: End of book
+              - name: page
+                label: Page setup
                 type: object
                 fields:
-                  - name: notes
-                    label: Note placement
-                    type: select
-                    options:
-                      values:
-                        - name: footnotes
-                          label: Footnotes, bottom of page
-                        - name: chapter-footnotes
-                          label: End of chapter
-                        - name: book-footnotes
-                          label: End of book
-                  - name: page
-                    label: Page setup
-                    type: object
-                    fields:
-                      - name: size
-                        type: string
-                      - name: margin
-                        type: string
+                  - name: size
+                    type: string
+                  - name: margin
+                    type: string
 `;
 }
 
-function projectMetadata(lang) {
-  const display = displayName(lang);
-  return `          - name: project_metadata_${lang}
-            label: Project metadata
+function sharedProjectSettings() {
+  return `  - name: project_settings
+    label: Project Settings
+    type: group
+    items:
+${sharedProjectMetadata()}
+${appSettings()}`;
+}
+
+function sharedProjectMetadata() {
+  return `      - name: project_metadata
+        label: Project metadata
+        type: file
+        path: src/data/project.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: creator
+            type: string
+          - name: contributor
+            type: string
+          - name: publisher
+            type: string
+          - name: rights
+            type: text
+          - name: date
+            type: string
+          - name: modified
+            type: string
+          - name: identifier
+            type: string
+`;
+}
+
+function languageMetadata(lang) {
+  return `          - name: metadata_${lang}
+            label: Metadata
             type: file
-            path: src/data/locales.json
+            path: src/data/works.json
             format: json
             operations:
               create: false
               delete: false
             fields:
-              - name: ${lang}
-                label: ${display} project text
-                type: object
-                fields:
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
+${indentBlock(metadata(lang), 4)}`;
+}
+
+function metadata(lang) {
+  const display = displayName(lang);
+  return `          - name: ${lang}
+            label: ${display} metadata
+            type: object
+            fields:
+              - name: title
+                label: Title
+                type: string
+                required: true
+              - name: subtitle
+                type: string
+              - name: description
+                label: Description
+                type: text
+              - name: credit
+                label: Credit
+                type: text
+              - name: language
+                type: string
+              - name: type
+                type: string
+              - name: subject
+                type: string
 `;
 }
 
@@ -274,38 +286,15 @@ function languageSection(lang) {
     type: group
     items:
       - name: project_settings_${lang}
-        label: Project Settings
+        label: Language Settings
         type: group
         items:
-${projectMetadata(lang)}
-${bookMetadataFile(lang)}
+${languageMetadata(lang)}
 ${navigationFile(lang)}
 ${localeFile(lang)}
-${appSettings(lang)}
 ${glossaryFile(lang)}
-      - name: pages_${lang}
-        label: Pages
-        type: group
-        items:
-${homePage(lang)}
-      - name: handbook_${lang}
-        label: Handbook
-        type: group
-        items:
-${handbookPages(lang)}`;
-}
-
-function bookMetadataFile(lang) {
-  return `          - name: book_metadata_${lang}
-            label: Book metadata
-            type: file
-            path: src/data/works.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-${indentBlock(bookMetadata(lang), 4)}`;
+${pagesCollection(lang)}
+${chaptersCollection(lang)}`;
 }
 
 function navigationFile(lang) {
@@ -335,42 +324,16 @@ ${indentBlock(localeStrings(lang), 4)}`;
 }
 
 function glossaryFile(lang) {
-  return `          - name: glossary_terms_${lang}
-            label: Glossary terms
-            type: file
-            path: src/data/glossary.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-${indentBlock(glossary(lang), 4)}`;
-}
-
-function bookMetadata(lang) {
-  const display = displayName(lang);
-  return `          - name: ${lang}
-            label: ${display} book metadata
-            type: object
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: subtitle
-                type: string
-              - name: creator
-                type: string
-              - name: contributor
-                type: string
-              - name: description
-                type: text
-              - name: publisher
-                type: string
-              - name: rights
-                type: text
-              - name: language
-                type: string
-`;
+  return `      - name: glossary_${lang}
+        label: Glossary
+        type: file
+        path: src/data/glossary.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+${indentBlock(glossary(lang), 0)}`;
 }
 
 function navigation(lang) {
@@ -637,6 +600,29 @@ function languageOptions() {
 `).join('');
 }
 
+function componentShowcase() {
+  return `  - name: component_showcase
+    label: Component Showcase
+    type: file
+    path: src/content/preview/component-showcase.mdx
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        readonly: true
+        description: "Preview: ${site}${BASE_PATH}/preview/component-showcase.html"
+      - name: lang
+        component: language
+        readonly: true
+      - name: body
+        component: markdown_body
+        readonly: true
+    operations:
+      create: false
+      delete: false
+`;
+}
+
 function pagesYml() {
   return `# GENERATED from handbook.config.ts — do not edit by hand.
 # Run \`npm run sync:config\` to regenerate.
@@ -678,14 +664,8 @@ components:
       values:
         - name: chapter
           label: Chapter
-        - name: cover
-          label: Cover
-        - name: title
-          label: Title page
-        - name: about
-          label: About page
-        - name: contents
-          label: Contents page
+        - name: section
+          label: Section
   page_template:
     label: Template
     type: select
@@ -704,7 +684,9 @@ components:
       values:
 ${languageOptions()}
 content:
-${LANGS.map((lang) => languageSection(lang)).join('\n')}`;
+${sharedProjectSettings()}
+${LANGS.map((lang) => languageSection(lang)).join('\n')}
+${componentShowcase()}`;
 }
 
 function robotsTxt() {
@@ -712,9 +694,10 @@ function robotsTxt() {
 }
 
 function webmanifest() {
+  const manifestName = WORKS[defaultLang]?.title;
   return `{
-  "name": "Toolbox for City Changers",
-  "short_name": "City Changers",
+  "name": ${JSON.stringify(manifestName)},
+  "short_name": ${JSON.stringify(manifestName)},
   "icons": [
     { "src": "${BASE_PATH}/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "${BASE_PATH}/icon-512.png", "sizes": "512x512", "type": "image/png" }
@@ -772,6 +755,10 @@ function validatePagesYml() {
           contentPaths.push(item.path);
         }
         if (item.path.startsWith('src/content/') && item.path.endsWith('.mdx')) {
+          mdxFiles += 1;
+          if (item.format === 'yaml-frontmatter') mdxFrontmatterEditors += 1;
+        }
+        if (item.type === 'collection' && item.path.startsWith('src/content/')) {
           mdxFiles += 1;
           if (item.format === 'yaml-frontmatter') mdxFrontmatterEditors += 1;
         }

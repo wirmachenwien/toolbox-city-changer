@@ -1,5 +1,6 @@
 ---
 import DownloadLink from './DownloadLink.astro';
+import { downloadEnabled } from '../lib/downloads';
 
 interface Link {
   href: string;
@@ -11,7 +12,10 @@ interface Props {
 }
 
 const { links } = Astro.props;
+const visibleLinks = links.filter((link) => downloadEnabled(link.href));
 ---
-<div class="download-buttons">
-  {links.map((link) => <DownloadLink href={link.href}>{link.label}</DownloadLink>)}
-</div>
+{visibleLinks.length > 0 && (
+  <div class="download-buttons">
+    {visibleLinks.map((link) => <DownloadLink href={link.href}>{link.label}</DownloadLink>)}
+  </div>
+)}

@@ -1,5 +1,5 @@
 // Client search UI powered by the static Pagefind index.
-// Reads the ?query= parameter, searches the prebuilt index, and renders
+// Reads the configured search parameter, searches the prebuilt index, and renders
 // locale-aware result counts. Results are filtered to the active language
 // by URL prefix (default language: no prefix, others: /<lang>/).
 import { t } from '../lib/i18n';
@@ -48,14 +48,15 @@ function publicUrl(url: string): string {
 }
 
 export async function initSearchUI(lang: Language): Promise<void> {
+  const param = document.body.dataset.searchParam ?? 'query';
   const params = new URLSearchParams(location.search);
-  const query = (params.get('query') ?? '').trim();
+  const query = (params.get(param) ?? '').trim();
   // The page form carries id="site-search"; the navbar mini form (which
   // comes first in the DOM) uses id="head-search" — a generic
   // [data-search-form] selector would hit the navbar input instead.
   const input =
     document.querySelector<HTMLInputElement>('#site-search') ??
-    document.querySelector<HTMLInputElement>('[data-search-form] input[name="query"]');
+    document.querySelector<HTMLInputElement>(`[data-search-form] input[name="${CSS.escape(param)}"]`);
   const status = document.querySelector('[data-search-status]');
   const list = document.querySelector('[data-search-results]');
   if (!input || !status || !list) return;

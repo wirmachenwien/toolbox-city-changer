@@ -41,14 +41,7 @@ export function bookUrl(lang: Language, file: string): string {
 /** Resolve a nav "file" value (e.g. "index" or "book/contents") to a URL. */
 export function navFileUrl(lang: Language, file: string, fallbackLang: Language = DEFAULT_LANG): string {
   if (file.startsWith('book/')) {
-    // A leading "book/<lang>/" segment pins the target language (legacy CMS
-    // values); bare "book/<file>" resolves in the fallback language.
-    const match = file.match(/^book\/([^/]+)\//);
-    const pinned = match && (languages as readonly string[]).includes(match[1])
-      ? (match[1] as Language)
-      : null;
-    const slug = pinned ? file.slice(`book/${pinned}/`.length) : file.slice('book/'.length);
-    return bookUrl(pinned ?? fallbackLang, slug);
+    return bookUrl(fallbackLang, file.slice('book/'.length));
   }
   return pageUrl(lang, file);
 }

@@ -1,0 +1,20 @@
+---
+// Preview shell for preview collection pages: the showcase is English-only
+// by design, so preview pages stay out of the sitemap and search index.
+import BaseLayout from './BaseLayout.astro';
+import { withBase } from '../lib/site';
+import type { Language } from '../data/locales';
+
+interface Props {
+  lang: Language;
+  title?: string;
+}
+
+const { lang, title = 'Preview' } = Astro.props;
+const url = withBase('/preview/component-showcase.html');
+---
+<BaseLayout lang={lang} title={title} kind="page" file="index" currentUrl={url} noindex hreflang={false}>
+  <div class="prose" data-prose>
+    <slot />
+  </div>
+</BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import ButtonLink from './ButtonLink.astro';
+import { downloadEnabled } from '../lib/downloads';
 import { withBase } from '../lib/site';
 
 interface Props {
@@ -8,4 +9,4 @@ interface Props {
 
 const { href } = Astro.props;
 ---
-<ButtonLink href={withBase(href)}><slot /></ButtonLink>
+{downloadEnabled(href) && <ButtonLink href={withBase(href)}><slot /></ButtonLink>}

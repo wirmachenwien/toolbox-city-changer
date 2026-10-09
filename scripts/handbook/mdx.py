@@ -6,7 +6,9 @@ src/content/book/<lang>/*.mdx, previously duplicated between
 scripts/bin/build-pdf.py and scripts/bin/build-epub.py. Import from here instead
 of redefining: common regexes, entry parsers, glossary/quiz/question/
 pullquote converters, and the strip-style handlers (CopyText, Toc,
-Spoiler, ButtonLink, DownloadLink, TableWrap).
+Spoiler, ButtonLink, DownloadLink, TableWrap, SideBySideButtons,
+Accordion, ExpandableBox, Slideshow, Bibliography, ColorPanel,
+DefinitionTerm, PageRef, SelectList, Math).
 
 Deliberately NOT shared (kept in each builder):
 - PDF: figure -> file-URI <img>, CC badge with embedded PNG, WeasyPrint
@@ -34,6 +36,19 @@ def _identity(text: str) -> str:
     return text
 
 
+def glossary_slug(term: str, seen: dict[str, int] | None = None) -> str:
+    """Anchor slug for a glossary term (mirrors src/lib/slug.ts, which uses
+    github-slugger like Astro's heading ids). No `#` permalink is rendered
+    on paper, matching headings: only the `id` is emitted so terms stay
+    linkable. `seen` deduplicates within one list ("term", "term-1")."""
+    slug = re.sub(r"\s+", "-", re.sub(r"[^\w\s-]", "", term.lower(), flags=re.UNICODE)).strip("-")
+    if seen is None:
+        return slug
+    count = seen.get(slug, 0)
+    seen[slug] = count + 1
+    return slug if count == 0 else f"{slug}-{count}"
+
+
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
 FIGURE_RE = re.compile(r'<Figure\b([^>]*)\s*/>|<Figure\b([^>]*)>(.*?)</Figure>', re.DOTALL)
 VIDEO_RE = re.compile(r'<Video\b([^>]*)\s*/>|<Video\b([^>]*)>')
@@ -49,7 +64,25 @@ FEATURE_CLOSE_RE = re.compile(r'</FeatureBox>')
 PULLQUOTE_RE = re.compile(r'<PullQuote\b([^>]*)>(.*?)</PullQuote>', re.DOTALL)
 TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
 TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
+SIDEBYSIDE_RE = re.compile(r'<SideBySideButtons\b[^>]*links=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
+ACCORDION_OPEN_RE = re.compile(r'<Accordion\b([^>]*)>')
+ACCORDION_CLOSE_RE = re.compile(r'</Accordion>')
+EXPANDABLE_OPEN_RE = re.compile(r'<ExpandableBox\b([^>]*)>')
+EXPANDABLE_CLOSE_RE = re.compile(r'</ExpandableBox>')
+SLIDESHOW_OPEN_RE = re.compile(r'<Slideshow\b[^>]*>')
+SLIDESHOW_CLOSE_RE = re.compile(r'</Slideshow>')
+BIBLIOGRAPHY_RE = re.compile(r'<Bibliography\b[^>]*sources=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
+COLOR_OPEN_RE = re.compile(r'<ColorPanel\b[^>]*>')
+COLOR_CLOSE_RE = re.compile(r'</ColorPanel>')
+DEFINITION_RE = re.compile(r'<DefinitionTerm\b([^>]*)\s*/>')
+PAGEREF_RE = re.compile(r'<PageRef\b([^>]*)\s*/>')
+SELECT_RE = re.compile(r'<SelectList\b[^>]*options=\{\[(.*?)\]\}[^>]*\s*/>', re.DOTALL)
+MATH_RE = re.compile(r'<Math\b([^>]*)\s*/>')
 FOOTNOTE_RE = re.compile(r'<Footnote\b([^>]*)\s*/>', re.DOTALL)
+# Inline Markdown links with absolute http(s) targets (image `![...]` links
+# excluded). The PDF builder turns these into lettered URL footnotes; anything
+# else (relative links, anchors) stays untouched.
+LINK_RE = re.compile(r'(?<!!)\[([^\]\n]+)\]\((https?://[^)\s]+)(?:\s+"[^"]*")?\)')
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
 QUIZ_RE = re.compile(r'<Quiz\b(.*?)options=\{\[(.*?)\]\}\s*/>', re.DOTALL)
 QUESTION_RE = re.compile(r'<Question\b(.*?)options=\{\[(.*?)\]\}(.*?)\s*/?>', re.DOTALL)
@@ -133,9 +166,55 @@ def option_entries(source: str) -> list[tuple[str, bool]]:
     return [(label, 'correct: true' in rest) for label, rest in re.findall(r'\{\s*label:\s*"([^"]+)"([^}]*)\}', source)]
 
 
+# `{ label: "...", href: "..." }` entries (SideBySideButtons links,
+# Bibliography sources, SelectList options). Both quote styles are accepted:
+# the component showcase uses single quotes, chapter MDX double quotes.
+LINK_ENTRY_RE = re.compile(
+    r"""\{\s*label:\s*(?:"([^"]+)"|'([^']+)')\s*"""
+    r"""(?:,\s*href:\s*(?:"([^"]+)"|'([^']+)'))?[^}]*\}"""
+)
+
+
+def link_entries(source: str) -> list[tuple[str, str]]:
+    """(label, href) pairs from a `{ label, href }` object array."""
+    return [
+        (label or other_label, href or other_href)
+        for label, other_label, href, other_href in LINK_ENTRY_RE.findall(source)
+    ]
+
+
+def links_list_md(source: str) -> str:
+    """Print-safe Markdown bullet list for links/sources/options arrays."""
+    lines = [
+        f"- [{label}]({href})" if href else f"- {label}"
+        for label, href in link_entries(source)
+    ]
+    return "\n\n" + "\n".join(lines) + "\n" if lines else "\n\n"
+
+
+def details_open_md(attr_source: str | None) -> str:
+    """Print opening for Accordion/ExpandableBox: title as bold text, then
+    the always-expanded body (paper has no collapse interaction)."""
+    title = attrs(attr_source).get("title")
+    return f"\n\n**{title}**\n\n" if title else "\n\n"
+
+
+def math_md(attr_source: str | None) -> str:
+    """Print delimiters for <Math source display?>: double backslashes survive
+    the Python-Markdown pass as single ones, which the KaTeX post-processor
+    (scripts/bin/render-math.mjs) then renders."""
+    source = attrs(attr_source).get("source", "")
+    if not source:
+        return "\n\n"
+    if attr_source and re.search(r"(?:^|\s)display(?:\s|/|$)", attr_source):
+        return f"\n\n\\\\[{source}\\\\]\n\n"
+    return f"\\\\({source}\\\\)"
+
+
 def glossary_html(source: str, escape_fn: EscapeFn = _identity) -> str:
+    seen: dict[str, int] = {}
     items = ''.join(
-        f'<dt>{escape_fn(term)}</dt><dd>{escape_fn(definition)}</dd>'
+        f'<dt id="{glossary_slug(term, seen)}">{escape_fn(term)}</dt><dd>{escape_fn(definition)}</dd>'
         for term, definition in object_entries(source)
     )
     return f'\n\n<dl class="glossary">{items}</dl>\n'
@@ -143,8 +222,9 @@ def glossary_html(source: str, escape_fn: EscapeFn = _identity) -> str:
 
 def glossary_lang_html(lang: str, data: dict, escape_fn: EscapeFn = _identity) -> str:
     """Full shared glossary for a language (data = parsed glossary.json)."""
+    seen: dict[str, int] = {}
     items = ''.join(
-        f'<dt>{escape_fn(entry["term"])}</dt><dd>{escape_fn(entry["definition"])}</dd>'
+        f'<dt id="{glossary_slug(entry["term"], seen)}">{escape_fn(entry["term"])}</dt><dd>{escape_fn(entry["definition"])}</dd>'
         for entry in data.get(lang, [])
     )
     return f'\n\n<dl class="glossary">{items}</dl>\n'
@@ -193,12 +273,50 @@ def question_html(question: str, source: str, answer: str, answers_label: str) -
 
 
 def strip_static_handlers(text: str) -> str:
-    """Handlers identical in PDF and EPUB: Button/Download links, CopyText, Toc, Spoiler, TableWrap."""
+    """Handlers identical in PDF and EPUB: Button/Download links, CopyText, Toc, Spoiler, TableWrap,
+    plus the collapsible/grouping wrappers (Accordion, ExpandableBox, Slideshow, ColorPanel),
+    link-list components (SideBySideButtons, Bibliography, SelectList), inline
+    aids (DefinitionTerm, PageRef) and TeX formulas (Math).
+
+    Everything emitted here is plain Markdown (bold titles, bullet lists,
+    unwrapped bodies), so downstream link-footnoting (PDF) and rendering
+    (EPUB) treat it like author prose. Ordered before Figure/Video handling
+    is irrelevant (disjoint tags), but must run before the PDF LINK_RE pass
+    so emitted `[label](url)` links become lettered URL notes.
+    """
     text = BUTTON_RE.sub(lambda m: component_link(m.group(1), m.group(2)), text)
     text = DOWNLOAD_RE.sub(lambda m: component_link(m.group(1), m.group(2).strip()), text)
+    text = SIDEBYSIDE_RE.sub(lambda m: links_list_md(m.group(1)), text)
     text = COPY_RE.sub("", text)
     text = TOC_RE.sub("", text)
     text = SPOILER_RE.sub(lambda m: m.group(1), text)
     text = TABLE_OPEN_RE.sub('\n\n', text)
     text = TABLE_CLOSE_RE.sub('\n\n', text)
+    # Collapsible sections print fully expanded with the title kept as bold text.
+    text = ACCORDION_OPEN_RE.sub(lambda m: details_open_md(m.group(1)), text)
+    text = ACCORDION_CLOSE_RE.sub('\n', text)
+    text = EXPANDABLE_OPEN_RE.sub(lambda m: details_open_md(m.group(1)), text)
+    text = EXPANDABLE_CLOSE_RE.sub('\n', text)
+    # Slideshows print as the plain figure sequence (inner Figures convert later).
+    text = SLIDESHOW_OPEN_RE.sub('\n\n', text)
+    text = SLIDESHOW_CLOSE_RE.sub('\n', text)
+    text = BIBLIOGRAPHY_RE.sub(lambda m: links_list_md(m.group(1)), text)
+    text = SELECT_RE.sub(lambda m: links_list_md(m.group(1)), text)
+    text = COLOR_OPEN_RE.sub('\n\n<div class="color-panel">\n', text)
+    text = COLOR_CLOSE_RE.sub('\n</div>\n', text)
+    # Inline definition popups have no hover target on paper: keep term + definition.
+    text = DEFINITION_RE.sub(
+        lambda m: (
+            lambda values: (
+                f"{values.get('term', '')} ({values['definition']})"
+                if values.get("term") and values.get("definition")
+                else values.get("term") or values.get("definition") or ""
+            )
+        )(attrs(m.group(1))),
+        text,
+    )
+    # Cross-references keep their label; print page numbers don't transfer.
+    text = PAGEREF_RE.sub(lambda m: attrs(m.group(1)).get("label", ""), text)
+    # TeX formulas become delimiters for the KaTeX post-processor.
+    text = MATH_RE.sub(lambda m: math_md(m.group(1)), text)
     return text

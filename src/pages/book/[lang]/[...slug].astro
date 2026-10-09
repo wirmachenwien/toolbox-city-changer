@@ -53,7 +53,7 @@ const url = bookUrl(language, file);
     file={file}
     title={title}
     description={entry?.data.description}
-    layout={entry?.data.template ?? 'contents'}
+    layout={entry?.data.template ?? 'section'}
     currentUrl={url}
   >
     {entry && <MdxContent entry={entry} />}

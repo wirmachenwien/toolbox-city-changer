@@ -1,6 +1,6 @@
 // Localisation helpers: locale lookup, nested key access, <html> attrs.
 import { locales, type Language } from '../data/locales';
-import { project } from '../data/project';
+import { getWork } from '../data/works';
 
 const ENGLISH_LANG = 'en' as Language;
 
@@ -30,18 +30,15 @@ export function htmlDir(lang: Language): 'ltr' | 'rtl' {
 }
 
 /** Project name/description/credit for the active language.
- *  Languages without their own project block fall back to the English
- *  project metadata. */
+ *  The single Title/Description/Credit fields in works.json serve both the
+ *  site chrome and the book metadata. Languages without their own block fall
+ *  back to English. */
 export function projectText(lang: Language): { name: string; description: string; credit: string } {
-  const locale = getLocale(lang) as {
-    project?: { name?: string; description?: string; credit?: string };
-  };
-  const english = getLocale(ENGLISH_LANG) as {
-    project?: { name?: string; description?: string; credit?: string };
-  };
+  const work = getWork(lang) ?? getWork(ENGLISH_LANG);
+  const fallback = getWork(ENGLISH_LANG);
   return {
-    name: locale.project?.name ?? english.project?.name ?? project.name,
-    description: locale.project?.description ?? english.project?.description ?? project.description,
-    credit: locale.project?.credit ?? english.project?.credit ?? project.credit,
+    name: work.title || fallback.title,
+    description: work.description || fallback.description,
+    credit: work.credit || fallback.credit,
   };
 }

@@ -2,7 +2,7 @@
 // Previous/next pagination. Dumb renderer: the "which pages paginate" rule
 // lives in `paginationNeighbours` (src/data/works.ts); layouts pass the
 // resolved prev/next in. Style follows
-// settings.web.paginationType: direction | titles | title-arrows | arrows.
+// settings.web.paginationType: previous-next | titles | title-arrows | arrows.
 import { settings } from '../data/settings';
 import { t } from '../lib/i18n';
 import { bookUrl, pageUrl } from '../lib/site';
@@ -26,7 +26,7 @@ function label(entry: NeighbourEntry, direction: 'prev' | 'next'): string {
   const arrow = direction === 'prev' ? '←' : '→';
   const fallback = direction === 'prev' ? t(lang, 'nav.previous', 'Previous') : t(lang, 'nav.next', 'Next');
   if (type === 'arrows') return arrow;
-  if (type === 'direction') return fallback;
+  if (type === 'previous-next') return fallback;
   if (type === 'titles') return entry.label;
   return direction === 'prev' ? `${arrow} ${entry.label}` : `${entry.label} ${arrow}`;
 }

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { languages } from '../../handbook.config.ts';
 import { smartQuotes } from '../lib/smart-quotes.ts';
 import { nav } from './nav';
+import { project } from './project';
 import raw from './works.json';
 import type { Language } from './locales';
 
@@ -28,6 +29,7 @@ const workSchema = z.object({
   creator: z.string().optional().default(''),
   contributor: z.string().optional().default(''),
   description: z.string().optional().default(''),
+  credit: z.string().optional().default(''),
   image: z.string().optional().default(''),
   publisher: z.string().optional().default(''),
   rights: z.string().optional().default(''),
@@ -37,13 +39,8 @@ const workSchema = z.object({
   type: z.string().optional().default(''),
   subject: z.string().optional().default(''),
   identifier: z.string().optional().default(''),
-  products: z.object({
-    pdf: z.object({ files: z.array(z.string()), toc: z.array(tocEntrySchema) }),
-    web: z.object({ files: z.array(z.string()), nav: z.array(tocEntrySchema) }),
-  }).optional(),
   /** Single ordered chapter list per language (single source of truth for
-   *  reading order). `files`/`nav`/`toc` are derived from it below. Any
-   *  legacy `products` block is ignored. */
+   *  reading order). `files`/`nav`/`toc` are derived from it below. */
   chapters: z.array(chapterSchema).min(1),
 });
 
@@ -61,6 +58,18 @@ for (const lang of languages) {
   if (!files.includes('contents')) throw new Error(`works.json: "${lang}" chapters are missing "contents"`);
 }
 const works = parsedWorks as Record<Language, Work>;
+
+for (const work of Object.values(works)) {
+  Object.assign(work, {
+    creator: work.creator || project.creator,
+    contributor: work.contributor || project.contributor,
+    publisher: work.publisher || project.publisher,
+    rights: work.rights || project.rights,
+    date: work.date || project.date,
+    modified: work.modified || project.modified,
+    identifier: work.identifier || project.identifier,
+  });
+}
 
 // Chapter counters must consistently include a trailing dot, e.g. "2. Title".
 // This keeps generated navigation, pagination, TOCs and any future metadata

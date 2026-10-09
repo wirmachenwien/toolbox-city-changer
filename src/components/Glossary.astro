@@ -1,9 +1,12 @@
 ---
- // Glossary list (description list of terms + definitions). Either pass
- // explicit `entries` (e.g. chapter recap boxes) or a `lang` to render the
- // full shared glossary from src/data/glossary.json (single source of
- // truth, editable via PagesCMS).
+// Glossary list (description list of terms + definitions). Either pass
+// explicit `entries` (e.g. chapter recap boxes) or a `lang` to render the
+// full shared glossary from src/data/glossary.json (single source of
+// truth, editable via PagesCMS). Every term gets an `id` plus a `#`
+// permalink anchor, mirroring the heading anchors (src/scripts/headings.ts).
 import { glossaryTerms } from '../data/glossary';
+import { slugifyTerms } from '../lib/slug';
+import { t } from '../lib/i18n';
 import { smartQuotes } from '../lib/smart-quotes';
 import type { Language } from '../data/locales';
 
@@ -30,10 +33,14 @@ const displayEntries = lang
     }))
   : entries;
 if (displayEntries.length === 0) throw new Error('<Glossary> needs either entries or lang');
+// Slugs derive from the raw terms so display transforms (smart quotes)
+// can never change an anchor target.
+const slugs = slugifyTerms(entries.map((entry) => entry.term));
+const anchorLabel = t(lang ?? 'en', 'headings.link-to-section', 'Link to this section');
 ---
 <dl class="glossary">
-  {displayEntries.map((entry) => (
-    <dt>{entry.term}</dt>
+  {displayEntries.map((entry, index) => (
+    <dt id={slugs[index]}>{entry.term}<a href={`#${slugs[index]}`} data-heading-anchor aria-label={anchorLabel}>#</a></dt>
     <dd>{entry.definition}</dd>
   ))}
 </dl>

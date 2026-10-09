@@ -1,7 +1,7 @@
 // Exclusive collapsibles with a smooth fold: opening one closes its
 // siblings in the same group (same parent); accordions elsewhere on the
-// page stay untouched. Always wired, no feature flag. When enabled via
-// settings, sections under the configured heading level additionally
+// page stay untouched. Always wired. When enabled via settings, sections
+// under the configured heading level additionally
 // collapse into <details> elements.
 //
 // The fold is driven by the Web Animations API: browsers hide closed
@@ -68,8 +68,9 @@ function foldClose(details: HTMLDetailsElement, body: HTMLElement, instant: bool
 export function initAccordion(): void {
   const prose = document.querySelector('[data-prose]');
   if (!prose) return;
-  if (document.body.dataset.accordion === 'true') {
-    const level = document.body.dataset.accordionLevel === 'h2' ? 'H2' : 'H3';
+  const configuredLevel = document.body.dataset.collapsibleSections ?? 'none';
+  if (/^h[2-5]$/.test(configuredLevel)) {
+    const level = configuredLevel.toUpperCase();
     const headings = [...prose.querySelectorAll(level)].filter(
       (heading) => !heading.closest('details'),
     );

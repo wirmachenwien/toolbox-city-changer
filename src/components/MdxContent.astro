@@ -1,6 +1,9 @@
 ---
 // Shared MDX renderer: renders a content-collection entry with the project
-// component scope (Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, and content aids).
+// component scope. The scope covers every showcase component (content aids
+// plus the chrome sheets/demos the component showcase exercises), so MDX sources
+// never import components themselves. Page chrome (Masthead, SideNav,
+// Footer) stays in the layouts.
 import { render, type CollectionEntry } from 'astro:content';
 import Figure from './Figure.astro';
 import Video from './Video.astro';
@@ -18,12 +21,81 @@ import Quiz from './Quiz.astro';
 import Question from './Question.astro';
 import Footnote from './Footnote.astro';
 import Spoiler from './Spoiler.astro';
+import Math from './Math.astro';
+import Accordion from './Accordion.astro';
+import ExpandableBox from './ExpandableBox.astro';
+import Slideshow from './Slideshow.astro';
+import Bibliography from './Bibliography.astro';
+import ColorPanel from './ColorPanel.astro';
+import DefinitionTerm from './DefinitionTerm.astro';
+import PageRef from './PageRef.astro';
+import SelectList from './SelectList.astro';
+import BookmarkAdd from './BookmarkAdd.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import ContentsPage from './ContentsPage.astro';
+import Cover from './Cover.astro';
+import Icon from './Icon.astro';
+import LanguageMenu from './LanguageMenu.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import MetadataTable from './MetadataTable.astro';
+import OpenerImage from './OpenerImage.astro';
+import Pagination from './Pagination.astro';
+import QrCode from './QrCode.astro';
+import Rotate from './Rotate.astro';
+import SearchForm from './SearchForm.astro';
+import Share from './Share.astro';
+import TitlePage from './TitlePage.astro';
+import VisualToc from './VisualToc.astro';
+
+export const mdxComponents = {
+  Figure,
+  Video,
+  ButtonLink,
+  DownloadLink,
+  SideBySideButtons,
+  CopyText,
+  Toc,
+  CcBadge,
+  FeatureBox,
+  PullQuote,
+  TableWrap,
+  Glossary,
+  Quiz,
+  Question,
+  Footnote,
+  Spoiler,
+  Math,
+  Accordion,
+  ExpandableBox,
+  Slideshow,
+  Bibliography,
+  ColorPanel,
+  DefinitionTerm,
+  PageRef,
+  SelectList,
+  BookmarkAdd,
+  Breadcrumbs,
+  ContentsPage,
+  Cover,
+  Icon,
+  LanguageMenu,
+  LanguageSwitcher,
+  MetadataTable,
+  OpenerImage,
+  Pagination,
+  QrCode,
+  Rotate,
+  SearchForm,
+  Share,
+  TitlePage,
+  VisualToc,
+};
 
 interface Props {
-  entry: CollectionEntry<'book'> | CollectionEntry<'pages'>;
+  entry: CollectionEntry<'book'> | CollectionEntry<'pages'> | CollectionEntry<'preview'>;
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
-<Content components={{ Figure, Video, ButtonLink, DownloadLink, SideBySideButtons, CopyText, Toc, CcBadge, FeatureBox, PullQuote, TableWrap, Glossary, Quiz, Question, Footnote, Spoiler }} />
+<Content components={mdxComponents} />

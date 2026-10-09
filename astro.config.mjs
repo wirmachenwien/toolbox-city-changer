@@ -1,9 +1,26 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import { satteri } from '@astrojs/markdown-satteri';
-import { smartQuotesHastPlugin } from './src/lib/satteri-smart-quotes.ts';
+import { unified } from '@astrojs/markdown-remark';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import { remarkBackslashMath } from './src/lib/remark-backslash-math.mjs';
+import { smartQuotesRehypePlugin } from './src/lib/satteri-smart-quotes.ts';
 import { site, base, defaultLang } from './handbook.config.ts';
+
+/** @typedef {{ file: string, web?: boolean }} Chapter */
+/** @typedef {{ chapters?: Chapter[] }} Work */
+
+const works = /** @type {Record<string, Work>} */ (
+  JSON.parse(readFileSync(new URL('./src/data/works.json', import.meta.url), 'utf8'))
+);
+const defaultLanguageBookRedirects = Object.fromEntries(
+  [...new Set([...(works[defaultLang]?.chapters ?? [])
+    .filter((chapter) => chapter.web !== false)
+    .map((chapter) => chapter.file), 'contents'])]
+    .map((file) => [`/book/${defaultLang}/${file}`, `/book/${file}`]),
+);
 
 export default defineConfig({
   site,
@@ -14,14 +31,13 @@ export default defineConfig({
     // book/01 -> book/01.html (no trailing-slash directories).
     format: 'file',
   },
-  // Legacy default-language prefix: the default language lives at the root
-  // (/ and /book/), so the old /<lang>/ and /book/<lang>/ URLs redirect to
-  // their canonical equivalents (emitted as static redirect pages).
+  // The default language is canonical at the root (/ and /book/), but the
+  // prefixed form should still resolve and redirect consistently.
   redirects: {
     [`/${defaultLang}`]: '/',
     [`/${defaultLang}/search`]: '/search',
     [`/book/${defaultLang}`]: '/book',
-    [`/book/${defaultLang}/[...slug]`]: '/book/[...slug]',
+    ...defaultLanguageBookRedirects,
   },
   integrations: [mdx()],
   markdown: {
@@ -30,9 +46,11 @@ export default defineConfig({
     // MDX inherits this processor (extendMarkdownConfig defaults to true).
     // Sätteri's built-in English quotes stay off so the plugin below has
     // straight quotes left to localise; dashes/ellipses are untouched.
-    processor: satteri({
-      features: { smartPunctuation: { quotes: false } },
-      hastPlugins: [smartQuotesHastPlugin(defaultLang)],
+    processor: unified({
+      gfm: true,
+      smartypants: false,
+      remarkPlugins: [remarkBackslashMath, remarkMath],
+      rehypePlugins: [rehypeKatex, smartQuotesRehypePlugin(defaultLang)],
     }),
   },
 });

@@ -13,7 +13,7 @@ const { lang, title } = Astro.props;
 // match the hast-transformed prose.
 const displayTitle = smartQuotes(title, lang);
 ---
-<div class="sheet">
+<div class="sheet contents-sheet">
   <h1>{displayTitle}</h1>
   <Toc lang={lang} />
 </div>

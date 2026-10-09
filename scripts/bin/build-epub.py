@@ -41,9 +41,12 @@ from handbook.book import (
     front_opener,
     glossary_data,
     locale_text,
+    katex_css,
+    katex_font_files,
     load_works,
     markdown_to_html,
     read_chapter_mdx,
+    render_math_html,
     resolve_jobs,
 )
 from handbook.mdx import (
@@ -145,6 +148,12 @@ class EpubBook:
             self.fonts[key] = f"fonts/{source.name}"
         return self.fonts[key]
 
+    def add_katex_font(self, source: Path) -> str:
+        key = source.resolve().as_posix()
+        if key not in self.fonts:
+            self.fonts[key] = f"fonts/{source.name}"
+        return self.fonts[key]
+
     def convert_mdx(self, text: str) -> str:
         text = FRONTMATTER_RE.sub("", text, count=1)
         answers_label = locale_text(self.lang, "questions.correct-answers", "Correct answers")
@@ -206,7 +215,7 @@ class EpubBook:
 
     def render_markdown(self, md_text: str) -> str:
         # Render-time typographic quotes (source keeps straight quotes).
-        return as_xhtml(markdown_to_html(self.convert_mdx(md_text), self.lang))
+        return as_xhtml(render_math_html(markdown_to_html(self.convert_mdx(md_text), self.lang)))
 
     def add_chapter(self, slug: str, title: str, body: str) -> None:
         filename = f"{slug}.xhtml"
@@ -218,6 +227,8 @@ class EpubBook:
 
         for filename in EPUB_FONTS:
             self.add_font(filename)
+        for font_path in katex_font_files():
+            self.add_katex_font(font_path)
 
         cover_name = front_opener(self.lang) or self.works.get("image") or ""
         self.cover_image = self.add_image(cover_name) if cover_name else ""
@@ -320,7 +331,7 @@ class EpubBook:
             for index, chapter in enumerate(self.chapters, start=1)
         )
         font_items = "\n".join(
-            f'<item id="font-{index}" href="{xml_escape(href)}" media-type="font/ttf"/>'
+            f'<item id="font-{index}" href="{xml_escape(href)}" media-type="{media_type(Path(href))}"/>'
             for index, href in enumerate(self.fonts.values(), start=1)
         )
         spine_items = "\n".join(
@@ -380,7 +391,8 @@ class EpubBook:
                 '</rootfiles></container>\n',
                 encoding="utf-8",
             )
-            (oebps / "styles" / "epub.css").write_text(EPUB_CSS_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+            css = EPUB_CSS_PATH.read_text(encoding="utf-8") + "\n" + katex_css("../fonts/")
+            (oebps / "styles" / "epub.css").write_text(css, encoding="utf-8")
             (oebps / "nav.xhtml").write_text(self.nav_document(), encoding="utf-8")
             (oebps / "content.opf").write_text(self.opf_document(), encoding="utf-8")
 

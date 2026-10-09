@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Post-build fix for GitHub Pages hosting: Astro's file format flattens
 // `<lang>/index` routes to `<lang>.html`; move those back to directory
-// indexes so /de/, /sl/, /<default>/ (legacy redirect), /book/,
-// /book/<lang>/ and /book/<default>/ (legacy redirect) resolve.
+// indexes so /de/, /sl/, /<default>/ redirects, /book/,
+// /book/<lang>/ and /book/<default>/ redirects resolve.
 // (The sitemap needs no fixups: src/pages/sitemap.xml.ts already emits
 // canonical URLs.)
 import { mkdirSync, renameSync, existsSync } from 'node:fs';
@@ -11,8 +11,8 @@ import { languages } from '../../handbook.config.ts';
 import { DIST_DIR } from '../lib/paths.mjs';
 
 const INDEX_MOVES = [
-  // Language homes: <lang>.html -> <lang>/index.html (plus the legacy
-  // default-language prefix, emitted by the astro.config.mjs redirects).
+  // Language homes: <lang>.html -> <lang>/index.html, including the
+  // default-language prefixed redirect emitted by astro.config.mjs.
   ...languages.map((lang) => [`${lang}.html`, `${lang}/index.html`]),
   // Book landings: book.html -> book/index.html, same per language.
   ['book.html', 'book/index.html'],

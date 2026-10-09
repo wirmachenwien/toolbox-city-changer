@@ -1,6 +1,8 @@
 /* Toolbox for City Changers — global stylesheet.
    Modern CSS, logical properties throughout so RTL locales mirror for free. */
 
+@import "katex/dist/katex.css";
+
 /* Self-hosted Newsreader Text (OFL, see OFL-Newsreader.txt) so body copy
    renders identically online and in the WeasyPrint PDF, which embeds the
    same files. Static instances at the text optical size (opsz 16). */
@@ -632,14 +634,18 @@ body.drawer-open {
   margin-block-end: 1rem;
 }
 
-/* Breadcrumbs sit directly above the article heading as an eyebrow. */
-.article > .crumbs {
+/* Breadcrumbs sit directly above the article heading as an eyebrow. The
+   spacer wraps a hidden duplicate on pages without a trail, so its inner
+   crumbs need the same sizing (the child selector alone would not match). */
+.article > .crumbs,
+.article > .crumbs-spacer > .crumbs {
   font-size: 0.83rem;
   letter-spacing: 0.02em;
   margin-block-end: 0.85rem;
 }
 
-.article > .crumbs a {
+.article > .crumbs a,
+.article > .crumbs-spacer > .crumbs a {
   text-decoration: none;
 }
 
@@ -674,6 +680,13 @@ body.drawer-open {
 
 .crumbs [aria-current="page"] {
   color: var(--ink-soft);
+}
+
+/* Placeholder on book pages without a breadcrumb trail (sections, virtual
+   contents page): a hidden duplicate of the crumbs that reserves exactly
+   their height so the heading aligns with chapter headings. */
+.crumbs-spacer {
+  visibility: hidden;
 }
 
 /* ---------- Figures & opener ---------- */
@@ -1585,6 +1598,19 @@ html:not(.js-fold) .accordion-content {
   text-wrap: balance;
 }
 
+/* The contents sheet heading matches a chapter h1 exactly (same size and
+   margins as .prose h1 above). */
+.sheet h1 {
+  font-size: 2rem;
+  margin-block: 0 1rem;
+}
+
+/* On the contents page the sheet opens the article (after the crumbs
+   spacer), so it carries no top margin — like .prose following crumbs. */
+.contents-sheet {
+  margin-block: 0 2rem;
+}
+
 .cover-sheet {
   text-align: center;
   max-inline-size: 36rem;
@@ -1597,10 +1623,6 @@ html:not(.js-fold) .accordion-content {
 
 .title-sheet h1 {
   font-size: 2.5rem;
-}
-
-.about-sheet {
-  font-size: 1.02rem;
 }
 
 .metadata-table {
@@ -1784,16 +1806,16 @@ html:not(.js-fold) .accordion-content {
   margin-block-start: 0;
 }
 
-/* ---------- Kitchen sink ---------- */
+/* ---------- Component showcase ---------- */
 
-.sink-demo {
+.showcase-demo {
   border: 1px dashed var(--ink-soft);
   border-radius: var(--radius);
   padding: 1rem;
   margin-block: 1rem 2rem;
 }
 
-.sink-label {
+.showcase-label {
   font-family: var(--font-ui);
   font-size: 0.8rem;
   color: var(--ink-soft);
@@ -1801,7 +1823,7 @@ html:not(.js-fold) .accordion-content {
 }
 
 /* Icon gallery: responsive tile grid, one tile per icon with its name. */
-.sink-icons {
+.showcase-icons {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
   gap: 0.5rem;
@@ -1810,11 +1832,11 @@ html:not(.js-fold) .accordion-content {
   padding: 0;
 }
 
-.sink-icons li + li {
+.showcase-icons li + li {
   margin-block-start: 0;
 }
 
-.sink-icons li {
+.showcase-icons li {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1825,12 +1847,12 @@ html:not(.js-fold) .accordion-content {
   text-align: center;
 }
 
-.sink-icons .icon {
+.showcase-icons .icon {
   inline-size: 1.5rem;
   block-size: 1.5rem;
 }
 
-.sink-icon-name {
+.showcase-icon-name {
   font-family: var(--font-ui);
   font-size: 0.75rem;
   color: var(--ink-soft);
@@ -1896,15 +1918,6 @@ html:not(.js-fold) .accordion-content {
 .rotated[data-angle="270"] {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-}
-
-/* ---------- Annotation (opt-in only) ---------- */
-
-.annotation-note {
-  font-size: 0.91rem;
-  color: var(--ink-soft);
-  border-inline-start: 3px solid var(--warn);
-  padding-inline-start: 0.75rem;
 }
 
 /* ---------- Utilities ---------- */

@@ -38,8 +38,8 @@ npm run sync:config  # regenerate .pages.yml, public/robots.txt, public/site.web
 ```
 
 English is the default language and lives at the root (`/`, `/book/…`);
-other languages live under `/<lang>/` and `/book/<lang>/…` (legacy `/en/`
-URLs redirect to the canonical locations).
+other languages live under `/<lang>/` and `/book/<lang>/…`. Prefixed default
+language URLs (`/en/…`) redirect to the canonical root locations.
 
 ## Project layout
 

@@ -1,6 +1,7 @@
 ---
- // Search form. Points at the language-local search page with ?query= and is
- // progressively enhanced by the client search UI.
+ // Search form. Points at the language-local search page with the configured
+// search parameter and is progressively enhanced by the client search UI.
+import { settings } from '../data/settings';
 import { t } from '../lib/i18n';
 import { pageUrl } from '../lib/site';
 import type { Language } from '../data/locales';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const { lang, query = '', autofocus = false } = Astro.props;
+const searchParam = settings.web.search.param;
 ---
 <form class="search-form" role="search" action={pageUrl(lang, 'search')} method="get" data-search-form>
   <label class="visually-hidden" for="site-search">
@@ -23,7 +25,7 @@ const { lang, query = '', autofocus = false } = Astro.props;
     <input
       id="site-search"
       type="search"
-      name="query"
+      name={searchParam}
       value={query}
       placeholder={t(lang, 'search.placeholder', 'Search…')}
       autocomplete="off"

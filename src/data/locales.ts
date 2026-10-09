@@ -11,7 +11,7 @@ export type { Language };
 
 export const localeSchema = z
   .object({ direction: z.enum(['ltr', 'rtl']).default('ltr') })
-  .passthrough();
+  .loose();
 export type AppLocale = z.infer<typeof localeSchema> & Record<string, unknown>;
 
 const parsed = z.record(z.string(), localeSchema).parse(raw) as Record<string, AppLocale>;

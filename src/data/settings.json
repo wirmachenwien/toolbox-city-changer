@@ -1,17 +1,14 @@
 {
-  "math": { "enabled": true, "source": "cdn" },
+  "downloads": { "pdf": true, "epub": true },
   "web": {
     "pagination": true,
     "paginationType": "title-arrows",
-    "accordion": false,
-    "accordionLevel": "h3",
-    "svgInject": true,
-    "lazyload": true,
-    "bookmarks": { "enabled": true, "noteMaxLength": 5000 },
+    "collapsibleSections": "none",
+    "bookmarks": { "enabled": true },
     "nav": { "expandBooks": true, "projectNavPosition": "before" },
-    "search": { "jumpBoxLocation": "mainHeading", "param": "query" },
+    "search": { "param": "query" },
     "titleDivider": " – ",
-    "indexing": { "development": "index", "live": "index" }
+    "indexing": true
   },
   "pdf": {
     "notes": "footnotes",

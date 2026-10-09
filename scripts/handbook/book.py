@@ -29,6 +29,8 @@ from __future__ import annotations
 import argparse
 import functools
 import json
+import re
+import subprocess
 from pathlib import Path
 
 from handbook.config import load_config
@@ -38,7 +40,11 @@ from handbook.typography import smart_quotes_html
 ROOT = Path(__file__).resolve().parent.parent.parent
 CONTENT = ROOT / "src" / "content" / "book"
 ASSETS = ROOT / "src" / "assets"
+KATEX_DIST = ROOT / "node_modules" / "katex" / "dist"
+KATEX_CSS_PATH = KATEX_DIST / "katex.css"
+RENDER_MATH = ROOT / "scripts" / "bin" / "render-math.mjs"
 DATA = ROOT / "src" / "data" / "works.json"
+PROJECT_DATA = ROOT / "src" / "data" / "project.json"
 GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
 LOCALES_DATA = ROOT / "src" / "data" / "locales.json"
 PAGES = ROOT / "src" / "content" / "pages"
@@ -64,7 +70,12 @@ def glossary_data() -> dict:
 @functools.lru_cache(maxsize=None)
 def load_works() -> dict:
     """Full src/data/works.json mapping (one entry per language)."""
-    return json.loads(DATA.read_text(encoding="utf-8"))
+    works = json.loads(DATA.read_text(encoding="utf-8"))
+    project = json.loads(PROJECT_DATA.read_text(encoding="utf-8"))
+    for work in works.values():
+        for key, value in project.items():
+            work.setdefault(key, value)
+    return works
 
 
 @functools.lru_cache(maxsize=None)
@@ -126,6 +137,36 @@ def markdown_to_html(converted_md: str, lang: str) -> str:
 
     body = markdown.markdown(converted_md, extensions=["extra"])
     return smart_quotes_html(body, lang)
+
+
+def render_math_html(html: str) -> str:
+    """Render TeX delimiters in HTML to static KaTeX markup via Node."""
+    try:
+        result = subprocess.run(
+            ["node", str(RENDER_MATH)],
+            input=html,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+            cwd=ROOT,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError("node is required for static math rendering") from exc
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f"math rendering failed: {exc.stderr.strip()}") from exc
+    return result.stdout
+
+
+def katex_css(url_prefix: str = "fonts/") -> str:
+    """KaTeX stylesheet with font URLs rewritten for the target output."""
+    css = KATEX_CSS_PATH.read_text(encoding="utf-8")
+    return re.sub(r"url\(fonts/([^)]+)\)", lambda m: f"url({url_prefix}{m.group(1)})", css)
+
+
+def katex_font_files() -> list[Path]:
+    """All KaTeX font assets referenced by its stylesheet."""
+    return sorted((KATEX_DIST / "fonts").glob("KaTeX_*"))
 
 
 def download_stem(lang: str) -> str:

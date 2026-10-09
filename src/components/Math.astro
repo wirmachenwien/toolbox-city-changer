@@ -1,22 +1,18 @@
 ---
-// Mathematics (TeX). Loads the MathJax runtime from the configured source
-// (settings.math.source: "cdn" | "local") only on pages that use this
-// component, then typesets the slot content.
-import { settings } from '../data/settings';
-import { withBase } from '../lib/site';
+// Mathematics (TeX) rendered at build time with KaTeX: no client runtime.
+// `source` is the TeX string; `display` selects display vs. inline mode.
+import katex from 'katex';
 
 interface Props {
+  source: string;
   display?: boolean;
 }
-const { display = false } = Astro.props;
-const src =
-  settings.math.source === 'local'
-    ? withBase('/vendor/mathjax/tex-chtml.js')
-    : 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js';
+
+const { source, display = false } = Astro.props;
+const html = katex.renderToString(source, {
+  displayMode: display,
+  output: 'html',
+  throwOnError: false,
+});
 ---
-{settings.math.enabled && (
-  <>
-    <span class="math" data-display={display ? 'true' : 'false'}><slot /></span>
-    <script src={src} async data-mathjax />
-  </>
-)}
+{display ? <div set:html={html} /> : <span set:html={html} />}

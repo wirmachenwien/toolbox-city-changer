@@ -6,9 +6,8 @@
 // from the document frontmatter (`ctx.data.astro.frontmatter.lang`;
 // content collections always set it — see src/content.config.ts).
 //
-// Wired in astro.config.mjs via `satteri({ hastPlugins, features })`.
-// Sätteri's built-in English `smartPunctuation.quotes` must stay off
-// (there) or there would be no straight quotes left to localise.
+// `smartQuotesHastPlugin` is the original Sätteri plugin. The unified export
+// below keeps the same behaviour for the Markdown/MDX processor used now.
 import type { HastPluginEntry } from 'satteri';
 import {
   createQuoteState,
@@ -71,6 +70,27 @@ export function smartQuotesHastPlugin(defaultLang: QuoteLang = 'en'): HastPlugin
         const next = smartQuotesChunk(node.value, lang, state);
         if (next !== node.value) ctx.replaceNode(node, { ...node, value: next });
       },
+    };
+  };
+}
+
+export function smartQuotesRehypePlugin(defaultLang: QuoteLang = 'en') {
+  return () => {
+    return (tree: unknown, file: unknown) => {
+      let lang = normalizeLang(readFrontmatterLang((file as { data?: unknown }).data), defaultLang);
+      let state = createQuoteState();
+
+      function walk(node: any, skip = false): void {
+        const nextSkip = skip || (node?.type === 'element' && SKIP_TAGS.has(String(node.tagName).toLowerCase()));
+        if (node?.type === 'text' && !nextSkip && (node.value.includes('"') || node.value.includes("'"))) {
+          node.value = smartQuotesChunk(node.value, lang, state);
+        }
+        if (Array.isArray(node?.children)) {
+          for (const child of node.children) walk(child, nextSkip);
+        }
+      }
+
+      walk(tree);
     };
   };
 }

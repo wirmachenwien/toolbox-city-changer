@@ -3,7 +3,6 @@
 // and the progressive-enhancement client bundle.
 import '../styles/global.css';
 import { settings } from '../data/settings';
-import { project } from '../data/project';
 import { projectText, t, htmlDir } from '../lib/i18n';
 import { canonical, withBase } from '../lib/site';
 import { smartQuotes } from '../lib/smart-quotes';
@@ -32,10 +31,10 @@ const { lang, title, description, kind, file, currentUrl, noindex = false, hrefl
 const displayTitle = smartQuotes(title, lang);
 const displayDescription = description ? smartQuotes(description, lang) : undefined;
 const text = projectText(lang);
-const projectName = smartQuotes(text.name || project.name, lang);
+const projectName = smartQuotes(text.name, lang);
 const fullTitle = `${displayTitle}${settings.web.titleDivider}${projectName}`;
 const metaDescription = displayDescription ?? text.description;
-const hideFromIndex = noindex || settings.web.indexing.live === 'noindex';
+const hideFromIndex = noindex || !settings.web.indexing;
 ---
 <!doctype html>
 <html lang={lang} dir={htmlDir(lang)}>
@@ -60,10 +59,7 @@ const hideFromIndex = noindex || settings.web.indexing.live === 'noindex';
   </head>
   <body
     data-pagefind-ignore={noindex ? '' : undefined}
-    data-accordion={settings.web.accordion ? 'true' : 'false'}
-    data-accordion-level={settings.web.accordionLevel}
-    data-svg-inject={settings.web.svgInject ? 'true' : 'false'}
-    data-lazyload={settings.web.lazyload ? 'true' : 'false'}
+    data-collapsible-sections={settings.web.collapsibleSections}
     data-search-param={settings.web.search.param}
   >
     <a class="skip-link" href="#main">{t(lang, 'nav.toc', 'Contents')}</a>

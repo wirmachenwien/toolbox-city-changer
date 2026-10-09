@@ -2,11 +2,6 @@
   "de": {
     "direction": "ltr",
     "local-name": "Deutsch",
-    "project": {
-      "name": "Toolbox für City Changer",
-      "description": "Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož aus dem Erasmus+-Projekt Toolbox für City Changer.",
-      "credit": "Ein Handbuch von <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
-    },
     "nav": {
       "breadcrumb": "Breadcrumb",
       "menu": "Menü",
@@ -109,11 +104,6 @@
   "en": {
     "direction": "ltr",
     "local-name": "English",
-    "project": {
-      "name": "Toolbox for City Changers",
-      "description": "A handbook by Wir machen Wien, Changing Cities and Prostorož from the Erasmus+ project Toolbox for City Changers.",
-      "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
-    },
     "nav": {
       "breadcrumb": "Breadcrumb",
       "menu": "Menu",
@@ -313,11 +303,6 @@
     },
     "visual-toc": {
       "link-to-page-assistive-text": "Povezava do strani"
-    },
-    "project": {
-      "name": "Zbirka orodij za spreminjanje mest",
-      "description": "Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož iz projekta Erasmus+ Zbirka orodij za spreminjanje mest.",
-      "credit": "Priročnik organizacij <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> in <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
     }
   }
 }
