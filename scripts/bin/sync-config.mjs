@@ -610,8 +610,14 @@ function componentShowcase() {
       - name: title
         type: string
         required: true
+        readonly: true
+        description: "Preview: ${site}${BASE_PATH}/preview/component-showcase.html"
+      - name: lang
+        component: language
+        readonly: true
       - name: body
         component: markdown_body
+        readonly: true
     operations:
       create: false
       delete: false
