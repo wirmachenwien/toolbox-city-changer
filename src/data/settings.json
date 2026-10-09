@@ -4,7 +4,6 @@
     "paginationType": "title-arrows",
     "accordion": false,
     "accordionLevel": "h3",
-    "svgInject": true,
     "bookmarks": { "enabled": true },
     "nav": { "expandBooks": true, "projectNavPosition": "before" },
     "search": { "param": "query" },

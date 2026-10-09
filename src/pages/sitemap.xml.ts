@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { settings } from '../data/settings';
 import { getWork, webBookToc } from '../data/works';
 import { pageUrl, bookUrl, canonical } from '../lib/site';
 import { languages } from '../data/locales';
@@ -8,12 +9,14 @@ import { languages } from '../data/locales';
 // prefixed URLs, 404 and preview pages are intentionally excluded.
 export const GET: APIRoute = () => {
   const entries: { loc: string; lastmod: string }[] = [];
-  for (const lang of languages) {
-    const lastmod = getWork(lang).modified || getWork(lang).date || '';
-    const push = (url: string) => entries.push({ loc: canonical(url), lastmod });
-    push(pageUrl(lang, 'index'));
-    push(pageUrl(lang, 'search'));
-    for (const entry of webBookToc(lang)) push(bookUrl(lang, entry.file));
+  if (settings.web.indexing.live === 'index') {
+    for (const lang of languages) {
+      const lastmod = getWork(lang).modified || getWork(lang).date || '';
+      const push = (url: string) => entries.push({ loc: canonical(url), lastmod });
+      push(pageUrl(lang, 'index'));
+      push(pageUrl(lang, 'search'));
+      for (const entry of webBookToc(lang)) push(bookUrl(lang, entry.file));
+    }
   }
   const urls = entries
     .map(

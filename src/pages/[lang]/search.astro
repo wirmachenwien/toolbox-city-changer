@@ -3,6 +3,7 @@
 // file; the title comes from the locale strings.
 import PageLayout from '../../layouts/PageLayout.astro';
 import SearchForm from '../../components/SearchForm.astro';
+import { settings } from '../../data/settings';
 import { t } from '../../lib/i18n';
 import { defaultLang, languages } from '../../../handbook.config.ts';
 import type { Language } from '../../data/locales';
@@ -17,7 +18,7 @@ export async function getStaticPaths() {
 const language = Astro.params.lang as Language;
 const title = t(language, 'search.search-title', 'Search');
 const url = pageUrl(language, 'search');
-const query = Astro.url.searchParams.get('query') ?? '';
+const query = Astro.url.searchParams.get(settings.web.search.param) ?? '';
 ---
 <PageLayout lang={language} file="search" title={title} layout="search" currentUrl={url}>
   <h1>{title}</h1>

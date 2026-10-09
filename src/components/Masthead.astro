@@ -1,6 +1,7 @@
 ---
  // Site masthead: brand mark, search shortcut, language dropdown, menu button.
  // Breadcrumbs live with the article heading (single source, no duplication).
+import { settings } from '../data/settings';
 import { projectText, t } from '../lib/i18n';
 import { smartQuotes } from '../lib/smart-quotes';
 import { withBase, DEFAULT_LANG } from '../lib/site';
@@ -16,6 +17,7 @@ interface Props {
 
 const { lang, kind, file } = Astro.props;
 const text = projectText(lang);
+const searchParam = settings.web.search.param;
 ---
 <header class="site-head">
   <div class="site-head-inner">
@@ -40,7 +42,7 @@ const text = projectText(lang);
           <input
             id="head-search"
             type="search"
-            name="query"
+            name={searchParam}
             placeholder={t(lang, 'search.placeholder', 'Search…')}
             autocomplete="off"
           />

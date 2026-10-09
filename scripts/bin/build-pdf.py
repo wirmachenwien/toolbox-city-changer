@@ -74,11 +74,12 @@ BOOK_FOOTNOTES: list[tuple[str, str, str]] = []
 
 
 def pdf_notes_mode() -> str:
-    try:
-        data = json.loads(SETTINGS.read_text(encoding="utf-8"))
-    except Exception:
-        return "footnotes"
-    return data.get("pdf", {}).get("notes", "footnotes")
+    return json.loads(SETTINGS.read_text(encoding="utf-8"))["pdf"]["notes"]
+
+
+def pdf_page_settings() -> tuple[str, str]:
+    page = json.loads(SETTINGS.read_text(encoding="utf-8"))["pdf"]["page"]
+    return page["size"], page["margin"]
 
 
 def image_uri(filename: str) -> str:
@@ -158,6 +159,13 @@ def font_uri(filename: str) -> str:
 def print_css() -> str:
     """Print stylesheet with logical font paths rewritten to file URIs."""
     css = PRINT_CSS.read_text(encoding="utf-8")
+    size, margin = pdf_page_settings()
+    css = re.sub(
+        r"(@page\s*\{\s*)size:\s*[^;]+;\s*margin:\s*[^;]+;",
+        lambda match: f"{match.group(1)}size: {size};\n  margin: {margin};",
+        css,
+        count=1,
+    )
     css = FONT_RE.sub(lambda m: f'url("{font_uri(m.group(1))}")', css)
     katex_fonts = (ROOT / "node_modules" / "katex" / "dist" / "fonts").as_uri() + "/"
     return css + "\n" + katex_css(katex_fonts)

@@ -129,6 +129,8 @@ function appSettings() {
                       label: Arrows only
                     - name: titles
                       label: Titles only
+                    - name: previous-next
+                      label: Previous and next
               - name: accordion
                 type: boolean
               - name: accordionLevel
@@ -140,9 +142,6 @@ function appSettings() {
                       label: H2
                     - name: h3
                       label: H3
-              - name: svgInject
-                label: Inline SVG injection
-                type: boolean
               - name: bookmarks
                 type: object
                 fields:

@@ -3,7 +3,6 @@
 // Full list of supported toggles:
 // - web.pagination / web.paginationType
 // - web.accordion / web.accordionLevel
-// - web.svgInject
 // - web.bookmarks.enabled
 // - web.nav.expandBooks / web.nav.projectNavPosition ("before" | "after")
 // - web.titleDivider
@@ -18,11 +17,10 @@ const toggleSchema = z.object({
     .object({
       pagination: z.boolean().default(true),
       paginationType: z
-        .enum(['direction', 'titles', 'title-arrows', 'arrows'])
+        .enum(['previous-next', 'titles', 'title-arrows', 'arrows'])
         .default('title-arrows'),
       accordion: z.boolean().default(false),
       accordionLevel: z.enum(['h2', 'h3']).default('h3'),
-      svgInject: z.boolean().default(true),
       bookmarks: z
         .object({
           enabled: z.boolean().default(true),
@@ -51,7 +49,6 @@ const toggleSchema = z.object({
       paginationType: 'title-arrows',
       accordion: false,
       accordionLevel: 'h3',
-      svgInject: true,
       bookmarks: { enabled: true },
       nav: { expandBooks: true, projectNavPosition: 'before' },
       search: { param: 'query' },
