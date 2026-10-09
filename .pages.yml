@@ -521,323 +521,66 @@ content:
 
       - name: pages_de
         label: Pages
-        type: group
-        items:
-          - name: home_de
-            label: "Start"
-            type: file
-            path: src/content/pages/de/index.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
+        type: collection
+        path: src/content/pages/de
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
 
-          - name: new_pages_de
-            label: New pages
-            type: collection
-            path: src/content/pages/de
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["index.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
-      - name: handbook_de
-        label: Handbook
-        type: group
-        items:
-          - name: handbook_de_about
-            label: "Über"
-            type: file
-            path: src/content/book/de/about.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_glossary
-            label: "Glossar"
-            type: file
-            path: src/content/book/de/glossary.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_01
-            label: "1. Wozu diese Toolbox?"
-            type: file
-            path: src/content/book/de/01.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_02
-            label: "2. Superblocks starten"
-            type: file
-            path: src/content/book/de/02.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_03
-            label: "3. Tactical Urbanism und Street Design"
-            type: file
-            path: src/content/book/de/03.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_04
-            label: "4. Mobilisierung und Strategien des Wandels"
-            type: file
-            path: src/content/book/de/04.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_05
-            label: "5. Monitoring: Wirkung sichtbar machen"
-            type: file
-            path: src/content/book/de/05.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_de_06
-            label: "6. Arbeitsplan und Quellen"
-            type: file
-            path: src/content/book/de/06.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: new_chapters_de
-            label: New chapters
-            type: collection
-            path: src/content/book/de
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["about.mdx", "glossary.mdx", "01.mdx", "02.mdx", "03.mdx", "04.mdx", "05.mdx", "06.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
+      - name: chapters_de
+        label: Chapters
+        type: collection
+        path: src/content/book/de
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            label: Page title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: book_images
+              path: src/assets/book
+              rename: safe
 
   - name: language_en
     label: "English"
@@ -1154,323 +897,66 @@ content:
 
       - name: pages_en
         label: Pages
-        type: group
-        items:
-          - name: home_en
-            label: "Home"
-            type: file
-            path: src/content/pages/en/index.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
+        type: collection
+        path: src/content/pages/en
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
 
-          - name: new_pages_en
-            label: New pages
-            type: collection
-            path: src/content/pages/en
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["index.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
-      - name: handbook_en
-        label: Handbook
-        type: group
-        items:
-          - name: handbook_en_about
-            label: "About"
-            type: file
-            path: src/content/book/en/about.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_glossary
-            label: "Glossary"
-            type: file
-            path: src/content/book/en/glossary.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_01
-            label: "1. Why this toolbox?"
-            type: file
-            path: src/content/book/en/01.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_02
-            label: "2. Starting superblocks"
-            type: file
-            path: src/content/book/en/02.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_03
-            label: "3. Tactical urbanism and street design"
-            type: file
-            path: src/content/book/en/03.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_04
-            label: "4. Mobilisation and strategies for change"
-            type: file
-            path: src/content/book/en/04.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_05
-            label: "5. Monitoring: making impact visible"
-            type: file
-            path: src/content/book/en/05.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_en_06
-            label: "6. Work plan and sources"
-            type: file
-            path: src/content/book/en/06.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: new_chapters_en
-            label: New chapters
-            type: collection
-            path: src/content/book/en
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["about.mdx", "glossary.mdx", "01.mdx", "02.mdx", "03.mdx", "04.mdx", "05.mdx", "06.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
+      - name: chapters_en
+        label: Chapters
+        type: collection
+        path: src/content/book/en
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            label: Page title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: book_images
+              path: src/assets/book
+              rename: safe
 
   - name: language_sl
     label: "Slovenščina"
@@ -1787,320 +1273,63 @@ content:
 
       - name: pages_sl
         label: Pages
-        type: group
-        items:
-          - name: home_sl
-            label: "Domov"
-            type: file
-            path: src/content/pages/sl/index.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
+        type: collection
+        path: src/content/pages/sl
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
 
-          - name: new_pages_sl
-            label: New pages
-            type: collection
-            path: src/content/pages/sl
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["index.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
-      - name: handbook_sl
-        label: Handbook
-        type: group
-        items:
-          - name: handbook_sl_about
-            label: "O nas"
-            type: file
-            path: src/content/book/sl/about.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_glossary
-            label: "Glosar"
-            type: file
-            path: src/content/book/sl/glossary.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_01
-            label: "1. Zakaj ta zbirka orodij?"
-            type: file
-            path: src/content/book/sl/01.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_02
-            label: "2. Kako začeti s superbloki"
-            type: file
-            path: src/content/book/sl/02.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_03
-            label: "3. Taktični urbanizem in oblikovanje ulic"
-            type: file
-            path: src/content/book/sl/03.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_04
-            label: "4. Mobilizacija in strategije sprememb"
-            type: file
-            path: src/content/book/sl/04.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_05
-            label: "5. Spremljanje: pokažimo učinek"
-            type: file
-            path: src/content/book/sl/05.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: handbook_sl_06
-            label: "6. Delovni načrt in viri"
-            type: file
-            path: src/content/book/sl/06.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-
-          - name: new_chapters_sl
-            label: New chapters
-            type: collection
-            path: src/content/book/sl
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["about.mdx", "glossary.mdx", "01.mdx", "02.mdx", "03.mdx", "04.mdx", "05.mdx", "06.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
+      - name: chapters_sl
+        label: Chapters
+        type: collection
+        path: src/content/book/sl
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            label: Page title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: book_images
+              path: src/assets/book
+              rename: safe

@@ -9,7 +9,7 @@
 // Run `npm run sync:config` after changing handbook.config.ts; CI runs
 // `npm run check:config` (--check) to make sure the committed files are
 // in sync.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { parseDocument } from 'yaml';
 import { site, base, languages, languageNames, defaultLang } from '../../handbook.config.ts';
 import { normalizeBase } from '../lib/paths.mjs';
@@ -18,87 +18,78 @@ const LANGS = [...languages];
 const BASE_PATH = normalizeBase(base);
 const WORKS = JSON.parse(readFileSync('src/data/works.json', 'utf8'));
 const LOCALES = JSON.parse(readFileSync('src/data/locales.json', 'utf8'));
-const NAV = JSON.parse(readFileSync('src/data/nav.json', 'utf8'));
 
 const displayName = (lang) => languageNames[lang] ?? lang;
 const nativeName = (lang) => LOCALES[lang]?.['local-name'] ?? displayName(lang);
 const yamlString = (value) => JSON.stringify(String(value));
 const indentBlock = (text, spaces) => text.split('\n').map((line) => line ? `${' '.repeat(spaces)}${line}` : line).join('\n');
 
-function bookBodyFile(lang, file, label) {
-  const path = `src/content/book/${lang}/${file}.mdx`;
-  if (!existsSync(path)) return '';
-  const name = `handbook_${lang}_${file.replace(/[^a-z0-9]+/gi, '_')}`;
-  return `          - name: ${name}
-            label: ${yamlString(label)}
-            type: file
-            path: ${path}
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
+function pagesCollection(lang) {
+  return `      - name: pages_${lang}
+        label: Pages
+        type: collection
+        path: src/content/pages/${lang}
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: page_template
+          - name: openerImage
+            label: Opener image
+            type: image
+            options:
+              media: book_images
+              path: src/assets/book
+          - name: openerImageAlt
+            label: Opener image alt text
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: site_images
+              path: src/assets/site
+              rename: safe
 `;
 }
 
-function handbookPages(lang) {
-  return WORKS[lang].chapters
-    .filter((chapter) => chapter.web !== false)
-    .map((chapter) => bookBodyFile(lang, chapter.file, chapter.label))
-    .filter(Boolean)
-    .join('\n');
-}
-
-function homePage(lang) {
-  const label = NAV[lang]?.[0]?.label ?? 'Home';
-  return `          - name: home_${lang}
-            label: ${yamlString(label)}
-            type: file
-            path: src/content/pages/${lang}/index.mdx
-            format: yaml-frontmatter
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
+function chaptersCollection(lang) {
+  return `      - name: chapters_${lang}
+        label: Chapters
+        type: collection
+        path: src/content/book/${lang}
+        format: yaml-frontmatter
+        filename:
+          template: "{primary}.mdx"
+          field: create
+        view:
+          primary: title
+        fields:
+          - name: title
+            label: Page title
+            type: string
+            required: true
+          - name: lang
+            component: language
+          - name: template
+            component: book_template
+          - name: description
+            label: Description
+            type: text
+          - name: body
+            component: markdown_body
+            options:
+              media: book_images
+              path: src/assets/book
+              rename: safe
 `;
 }
 
@@ -289,81 +280,6 @@ function metadata(lang) {
 `;
 }
 
-function pagesCollection(lang) {
-  return `          - name: new_pages_${lang}
-            label: New pages
-            type: collection
-            path: src/content/pages/${lang}
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create
-            exclude: ["index.mdx"]
-            view:
-              primary: title
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: page_template
-              - name: openerImage
-                label: Opener image
-                type: image
-                options:
-                  media: book_images
-                  path: src/assets/book
-              - name: openerImageAlt
-                label: Opener image alt text
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: site_images
-                  path: src/assets/site
-                  rename: safe
-`;
-}
-
-function chaptersCollection(lang) {
-  const existing = (WORKS[lang]?.chapters ?? [])
-    .filter((chapter) => chapter.web !== false)
-    .map((chapter) => `${chapter.file}.mdx`)
-    .filter((file) => existsSync(`src/content/book/${lang}/${file}`));
-  const exclude = existing.length > 0 ? `\n            exclude: [${existing.map((file) => yamlString(file)).join(', ')}]` : '';
-  return `          - name: new_chapters_${lang}
-            label: New chapters
-            type: collection
-            path: src/content/book/${lang}
-            format: yaml-frontmatter
-            filename:
-              template: "{primary}.mdx"
-              field: create${exclude}
-            view:
-              primary: title
-            fields:
-              - name: title
-                label: Page title
-                type: string
-                required: true
-              - name: lang
-                component: language
-              - name: template
-                component: book_template
-              - name: description
-                label: Description
-                type: text
-              - name: body
-                component: markdown_body
-                options:
-                  media: book_images
-                  path: src/assets/book
-                  rename: safe
-`;
-}
-
 function languageSection(lang) {
   return `  - name: language_${lang}
     label: ${yamlString(nativeName(lang))}
@@ -377,16 +293,7 @@ ${languageMetadata(lang)}
 ${navigationFile(lang)}
 ${localeFile(lang)}
 ${glossaryFile(lang)}
-      - name: pages_${lang}
-        label: Pages
-        type: group
-        items:
-${homePage(lang)}
-${pagesCollection(lang)}      - name: handbook_${lang}
-        label: Handbook
-        type: group
-        items:
-${handbookPages(lang)}
+${pagesCollection(lang)}
 ${chaptersCollection(lang)}`;
 }
 
@@ -830,6 +737,10 @@ function validatePagesYml() {
           contentPaths.push(item.path);
         }
         if (item.path.startsWith('src/content/') && item.path.endsWith('.mdx')) {
+          mdxFiles += 1;
+          if (item.format === 'yaml-frontmatter') mdxFrontmatterEditors += 1;
+        }
+        if (item.type === 'collection' && item.path.startsWith('src/content/')) {
           mdxFiles += 1;
           if (item.format === 'yaml-frontmatter') mdxFrontmatterEditors += 1;
         }
