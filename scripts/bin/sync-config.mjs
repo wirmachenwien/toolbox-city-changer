@@ -112,12 +112,6 @@ function appSettings() {
           create: false
           delete: false
         fields:
-          - name: math
-            label: Math rendering
-            type: object
-            fields:
-              - name: enabled
-                type: boolean
           - name: web
             label: Website settings
             type: object
@@ -149,17 +143,11 @@ function appSettings() {
               - name: svgInject
                 label: Inline SVG injection
                 type: boolean
-              - name: lazyload
-                label: Lazy-load media
-                type: boolean
               - name: bookmarks
                 type: object
                 fields:
                   - name: enabled
                     type: boolean
-                  - name: noteMaxLength
-                    label: Maximum note length
-                    type: number
               - name: nav
                 label: Navigation behavior
                 type: object
@@ -177,8 +165,6 @@ function appSettings() {
               - name: search
                 type: object
                 fields:
-                  - name: jumpBoxLocation
-                    type: string
                   - name: param
                     label: Search query parameter
                     type: string
@@ -189,14 +175,6 @@ function appSettings() {
                 label: Search engine indexing
                 type: object
                 fields:
-                  - name: development
-                    type: select
-                    options:
-                      values:
-                        - name: index
-                          label: Index
-                        - name: noindex
-                          label: No index
                   - name: live
                     type: select
                     options:

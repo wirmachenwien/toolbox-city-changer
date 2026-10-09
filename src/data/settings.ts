@@ -1,27 +1,19 @@
 // Site feature toggles. Every toggle is typed and validated with Zod;
 // client islands read them from data attributes rendered by the layouts.
 // Full list of supported toggles:
-// - math.enabled
 // - web.pagination / web.paginationType
-
 // - web.accordion / web.accordionLevel
-// - web.svgInject, web.lazyload
-// - web.bookmarks.enabled / web.bookmarks.noteMaxLength
+// - web.svgInject
+// - web.bookmarks.enabled
 // - web.nav.expandBooks / web.nav.projectNavPosition ("before" | "after")
-// - web.search.jumpBoxLocation
 // - web.titleDivider
-// - web.indexing.development / web.indexing.live ("index" | "noindex")
+// - web.indexing.live ("index" | "noindex")
 // - pdf.notes ("footnotes" | "chapter-footnotes" | "book-footnotes")
 // - pdf.page.size / pdf.page.margin
 import { z } from 'zod';
 import raw from './settings.json';
 
 const toggleSchema = z.object({
-  math: z
-    .object({
-      enabled: z.boolean().default(true),
-    })
-    .default({ enabled: true }),
   web: z
     .object({
       pagination: z.boolean().default(true),
@@ -31,13 +23,11 @@ const toggleSchema = z.object({
       accordion: z.boolean().default(false),
       accordionLevel: z.enum(['h2', 'h3']).default('h3'),
       svgInject: z.boolean().default(true),
-      lazyload: z.boolean().default(true),
       bookmarks: z
         .object({
           enabled: z.boolean().default(true),
-          noteMaxLength: z.number().default(5000),
         })
-        .default({ enabled: true, noteMaxLength: 5000 }),
+        .default({ enabled: true }),
       nav: z
         .object({
           expandBooks: z.boolean().default(true),
@@ -46,17 +36,15 @@ const toggleSchema = z.object({
         .default({ expandBooks: true, projectNavPosition: 'before' }),
       search: z
         .object({
-          jumpBoxLocation: z.string().default('mainHeading'),
           param: z.string().default('query'),
         })
-        .default({ jumpBoxLocation: 'mainHeading', param: 'query' }),
+        .default({ param: 'query' }),
       titleDivider: z.string().default(' – '),
       indexing: z
         .object({
-          development: z.enum(['index', 'noindex']).default('index'),
           live: z.enum(['index', 'noindex']).default('index'),
         })
-        .default({ development: 'index', live: 'index' }),
+        .default({ live: 'index' }),
     })
     .default({
       pagination: true,
@@ -64,12 +52,11 @@ const toggleSchema = z.object({
       accordion: false,
       accordionLevel: 'h3',
       svgInject: true,
-      lazyload: true,
-      bookmarks: { enabled: true, noteMaxLength: 5000 },
+      bookmarks: { enabled: true },
       nav: { expandBooks: true, projectNavPosition: 'before' },
-      search: { jumpBoxLocation: 'mainHeading', param: 'query' },
+      search: { param: 'query' },
       titleDivider: ' – ',
-      indexing: { development: 'index', live: 'index' },
+      indexing: { live: 'index' },
     }),
   pdf: z
     .object({
