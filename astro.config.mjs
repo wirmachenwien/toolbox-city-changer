@@ -1,9 +1,18 @@
 // @ts-check
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import { satteri } from '@astrojs/markdown-satteri';
 import { smartQuotesHastPlugin } from './src/lib/satteri-smart-quotes.ts';
 import { site, base, defaultLang } from './handbook.config.ts';
+
+const works = JSON.parse(readFileSync(new URL('./src/data/works.json', import.meta.url), 'utf8'));
+const legacyDefaultBookRedirects = Object.fromEntries(
+  [...new Set([...(works[defaultLang]?.chapters ?? [])
+    .filter((chapter) => chapter.web !== false)
+    .map((chapter) => chapter.file), 'contents'])]
+    .map((file) => [`/book/${defaultLang}/${file}`, `/book/${file}`]),
+);
 
 export default defineConfig({
   site,
@@ -21,7 +30,7 @@ export default defineConfig({
     [`/${defaultLang}`]: '/',
     [`/${defaultLang}/search`]: '/search',
     [`/book/${defaultLang}`]: '/book',
-    [`/book/${defaultLang}/[...slug]`]: '/book/[...slug]',
+    ...legacyDefaultBookRedirects,
   },
   integrations: [mdx()],
   markdown: {
