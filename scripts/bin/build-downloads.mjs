@@ -4,8 +4,36 @@
 // failing the whole build, so local development without Python still gets a
 // working site (download buttons 404 with an explanatory message).
 // CI stays strict: with CI=true a missing/broken toolchain fails the build,
-// since release builds must always ship downloads.
+// since release builds must ship every enabled download format.
 import { spawnSync } from 'node:child_process';
+import { existsSync, readdirSync, unlinkSync } from 'node:fs';
+import { join } from 'node:path';
+import settings from '../../src/data/settings.json' with { type: 'json' };
+
+const OUT_DIR = 'dist/downloads';
+const jobs = [
+  { enabled: settings.downloads.pdf, ext: '.pdf', args: ['scripts/bin/build-pdf.py', '--all'] },
+  { enabled: settings.downloads.epub, ext: '.epub', args: ['scripts/bin/build-epub.py', '--all'] },
+];
+
+function removeDisabledDownloads() {
+  if (!existsSync(OUT_DIR)) return;
+  const disabled = jobs.filter((job) => !job.enabled).map((job) => job.ext);
+  if (disabled.length === 0) return;
+  for (const name of readdirSync(OUT_DIR)) {
+    if (disabled.some((ext) => name.toLowerCase().endsWith(ext))) {
+      unlinkSync(join(OUT_DIR, name));
+    }
+  }
+}
+
+removeDisabledDownloads();
+
+const enabledJobs = jobs.filter((job) => job.enabled);
+if (enabledJobs.length === 0) {
+  console.log('build:downloads: PDF and EPUB downloads disabled in src/data/settings.json');
+  process.exit(0);
+}
 
 function probe() {
   const cmd = spawnSync('python3', ['-c', 'import markdown, weasyprint'], { encoding: 'utf8' });
@@ -20,7 +48,7 @@ function probe() {
 const problem = probe();
 if (problem) {
   const message =
-    `build:downloads: skipping PDF/EPUB downloads — ${problem}.\n` +
+    `build:downloads: skipping enabled PDF/EPUB downloads — ${problem}.\n` +
     'Install Python ≥ 3.12 with `pip install -r requirements.txt`, then run `npm run build:downloads`.';
   if (process.env.CI === 'true') {
     console.error(message);
@@ -30,7 +58,7 @@ if (problem) {
   process.exit(0);
 }
 
-for (const args of [[ 'scripts/bin/build-pdf.py', '--all' ], [ 'scripts/bin/build-epub.py', '--all' ]]) {
-  const run = spawnSync('python3', args, { stdio: 'inherit' });
+for (const job of enabledJobs) {
+  const run = spawnSync('python3', job.args, { stdio: 'inherit' });
   if (run.status !== 0) process.exit(run.status ?? 1);
 }

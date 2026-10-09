@@ -7,6 +7,7 @@
 // - web.nav.expandBooks / web.nav.projectNavPosition ("before" | "after")
 // - web.titleDivider
 // - web.indexing.live ("index" | "noindex")
+// - downloads.pdf / downloads.epub
 // - pdf.notes ("footnotes" | "chapter-footnotes" | "book-footnotes")
 // - pdf.page.size / pdf.page.margin
 import { z } from 'zod';
@@ -55,6 +56,12 @@ const toggleSchema = z.object({
       titleDivider: ' – ',
       indexing: { live: 'index' },
     }),
+  downloads: z
+    .object({
+      pdf: z.boolean().default(true),
+      epub: z.boolean().default(true),
+    })
+    .default({ pdf: true, epub: true }),
   pdf: z
     .object({
       notes: z.enum(['footnotes', 'chapter-footnotes', 'book-footnotes']).default('footnotes'),

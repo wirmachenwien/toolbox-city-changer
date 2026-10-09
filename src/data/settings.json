@@ -10,6 +10,7 @@
     "titleDivider": " – ",
     "indexing": { "live": "index" }
   },
+  "downloads": { "pdf": true, "epub": true },
   "pdf": {
     "notes": "footnotes",
     "page": { "size": "A4", "margin": "20mm 16mm 22mm 16mm" }

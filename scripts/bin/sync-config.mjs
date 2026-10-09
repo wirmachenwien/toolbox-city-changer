@@ -11,7 +11,7 @@
 // in sync.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { parseDocument } from 'yaml';
-import { site, base, languages, languageNames } from '../../handbook.config.ts';
+import { site, base, languages, languageNames, defaultLang } from '../../handbook.config.ts';
 import { normalizeBase } from '../lib/paths.mjs';
 
 const LANGS = [...languages];
@@ -205,6 +205,16 @@ function appSettings() {
                     type: string
                   - name: margin
                     type: string
+          - name: downloads
+            label: Download settings
+            type: object
+            fields:
+              - name: pdf
+                label: Generate PDF downloads
+                type: boolean
+              - name: epub
+                label: Generate EPUB downloads
+                type: boolean
 `;
 }
 
@@ -696,9 +706,10 @@ function robotsTxt() {
 }
 
 function webmanifest() {
+  const manifestName = WORKS[defaultLang]?.project?.name ?? WORKS[defaultLang]?.title;
   return `{
-  "name": "Toolbox for City Changers",
-  "short_name": "City Changers",
+  "name": ${JSON.stringify(manifestName)},
+  "short_name": ${JSON.stringify(manifestName)},
   "icons": [
     { "src": "${BASE_PATH}/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "${BASE_PATH}/icon-512.png", "sizes": "512x512", "type": "image/png" }

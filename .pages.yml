@@ -200,6 +200,16 @@ content:
                     type: string
                   - name: margin
                     type: string
+          - name: downloads
+            label: Download settings
+            type: object
+            fields:
+              - name: pdf
+                label: Generate PDF downloads
+                type: boolean
+              - name: epub
+                label: Generate EPUB downloads
+                type: boolean
 
   - name: language_de
     label: "Deutsch"
