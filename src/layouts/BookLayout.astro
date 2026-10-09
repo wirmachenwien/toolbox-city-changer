@@ -39,7 +39,16 @@ const neighbours = paginationNeighbours(lang, 'book', file);
   currentUrl={currentUrl}
 >
   <ReadingProgress />
-  {isChapter && <Breadcrumbs items={crumbs} lang={lang} />}
+  {isChapter ? (
+    <Breadcrumbs items={crumbs} lang={lang} />
+  ) : (
+    // Sections and the virtual contents page have no navigation trail, but
+    // keep the exact vertical rhythm of chapters: a hidden duplicate of the
+    // breadcrumbs reserves precisely their height (including line wraps).
+    <div class="crumbs-spacer" aria-hidden="true">
+      <Breadcrumbs items={crumbs} lang={lang} />
+    </div>
+  )}
   {file === 'contents' && <ContentsPage lang={lang} title={displayTitle} />}
   {isChapter && <BookmarkAdd lang={lang} />}
   <div class="prose" data-prose data-glossary-terms>
