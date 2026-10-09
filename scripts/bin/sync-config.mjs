@@ -600,6 +600,20 @@ function languageOptions() {
 `).join('');
 }
 
+function kitchenSink() {
+  return `  - name: kitchen_sink
+    label: Kitchen Sink
+    type: file
+    path: src/pages/preview/kitchen-sink.astro
+    format: code
+    options:
+      format: mdx
+    operations:
+      create: false
+      delete: false
+`;
+}
+
 function pagesYml() {
   return `# GENERATED from handbook.config.ts — do not edit by hand.
 # Run \`npm run sync:config\` to regenerate.
@@ -662,7 +676,8 @@ components:
 ${languageOptions()}
 content:
 ${sharedProjectSettings()}
-${LANGS.map((lang) => languageSection(lang)).join('\n')}`;
+${LANGS.map((lang) => languageSection(lang)).join('\n')}
+${kitchenSink()}`;
 }
 
 function robotsTxt() {

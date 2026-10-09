@@ -1327,3 +1327,14 @@ content:
               media: book_images
               path: src/assets/book
               rename: safe
+
+  - name: kitchen_sink
+    label: Kitchen Sink
+    type: file
+    path: src/pages/preview/kitchen-sink.astro
+    format: code
+    options:
+      format: mdx
+    operations:
+      create: false
+      delete: false
