@@ -75,7 +75,7 @@ content:
     type: group
     items:
       - name: project_metadata
-        label: Shared project metadata
+        label: Project metadata
         type: file
         path: src/data/project.json
         format: json
@@ -215,7 +215,7 @@ content:
         type: group
         items:
           - name: metadata_de
-            label: Project and book metadata
+            label: Metadata
             type: file
             path: src/data/works.json
             format: json
@@ -227,25 +227,17 @@ content:
                 label: German metadata
                 type: object
                 fields:
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
                   - name: title
-                    label: Book title
+                    label: Title
                     type: string
                     required: true
                   - name: subtitle
                     type: string
                   - name: description
-                    label: Book description
+                    label: Description
+                    type: text
+                  - name: credit
+                    label: Credit
                     type: text
                   - name: language
                     type: string
@@ -563,6 +555,40 @@ content:
                   path: src/assets/site
                   rename: safe
 
+          - name: new_pages_de
+            label: New pages
+            type: collection
+            path: src/content/pages/de
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["index.mdx"]
+            view:
+              primary: title
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
       - name: handbook_de
         label: Handbook
         type: group
@@ -783,6 +809,36 @@ content:
                   path: src/assets/book
                   rename: safe
 
+          - name: new_chapters_de
+            label: New chapters
+            type: collection
+            path: src/content/book/de
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["about.mdx", "glossary.mdx", "01.mdx", "02.mdx", "03.mdx", "04.mdx", "05.mdx", "06.mdx"]
+            view:
+              primary: title
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
   - name: language_en
     label: "English"
     type: group
@@ -792,7 +848,7 @@ content:
         type: group
         items:
           - name: metadata_en
-            label: Project and book metadata
+            label: Metadata
             type: file
             path: src/data/works.json
             format: json
@@ -804,25 +860,17 @@ content:
                 label: English metadata
                 type: object
                 fields:
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
                   - name: title
-                    label: Book title
+                    label: Title
                     type: string
                     required: true
                   - name: subtitle
                     type: string
                   - name: description
-                    label: Book description
+                    label: Description
+                    type: text
+                  - name: credit
+                    label: Credit
                     type: text
                   - name: language
                     type: string
@@ -1140,6 +1188,40 @@ content:
                   path: src/assets/site
                   rename: safe
 
+          - name: new_pages_en
+            label: New pages
+            type: collection
+            path: src/content/pages/en
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["index.mdx"]
+            view:
+              primary: title
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
       - name: handbook_en
         label: Handbook
         type: group
@@ -1360,6 +1442,36 @@ content:
                   path: src/assets/book
                   rename: safe
 
+          - name: new_chapters_en
+            label: New chapters
+            type: collection
+            path: src/content/book/en
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["about.mdx", "glossary.mdx", "01.mdx", "02.mdx", "03.mdx", "04.mdx", "05.mdx", "06.mdx"]
+            view:
+              primary: title
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
   - name: language_sl
     label: "Slovenščina"
     type: group
@@ -1369,7 +1481,7 @@ content:
         type: group
         items:
           - name: metadata_sl
-            label: Project and book metadata
+            label: Metadata
             type: file
             path: src/data/works.json
             format: json
@@ -1381,25 +1493,17 @@ content:
                 label: Slovene metadata
                 type: object
                 fields:
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
                   - name: title
-                    label: Book title
+                    label: Title
                     type: string
                     required: true
                   - name: subtitle
                     type: string
                   - name: description
-                    label: Book description
+                    label: Description
+                    type: text
+                  - name: credit
+                    label: Credit
                     type: text
                   - name: language
                     type: string
@@ -1717,6 +1821,40 @@ content:
                   path: src/assets/site
                   rename: safe
 
+          - name: new_pages_sl
+            label: New pages
+            type: collection
+            path: src/content/pages/sl
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["index.mdx"]
+            view:
+              primary: title
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
       - name: handbook_sl
         label: Handbook
         type: group
@@ -1918,6 +2056,36 @@ content:
             operations:
               create: false
               delete: false
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
+
+          - name: new_chapters_sl
+            label: New chapters
+            type: collection
+            path: src/content/book/sl
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["about.mdx", "glossary.mdx", "01.mdx", "02.mdx", "03.mdx", "04.mdx", "05.mdx", "06.mdx"]
+            view:
+              primary: title
             fields:
               - name: title
                 label: Page title

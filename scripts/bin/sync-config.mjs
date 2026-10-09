@@ -224,7 +224,7 @@ ${appSettings()}`;
 
 function sharedProjectMetadata() {
   return `      - name: project_metadata
-        label: Shared project metadata
+        label: Project metadata
         type: file
         path: src/data/project.json
         format: json
@@ -251,7 +251,7 @@ function sharedProjectMetadata() {
 
 function languageMetadata(lang) {
   return `          - name: metadata_${lang}
-            label: Project and book metadata
+            label: Metadata
             type: file
             path: src/data/works.json
             format: json
@@ -268,25 +268,17 @@ function metadata(lang) {
             label: ${display} metadata
             type: object
             fields:
-              - name: project
-                label: Project text
-                type: object
-                fields:
-                  - name: name
-                    label: Project name
-                    type: string
-                  - name: description
-                    type: text
-                  - name: credit
-                    type: text
               - name: title
-                label: Book title
+                label: Title
                 type: string
                 required: true
               - name: subtitle
                 type: string
               - name: description
-                label: Book description
+                label: Description
+                type: text
+              - name: credit
+                label: Credit
                 type: text
               - name: language
                 type: string
@@ -294,6 +286,81 @@ function metadata(lang) {
                 type: string
               - name: subject
                 type: string
+`;
+}
+
+function pagesCollection(lang) {
+  return `          - name: new_pages_${lang}
+            label: New pages
+            type: collection
+            path: src/content/pages/${lang}
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create
+            exclude: ["index.mdx"]
+            view:
+              primary: title
+            fields:
+              - name: title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: page_template
+              - name: openerImage
+                label: Opener image
+                type: image
+                options:
+                  media: book_images
+                  path: src/assets/book
+              - name: openerImageAlt
+                label: Opener image alt text
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: site_images
+                  path: src/assets/site
+                  rename: safe
+`;
+}
+
+function chaptersCollection(lang) {
+  const existing = (WORKS[lang]?.chapters ?? [])
+    .filter((chapter) => chapter.web !== false)
+    .map((chapter) => `${chapter.file}.mdx`)
+    .filter((file) => existsSync(`src/content/book/${lang}/${file}`));
+  const exclude = existing.length > 0 ? `\n            exclude: [${existing.map((file) => yamlString(file)).join(', ')}]` : '';
+  return `          - name: new_chapters_${lang}
+            label: New chapters
+            type: collection
+            path: src/content/book/${lang}
+            format: yaml-frontmatter
+            filename:
+              template: "{primary}.mdx"
+              field: create${exclude}
+            view:
+              primary: title
+            fields:
+              - name: title
+                label: Page title
+                type: string
+                required: true
+              - name: lang
+                component: language
+              - name: template
+                component: book_template
+              - name: description
+                label: Description
+                type: text
+              - name: body
+                component: markdown_body
+                options:
+                  media: book_images
+                  path: src/assets/book
+                  rename: safe
 `;
 }
 
@@ -315,11 +382,12 @@ ${glossaryFile(lang)}
         type: group
         items:
 ${homePage(lang)}
-      - name: handbook_${lang}
+${pagesCollection(lang)}      - name: handbook_${lang}
         label: Handbook
         type: group
         items:
-${handbookPages(lang)}`;
+${handbookPages(lang)}
+${chaptersCollection(lang)}`;
 }
 
 function navigationFile(lang) {
@@ -701,7 +769,7 @@ function robotsTxt() {
 }
 
 function webmanifest() {
-  const manifestName = WORKS[defaultLang]?.project?.name ?? WORKS[defaultLang]?.title;
+  const manifestName = WORKS[defaultLang]?.title;
   return `{
   "name": ${JSON.stringify(manifestName)},
   "short_name": ${JSON.stringify(manifestName)},

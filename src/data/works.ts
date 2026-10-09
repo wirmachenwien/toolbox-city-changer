@@ -23,19 +23,13 @@ const chapterSchema = z.object({
   web: z.boolean().optional().default(true),
 });
 
-const projectTextSchema = z.object({
-  name: z.string(),
-  description: z.string(),
-  credit: z.string(),
-});
-
 const workSchema = z.object({
-  project: projectTextSchema,
   title: z.string(),
   subtitle: z.string().optional().default(''),
   creator: z.string().optional().default(''),
   contributor: z.string().optional().default(''),
   description: z.string().optional().default(''),
+  credit: z.string().optional().default(''),
   image: z.string().optional().default(''),
   publisher: z.string().optional().default(''),
   rights: z.string().optional().default(''),

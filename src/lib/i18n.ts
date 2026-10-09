@@ -30,8 +30,15 @@ export function htmlDir(lang: Language): 'ltr' | 'rtl' {
 }
 
 /** Project name/description/credit for the active language.
- *  Languages without their own project block fall back to the English
- *  project metadata. */
+ *  The single Title/Description/Credit fields in works.json serve both the
+ *  site chrome and the book metadata. Languages without their own block fall
+ *  back to English. */
 export function projectText(lang: Language): { name: string; description: string; credit: string } {
-  return getWork(lang).project ?? getWork(ENGLISH_LANG).project;
+  const work = getWork(lang) ?? getWork(ENGLISH_LANG);
+  const fallback = getWork(ENGLISH_LANG);
+  return {
+    name: work.title || fallback.title,
+    description: work.description || fallback.description,
+    credit: work.credit || fallback.credit,
+  };
 }
