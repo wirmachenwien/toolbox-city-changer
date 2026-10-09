@@ -1,16 +1,15 @@
 {
+  "downloads": { "pdf": true, "epub": true },
   "web": {
     "pagination": true,
     "paginationType": "title-arrows",
-    "accordion": false,
-    "accordionLevel": "h3",
+    "collapsibleSections": "none",
     "bookmarks": { "enabled": true },
     "nav": { "expandBooks": true, "projectNavPosition": "before" },
     "search": { "param": "query" },
     "titleDivider": " – ",
-    "indexing": { "live": "index" }
+    "indexing": true
   },
-  "downloads": { "pdf": true, "epub": true },
   "pdf": {
     "notes": "footnotes",
     "page": { "size": "A4", "margin": "20mm 16mm 22mm 16mm" }

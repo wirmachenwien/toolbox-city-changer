@@ -112,6 +112,16 @@ function appSettings() {
           create: false
           delete: false
         fields:
+          - name: downloads
+            label: Download settings
+            type: object
+            fields:
+              - name: pdf
+                label: Generate PDF downloads
+                type: boolean
+              - name: epub
+                label: Generate EPUB downloads
+                type: boolean
           - name: web
             label: Website settings
             type: object
@@ -131,17 +141,21 @@ function appSettings() {
                       label: Titles only
                     - name: previous-next
                       label: Previous and next
-              - name: accordion
-                type: boolean
-              - name: accordionLevel
-                label: Accordion heading level
+              - name: collapsibleSections
+                label: Collapsible sections
                 type: select
                 options:
                   values:
+                    - name: none
+                      label: No automatic collapsing
                     - name: h2
-                      label: H2
+                      label: Collapse H2 sections
                     - name: h3
-                      label: H3
+                      label: Collapse H3 sections
+                    - name: h4
+                      label: Collapse H4 sections
+                    - name: h5
+                      label: Collapse H5 sections
               - name: bookmarks
                 type: object
                 fields:
@@ -172,16 +186,7 @@ function appSettings() {
                 type: string
               - name: indexing
                 label: Search engine indexing
-                type: object
-                fields:
-                  - name: live
-                    type: select
-                    options:
-                      values:
-                        - name: index
-                          label: Index
-                        - name: noindex
-                          label: No index
+                type: boolean
           - name: pdf
             label: PDF settings
             type: object
@@ -205,16 +210,6 @@ function appSettings() {
                     type: string
                   - name: margin
                     type: string
-          - name: downloads
-            label: Download settings
-            type: object
-            fields:
-              - name: pdf
-                label: Generate PDF downloads
-                type: boolean
-              - name: epub
-                label: Generate EPUB downloads
-                type: boolean
 `;
 }
 

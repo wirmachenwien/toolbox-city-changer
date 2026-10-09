@@ -34,7 +34,7 @@ const text = projectText(lang);
 const projectName = smartQuotes(text.name, lang);
 const fullTitle = `${displayTitle}${settings.web.titleDivider}${projectName}`;
 const metaDescription = displayDescription ?? text.description;
-const hideFromIndex = noindex || settings.web.indexing.live === 'noindex';
+const hideFromIndex = noindex || !settings.web.indexing;
 ---
 <!doctype html>
 <html lang={lang} dir={htmlDir(lang)}>
@@ -59,8 +59,7 @@ const hideFromIndex = noindex || settings.web.indexing.live === 'noindex';
   </head>
   <body
     data-pagefind-ignore={noindex ? '' : undefined}
-    data-accordion={settings.web.accordion ? 'true' : 'false'}
-    data-accordion-level={settings.web.accordionLevel}
+    data-collapsible-sections={settings.web.collapsibleSections}
     data-search-param={settings.web.search.param}
   >
     <a class="skip-link" href="#main">{t(lang, 'nav.toc', 'Contents')}</a>

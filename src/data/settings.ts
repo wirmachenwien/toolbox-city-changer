@@ -2,11 +2,11 @@
 // client islands read them from data attributes rendered by the layouts.
 // Full list of supported toggles:
 // - web.pagination / web.paginationType
-// - web.accordion / web.accordionLevel
+// - web.collapsibleSections ("none" | "h2" | "h3" | "h4" | "h5")
 // - web.bookmarks.enabled
 // - web.nav.expandBooks / web.nav.projectNavPosition ("before" | "after")
 // - web.titleDivider
-// - web.indexing.live ("index" | "noindex")
+// - web.indexing
 // - downloads.pdf / downloads.epub
 // - pdf.notes ("footnotes" | "chapter-footnotes" | "book-footnotes")
 // - pdf.page.size / pdf.page.margin
@@ -14,14 +14,19 @@ import { z } from 'zod';
 import raw from './settings.json';
 
 const toggleSchema = z.object({
+  downloads: z
+    .object({
+      pdf: z.boolean().default(true),
+      epub: z.boolean().default(true),
+    })
+    .default({ pdf: true, epub: true }),
   web: z
     .object({
       pagination: z.boolean().default(true),
       paginationType: z
         .enum(['previous-next', 'titles', 'title-arrows', 'arrows'])
         .default('title-arrows'),
-      accordion: z.boolean().default(false),
-      accordionLevel: z.enum(['h2', 'h3']).default('h3'),
+      collapsibleSections: z.enum(['none', 'h2', 'h3', 'h4', 'h5']).default('none'),
       bookmarks: z
         .object({
           enabled: z.boolean().default(true),
@@ -39,29 +44,18 @@ const toggleSchema = z.object({
         })
         .default({ param: 'query' }),
       titleDivider: z.string().default(' – '),
-      indexing: z
-        .object({
-          live: z.enum(['index', 'noindex']).default('index'),
-        })
-        .default({ live: 'index' }),
+      indexing: z.boolean().default(true),
     })
     .default({
       pagination: true,
       paginationType: 'title-arrows',
-      accordion: false,
-      accordionLevel: 'h3',
+      collapsibleSections: 'none',
       bookmarks: { enabled: true },
       nav: { expandBooks: true, projectNavPosition: 'before' },
       search: { param: 'query' },
       titleDivider: ' – ',
-      indexing: { live: 'index' },
+      indexing: true,
     }),
-  downloads: z
-    .object({
-      pdf: z.boolean().default(true),
-      epub: z.boolean().default(true),
-    })
-    .default({ pdf: true, epub: true }),
   pdf: z
     .object({
       notes: z.enum(['footnotes', 'chapter-footnotes', 'book-footnotes']).default('footnotes'),

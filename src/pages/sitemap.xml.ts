@@ -9,7 +9,7 @@ import { languages } from '../data/locales';
 // prefixed URLs, 404 and preview pages are intentionally excluded.
 export const GET: APIRoute = () => {
   const entries: { loc: string; lastmod: string }[] = [];
-  if (settings.web.indexing.live === 'index') {
+  if (settings.web.indexing) {
     for (const lang of languages) {
       const lastmod = getWork(lang).modified || getWork(lang).date || '';
       const push = (url: string) => entries.push({ loc: canonical(url), lastmod });
