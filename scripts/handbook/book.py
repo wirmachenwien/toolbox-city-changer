@@ -39,6 +39,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 CONTENT = ROOT / "src" / "content" / "book"
 ASSETS = ROOT / "src" / "assets"
 DATA = ROOT / "src" / "data" / "works.json"
+PROJECT_DATA = ROOT / "src" / "data" / "project.json"
 GLOSSARY_DATA = ROOT / "src" / "data" / "glossary.json"
 LOCALES_DATA = ROOT / "src" / "data" / "locales.json"
 PAGES = ROOT / "src" / "content" / "pages"
@@ -64,7 +65,12 @@ def glossary_data() -> dict:
 @functools.lru_cache(maxsize=None)
 def load_works() -> dict:
     """Full src/data/works.json mapping (one entry per language)."""
-    return json.loads(DATA.read_text(encoding="utf-8"))
+    works = json.loads(DATA.read_text(encoding="utf-8"))
+    project = json.loads(PROJECT_DATA.read_text(encoding="utf-8"))
+    for work in works.values():
+        for key, value in project.items():
+            work.setdefault(key, value)
+    return works
 
 
 @functools.lru_cache(maxsize=None)

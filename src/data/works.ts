@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { languages } from '../../handbook.config.ts';
 import { smartQuotes } from '../lib/smart-quotes.ts';
 import { nav } from './nav';
+import { project } from './project';
 import raw from './works.json';
 import type { Language } from './locales';
 
@@ -22,7 +23,14 @@ const chapterSchema = z.object({
   web: z.boolean().optional().default(true),
 });
 
+const projectTextSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  credit: z.string(),
+});
+
 const workSchema = z.object({
+  project: projectTextSchema,
   title: z.string(),
   subtitle: z.string().optional().default(''),
   creator: z.string().optional().default(''),
@@ -61,6 +69,18 @@ for (const lang of languages) {
   if (!files.includes('contents')) throw new Error(`works.json: "${lang}" chapters are missing "contents"`);
 }
 const works = parsedWorks as Record<Language, Work>;
+
+for (const work of Object.values(works)) {
+  Object.assign(work, {
+    creator: work.creator || project.creator,
+    contributor: work.contributor || project.contributor,
+    publisher: work.publisher || project.publisher,
+    rights: work.rights || project.rights,
+    date: work.date || project.date,
+    modified: work.modified || project.modified,
+    identifier: work.identifier || project.identifier,
+  });
+}
 
 // Chapter counters must consistently include a trailing dot, e.g. "2. Title".
 // This keeps generated navigation, pagination, TOCs and any future metadata

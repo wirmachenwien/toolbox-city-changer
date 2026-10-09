@@ -1,6 +1,6 @@
 // Localisation helpers: locale lookup, nested key access, <html> attrs.
 import { locales, type Language } from '../data/locales';
-import { project } from '../data/project';
+import { getWork } from '../data/works';
 
 const ENGLISH_LANG = 'en' as Language;
 
@@ -33,15 +33,5 @@ export function htmlDir(lang: Language): 'ltr' | 'rtl' {
  *  Languages without their own project block fall back to the English
  *  project metadata. */
 export function projectText(lang: Language): { name: string; description: string; credit: string } {
-  const locale = getLocale(lang) as {
-    project?: { name?: string; description?: string; credit?: string };
-  };
-  const english = getLocale(ENGLISH_LANG) as {
-    project?: { name?: string; description?: string; credit?: string };
-  };
-  return {
-    name: locale.project?.name ?? english.project?.name ?? project.name,
-    description: locale.project?.description ?? english.project?.description ?? project.description,
-    credit: locale.project?.credit ?? english.project?.credit ?? project.credit,
-  };
+  return getWork(lang).project ?? getWork(ENGLISH_LANG).project;
 }

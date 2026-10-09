@@ -102,169 +102,224 @@ function homePage(lang) {
 `;
 }
 
-function appSettings(lang) {
-  return `          - name: app_settings_${lang}
-            label: Site and PDF settings
-            type: file
-            path: src/data/settings.json
-            format: json
-            operations:
-              create: false
-              delete: false
+function appSettings() {
+  return `      - name: app_settings
+        label: Site and PDF settings
+        type: file
+        path: src/data/settings.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: math
+            label: Math rendering
+            type: object
             fields:
-              - name: math
-                label: Math rendering
+              - name: enabled
+                type: boolean
+              - name: source
+                type: select
+                options:
+                  values:
+                    - name: cdn
+                      label: CDN
+                    - name: local
+                      label: Local
+          - name: web
+            label: Website settings
+            type: object
+            fields:
+              - name: pagination
+                type: boolean
+              - name: paginationType
+                label: Pagination type
+                type: select
+                options:
+                  values:
+                    - name: title-arrows
+                      label: Title and arrows
+                    - name: arrows
+                      label: Arrows only
+                    - name: titles
+                      label: Titles only
+              - name: accordion
+                type: boolean
+              - name: accordionLevel
+                label: Accordion heading level
+                type: select
+                options:
+                  values:
+                    - name: h2
+                      label: H2
+                    - name: h3
+                      label: H3
+              - name: svgInject
+                label: Inline SVG injection
+                type: boolean
+              - name: lazyload
+                label: Lazy-load media
+                type: boolean
+              - name: bookmarks
                 type: object
                 fields:
                   - name: enabled
                     type: boolean
-                  - name: source
-                    type: select
-                    options:
-                      values:
-                        - name: cdn
-                          label: CDN
-                        - name: local
-                          label: Local
-              - name: web
-                label: Website settings
+                  - name: noteMaxLength
+                    label: Maximum note length
+                    type: number
+              - name: nav
+                label: Navigation behavior
                 type: object
                 fields:
-                  - name: pagination
+                  - name: expandBooks
                     type: boolean
-                  - name: paginationType
-                    label: Pagination type
+                  - name: projectNavPosition
                     type: select
                     options:
                       values:
-                        - name: title-arrows
-                          label: Title and arrows
-                        - name: arrows
-                          label: Arrows only
-                        - name: titles
-                          label: Titles only
-                  - name: accordion
-                    type: boolean
-                  - name: accordionLevel
-                    label: Accordion heading level
-                    type: select
-                    options:
-                      values:
-                        - name: h2
-                          label: H2
-                        - name: h3
-                          label: H3
-                  - name: svgInject
-                    label: Inline SVG injection
-                    type: boolean
-                  - name: lazyload
-                    label: Lazy-load media
-                    type: boolean
-                  - name: bookmarks
-                    type: object
-                    fields:
-                      - name: enabled
-                        type: boolean
-                      - name: noteMaxLength
-                        label: Maximum note length
-                        type: number
-                  - name: nav
-                    label: Navigation behavior
-                    type: object
-                    fields:
-                      - name: expandBooks
-                        type: boolean
-                      - name: projectNavPosition
-                        type: select
-                        options:
-                          values:
-                            - name: before
-                              label: Before book navigation
-                            - name: after
-                              label: After book navigation
-                  - name: search
-                    type: object
-                    fields:
-                      - name: jumpBoxLocation
-                        type: string
-                      - name: param
-                        label: Search query parameter
-                        type: string
-                  - name: titleDivider
-                    label: Title divider
+                        - name: before
+                          label: Before book navigation
+                        - name: after
+                          label: After book navigation
+              - name: search
+                type: object
+                fields:
+                  - name: jumpBoxLocation
                     type: string
-                  - name: indexing
-                    label: Search engine indexing
-                    type: object
-                    fields:
-                      - name: development
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-                      - name: live
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-              - name: pdf
-                label: PDF settings
+                  - name: param
+                    label: Search query parameter
+                    type: string
+              - name: titleDivider
+                label: Title divider
+                type: string
+              - name: indexing
+                label: Search engine indexing
                 type: object
                 fields:
-                  - name: notes
-                    label: Note placement
+                  - name: development
                     type: select
                     options:
                       values:
-                        - name: footnotes
-                          label: Footnotes, bottom of page
-                        - name: chapter-footnotes
-                          label: End of chapter
-                        - name: book-footnotes
-                          label: End of book
-                  - name: page
-                    label: Page setup
-                    type: object
-                    fields:
-                      - name: size
-                        type: string
-                      - name: margin
-                        type: string
+                        - name: index
+                          label: Index
+                        - name: noindex
+                          label: No index
+                  - name: live
+                    type: select
+                    options:
+                      values:
+                        - name: index
+                          label: Index
+                        - name: noindex
+                          label: No index
+          - name: pdf
+            label: PDF settings
+            type: object
+            fields:
+              - name: notes
+                label: Note placement
+                type: select
+                options:
+                  values:
+                    - name: footnotes
+                      label: Footnotes, bottom of page
+                    - name: chapter-footnotes
+                      label: End of chapter
+                    - name: book-footnotes
+                      label: End of book
+              - name: page
+                label: Page setup
+                type: object
+                fields:
+                  - name: size
+                    type: string
+                  - name: margin
+                    type: string
 `;
 }
 
-function projectMetadata(lang) {
-  const display = displayName(lang);
-  return `          - name: project_metadata_${lang}
-            label: Project metadata
+function sharedProjectSettings() {
+  return `  - name: project_settings
+    label: Project Settings
+    type: group
+    items:
+${sharedProjectMetadata()}
+${appSettings()}`;
+}
+
+function sharedProjectMetadata() {
+  return `      - name: project_metadata
+        label: Shared project metadata
+        type: file
+        path: src/data/project.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: creator
+            type: string
+          - name: contributor
+            type: string
+          - name: publisher
+            type: string
+          - name: rights
+            type: text
+          - name: date
+            type: string
+          - name: modified
+            type: string
+          - name: identifier
+            type: string
+`;
+}
+
+function languageMetadata(lang) {
+  return `          - name: metadata_${lang}
+            label: Project and book metadata
             type: file
-            path: src/data/locales.json
+            path: src/data/works.json
             format: json
             operations:
               create: false
               delete: false
             fields:
-              - name: ${lang}
-                label: ${display} project text
+${indentBlock(metadata(lang), 4)}`;
+}
+
+function metadata(lang) {
+  const display = displayName(lang);
+  return `          - name: ${lang}
+            label: ${display} metadata
+            type: object
+            fields:
+              - name: project
+                label: Project text
                 type: object
                 fields:
-                  - name: project
-                    label: Project text
-                    type: object
-                    fields:
-                      - name: name
-                        label: Project name
-                        type: string
-                      - name: description
-                        type: text
-                      - name: credit
-                        type: text
+                  - name: name
+                    label: Project name
+                    type: string
+                  - name: description
+                    type: text
+                  - name: credit
+                    type: text
+              - name: title
+                label: Book title
+                type: string
+                required: true
+              - name: subtitle
+                type: string
+              - name: description
+                label: Book description
+                type: text
+              - name: language
+                type: string
+              - name: type
+                type: string
+              - name: subject
+                type: string
 `;
 }
 
@@ -274,14 +329,12 @@ function languageSection(lang) {
     type: group
     items:
       - name: project_settings_${lang}
-        label: Project Settings
+        label: Language Settings
         type: group
         items:
-${projectMetadata(lang)}
-${bookMetadataFile(lang)}
+${languageMetadata(lang)}
 ${navigationFile(lang)}
 ${localeFile(lang)}
-${appSettings(lang)}
 ${glossaryFile(lang)}
       - name: pages_${lang}
         label: Pages
@@ -293,19 +346,6 @@ ${homePage(lang)}
         type: group
         items:
 ${handbookPages(lang)}`;
-}
-
-function bookMetadataFile(lang) {
-  return `          - name: book_metadata_${lang}
-            label: Book metadata
-            type: file
-            path: src/data/works.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-${indentBlock(bookMetadata(lang), 4)}`;
 }
 
 function navigationFile(lang) {
@@ -345,32 +385,6 @@ function glossaryFile(lang) {
               delete: false
             fields:
 ${indentBlock(glossary(lang), 4)}`;
-}
-
-function bookMetadata(lang) {
-  const display = displayName(lang);
-  return `          - name: ${lang}
-            label: ${display} book metadata
-            type: object
-            fields:
-              - name: title
-                type: string
-                required: true
-              - name: subtitle
-                type: string
-              - name: creator
-                type: string
-              - name: contributor
-                type: string
-              - name: description
-                type: text
-              - name: publisher
-                type: string
-              - name: rights
-                type: text
-              - name: language
-                type: string
-`;
 }
 
 function navigation(lang) {
@@ -704,6 +718,7 @@ components:
       values:
 ${languageOptions()}
 content:
+${sharedProjectSettings()}
 ${LANGS.map((lang) => languageSection(lang)).join('\n')}`;
 }
 

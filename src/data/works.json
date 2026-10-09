@@ -1,18 +1,16 @@
 {
   "de": {
+    "project": {
+      "name": "Toolbox für City Changer",
+      "description": "Ein Handbuch von Wir machen Wien, Changing Cities und Prostorož aus dem Erasmus+-Projekt Toolbox für City Changer.",
+      "credit": "Ein Handbuch von <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
+    },
     "title": "Toolbox für City Changer",
     "subtitle": "Ein Handbuch von Wir machen Wien, Changing Cities & Prostorož",
-    "creator": "Wir machen Wien, Changing Cities & Prostorož",
-    "contributor": "Fricka Lindemann, etc.",
     "description": "Ein praxisorientiertes Handbuch für Initiativen, die ihre Stadt sicherer, grüner, inklusiver und klimagerechter machen wollen und dafür Werkzeuge brauchen.",
-    "publisher": "Wir machen Wien",
-    "rights": "CC BY 4.0",
     "language": "de",
-    "date": "2026-09-03",
-    "modified": "2026-10-07",
     "type": "Handbuch",
     "subject": "Stadtentwicklung; Aktivismus; Verkehrsberuhigung; Beteiligung",
-    "identifier": "",
     "chapters": [
       {
         "file": "0-0-cover",
@@ -63,19 +61,17 @@
     ]
   },
   "en": {
+    "project": {
+      "name": "Toolbox for City Changers",
+      "description": "A handbook by Wir machen Wien, Changing Cities and Prostorož from the Erasmus+ project Toolbox for City Changers.",
+      "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
+    },
     "title": "Toolbox for City Changers",
     "subtitle": "A handbook by Wir machen Wien, Changing Cities & Prostorož",
-    "creator": "Wir machen Wien, Changing Cities & Prostorož",
-    "contributor": "Fricka Lindemann, etc.",
     "description": "A practical handbook for initiatives that want to make their city safer, greener, more inclusive and more resilient to climate change, and need tools to do so.",
-    "publisher": "Wir machen Wien",
-    "rights": "CC BY 4.0",
     "language": "en",
-    "date": "2026-09-03",
-    "modified": "2026-10-07",
     "type": "Handbook",
     "subject": "Urban development; activism; traffic calming; participation",
-    "identifier": "",
     "chapters": [
       {
         "file": "0-0-cover",
@@ -126,19 +122,17 @@
     ]
   },
   "sl": {
+    "project": {
+      "name": "Zbirka orodij za spreminjanje mest",
+      "description": "Priročnik organizacij Wir machen Wien, Changing Cities in Prostorož iz projekta Erasmus+ Zbirka orodij za spreminjanje mest.",
+      "credit": "Priročnik organizacij <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> in <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
+    },
     "title": "Zbirka orodij za spreminjanje mest",
     "subtitle": "Priročnik organizacij Wir machen Wien, Changing Cities & Prostorož",
-    "creator": "Wir machen Wien, Changing Cities & Prostorož",
-    "contributor": "Fricka Lindemann, etc.",
     "description": "Praktični priročnik za pobude, ki želijo svoje mesto narediti varnejše, bolj zeleno, vključujoče in odpornejše na podnebne spremembe ter za to potrebujejo orodja.",
-    "publisher": "Wir machen Wien",
-    "rights": "CC BY 4.0",
     "language": "sl",
-    "date": "2026-09-03",
-    "modified": "2026-10-07",
     "type": "Priročnik",
     "subject": "Urbani razvoj; aktivizem; umirjanje prometa; sodelovanje",
-    "identifier": "",
     "chapters": [
       {
         "file": "0-0-cover",

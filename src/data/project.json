@@ -1,5 +1,9 @@
 {
-  "name": "Toolbox for City Changers",
-  "description": "A handbook by Wir machen Wien, Changing Cities and Prostorož from the Erasmus+ project Toolbox for City Changers.",
-  "credit": "A handbook by <a href=\"https://wirmachen.wien\">Wir machen Wien</a>, <a href=\"https://changing-cities.org\">Changing Cities</a> & <a href=\"https://www.prostoroz.org\">Prostorož</a>. <a href=\"https://wirmachen.wien/impressum/\">Impressum</a>. <a href=\"https://github.com/wirmachenwien/toolbox-city-changer\">Github</a>."
+  "creator": "Wir machen Wien, Changing Cities & Prostorož",
+  "contributor": "Fricka Lindemann, etc.",
+  "publisher": "Wir machen Wien",
+  "rights": "CC BY 4.0",
+  "date": "2026-09-03",
+  "modified": "2026-10-07",
+  "identifier": ""
 }

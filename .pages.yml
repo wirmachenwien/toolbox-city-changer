@@ -70,25 +70,187 @@ components:
           label: "Slovenščina"
 
 content:
+  - name: project_settings
+    label: Project Settings
+    type: group
+    items:
+      - name: project_metadata
+        label: Shared project metadata
+        type: file
+        path: src/data/project.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: creator
+            type: string
+          - name: contributor
+            type: string
+          - name: publisher
+            type: string
+          - name: rights
+            type: text
+          - name: date
+            type: string
+          - name: modified
+            type: string
+          - name: identifier
+            type: string
+
+      - name: app_settings
+        label: Site and PDF settings
+        type: file
+        path: src/data/settings.json
+        format: json
+        operations:
+          create: false
+          delete: false
+        fields:
+          - name: math
+            label: Math rendering
+            type: object
+            fields:
+              - name: enabled
+                type: boolean
+              - name: source
+                type: select
+                options:
+                  values:
+                    - name: cdn
+                      label: CDN
+                    - name: local
+                      label: Local
+          - name: web
+            label: Website settings
+            type: object
+            fields:
+              - name: pagination
+                type: boolean
+              - name: paginationType
+                label: Pagination type
+                type: select
+                options:
+                  values:
+                    - name: title-arrows
+                      label: Title and arrows
+                    - name: arrows
+                      label: Arrows only
+                    - name: titles
+                      label: Titles only
+              - name: accordion
+                type: boolean
+              - name: accordionLevel
+                label: Accordion heading level
+                type: select
+                options:
+                  values:
+                    - name: h2
+                      label: H2
+                    - name: h3
+                      label: H3
+              - name: svgInject
+                label: Inline SVG injection
+                type: boolean
+              - name: lazyload
+                label: Lazy-load media
+                type: boolean
+              - name: bookmarks
+                type: object
+                fields:
+                  - name: enabled
+                    type: boolean
+                  - name: noteMaxLength
+                    label: Maximum note length
+                    type: number
+              - name: nav
+                label: Navigation behavior
+                type: object
+                fields:
+                  - name: expandBooks
+                    type: boolean
+                  - name: projectNavPosition
+                    type: select
+                    options:
+                      values:
+                        - name: before
+                          label: Before book navigation
+                        - name: after
+                          label: After book navigation
+              - name: search
+                type: object
+                fields:
+                  - name: jumpBoxLocation
+                    type: string
+                  - name: param
+                    label: Search query parameter
+                    type: string
+              - name: titleDivider
+                label: Title divider
+                type: string
+              - name: indexing
+                label: Search engine indexing
+                type: object
+                fields:
+                  - name: development
+                    type: select
+                    options:
+                      values:
+                        - name: index
+                          label: Index
+                        - name: noindex
+                          label: No index
+                  - name: live
+                    type: select
+                    options:
+                      values:
+                        - name: index
+                          label: Index
+                        - name: noindex
+                          label: No index
+          - name: pdf
+            label: PDF settings
+            type: object
+            fields:
+              - name: notes
+                label: Note placement
+                type: select
+                options:
+                  values:
+                    - name: footnotes
+                      label: Footnotes, bottom of page
+                    - name: chapter-footnotes
+                      label: End of chapter
+                    - name: book-footnotes
+                      label: End of book
+              - name: page
+                label: Page setup
+                type: object
+                fields:
+                  - name: size
+                    type: string
+                  - name: margin
+                    type: string
+
   - name: language_de
     label: "Deutsch"
     type: group
     items:
       - name: project_settings_de
-        label: Project Settings
+        label: Language Settings
         type: group
         items:
-          - name: project_metadata_de
-            label: Project metadata
+          - name: metadata_de
+            label: Project and book metadata
             type: file
-            path: src/data/locales.json
+            path: src/data/works.json
             format: json
             operations:
               create: false
               delete: false
             fields:
               - name: de
-                label: German project text
+                label: German metadata
                 type: object
                 fields:
                   - name: project
@@ -102,36 +264,20 @@ content:
                         type: text
                       - name: credit
                         type: text
-
-          - name: book_metadata_de
-            label: Book metadata
-            type: file
-            path: src/data/works.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: de
-                label: German book metadata
-                type: object
-                fields:
                   - name: title
+                    label: Book title
                     type: string
                     required: true
                   - name: subtitle
                     type: string
-                  - name: creator
-                    type: string
-                  - name: contributor
-                    type: string
                   - name: description
-                    type: text
-                  - name: publisher
-                    type: string
-                  - name: rights
+                    label: Book description
                     type: text
                   - name: language
+                    type: string
+                  - name: type
+                    type: string
+                  - name: subject
                     type: string
 
           - name: navigation_de
@@ -377,140 +523,6 @@ content:
                     type: object
                     fields:
                       - name: link-to-page-assistive-text
-                        type: string
-
-          - name: app_settings_de
-            label: Site and PDF settings
-            type: file
-            path: src/data/settings.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: math
-                label: Math rendering
-                type: object
-                fields:
-                  - name: enabled
-                    type: boolean
-                  - name: source
-                    type: select
-                    options:
-                      values:
-                        - name: cdn
-                          label: CDN
-                        - name: local
-                          label: Local
-              - name: web
-                label: Website settings
-                type: object
-                fields:
-                  - name: pagination
-                    type: boolean
-                  - name: paginationType
-                    label: Pagination type
-                    type: select
-                    options:
-                      values:
-                        - name: title-arrows
-                          label: Title and arrows
-                        - name: arrows
-                          label: Arrows only
-                        - name: titles
-                          label: Titles only
-                  - name: accordion
-                    type: boolean
-                  - name: accordionLevel
-                    label: Accordion heading level
-                    type: select
-                    options:
-                      values:
-                        - name: h2
-                          label: H2
-                        - name: h3
-                          label: H3
-                  - name: svgInject
-                    label: Inline SVG injection
-                    type: boolean
-                  - name: lazyload
-                    label: Lazy-load media
-                    type: boolean
-                  - name: bookmarks
-                    type: object
-                    fields:
-                      - name: enabled
-                        type: boolean
-                      - name: noteMaxLength
-                        label: Maximum note length
-                        type: number
-                  - name: nav
-                    label: Navigation behavior
-                    type: object
-                    fields:
-                      - name: expandBooks
-                        type: boolean
-                      - name: projectNavPosition
-                        type: select
-                        options:
-                          values:
-                            - name: before
-                              label: Before book navigation
-                            - name: after
-                              label: After book navigation
-                  - name: search
-                    type: object
-                    fields:
-                      - name: jumpBoxLocation
-                        type: string
-                      - name: param
-                        label: Search query parameter
-                        type: string
-                  - name: titleDivider
-                    label: Title divider
-                    type: string
-                  - name: indexing
-                    label: Search engine indexing
-                    type: object
-                    fields:
-                      - name: development
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-                      - name: live
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-              - name: pdf
-                label: PDF settings
-                type: object
-                fields:
-                  - name: notes
-                    label: Note placement
-                    type: select
-                    options:
-                      values:
-                        - name: footnotes
-                          label: Footnotes, bottom of page
-                        - name: chapter-footnotes
-                          label: End of chapter
-                        - name: book-footnotes
-                          label: End of book
-                  - name: page
-                    label: Page setup
-                    type: object
-                    fields:
-                      - name: size
-                        type: string
-                      - name: margin
                         type: string
 
           - name: glossary_terms_de
@@ -802,20 +814,20 @@ content:
     type: group
     items:
       - name: project_settings_en
-        label: Project Settings
+        label: Language Settings
         type: group
         items:
-          - name: project_metadata_en
-            label: Project metadata
+          - name: metadata_en
+            label: Project and book metadata
             type: file
-            path: src/data/locales.json
+            path: src/data/works.json
             format: json
             operations:
               create: false
               delete: false
             fields:
               - name: en
-                label: English project text
+                label: English metadata
                 type: object
                 fields:
                   - name: project
@@ -829,36 +841,20 @@ content:
                         type: text
                       - name: credit
                         type: text
-
-          - name: book_metadata_en
-            label: Book metadata
-            type: file
-            path: src/data/works.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: en
-                label: English book metadata
-                type: object
-                fields:
                   - name: title
+                    label: Book title
                     type: string
                     required: true
                   - name: subtitle
                     type: string
-                  - name: creator
-                    type: string
-                  - name: contributor
-                    type: string
                   - name: description
-                    type: text
-                  - name: publisher
-                    type: string
-                  - name: rights
+                    label: Book description
                     type: text
                   - name: language
+                    type: string
+                  - name: type
+                    type: string
+                  - name: subject
                     type: string
 
           - name: navigation_en
@@ -1104,140 +1100,6 @@ content:
                     type: object
                     fields:
                       - name: link-to-page-assistive-text
-                        type: string
-
-          - name: app_settings_en
-            label: Site and PDF settings
-            type: file
-            path: src/data/settings.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: math
-                label: Math rendering
-                type: object
-                fields:
-                  - name: enabled
-                    type: boolean
-                  - name: source
-                    type: select
-                    options:
-                      values:
-                        - name: cdn
-                          label: CDN
-                        - name: local
-                          label: Local
-              - name: web
-                label: Website settings
-                type: object
-                fields:
-                  - name: pagination
-                    type: boolean
-                  - name: paginationType
-                    label: Pagination type
-                    type: select
-                    options:
-                      values:
-                        - name: title-arrows
-                          label: Title and arrows
-                        - name: arrows
-                          label: Arrows only
-                        - name: titles
-                          label: Titles only
-                  - name: accordion
-                    type: boolean
-                  - name: accordionLevel
-                    label: Accordion heading level
-                    type: select
-                    options:
-                      values:
-                        - name: h2
-                          label: H2
-                        - name: h3
-                          label: H3
-                  - name: svgInject
-                    label: Inline SVG injection
-                    type: boolean
-                  - name: lazyload
-                    label: Lazy-load media
-                    type: boolean
-                  - name: bookmarks
-                    type: object
-                    fields:
-                      - name: enabled
-                        type: boolean
-                      - name: noteMaxLength
-                        label: Maximum note length
-                        type: number
-                  - name: nav
-                    label: Navigation behavior
-                    type: object
-                    fields:
-                      - name: expandBooks
-                        type: boolean
-                      - name: projectNavPosition
-                        type: select
-                        options:
-                          values:
-                            - name: before
-                              label: Before book navigation
-                            - name: after
-                              label: After book navigation
-                  - name: search
-                    type: object
-                    fields:
-                      - name: jumpBoxLocation
-                        type: string
-                      - name: param
-                        label: Search query parameter
-                        type: string
-                  - name: titleDivider
-                    label: Title divider
-                    type: string
-                  - name: indexing
-                    label: Search engine indexing
-                    type: object
-                    fields:
-                      - name: development
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-                      - name: live
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-              - name: pdf
-                label: PDF settings
-                type: object
-                fields:
-                  - name: notes
-                    label: Note placement
-                    type: select
-                    options:
-                      values:
-                        - name: footnotes
-                          label: Footnotes, bottom of page
-                        - name: chapter-footnotes
-                          label: End of chapter
-                        - name: book-footnotes
-                          label: End of book
-                  - name: page
-                    label: Page setup
-                    type: object
-                    fields:
-                      - name: size
-                        type: string
-                      - name: margin
                         type: string
 
           - name: glossary_terms_en
@@ -1529,20 +1391,20 @@ content:
     type: group
     items:
       - name: project_settings_sl
-        label: Project Settings
+        label: Language Settings
         type: group
         items:
-          - name: project_metadata_sl
-            label: Project metadata
+          - name: metadata_sl
+            label: Project and book metadata
             type: file
-            path: src/data/locales.json
+            path: src/data/works.json
             format: json
             operations:
               create: false
               delete: false
             fields:
               - name: sl
-                label: Slovene project text
+                label: Slovene metadata
                 type: object
                 fields:
                   - name: project
@@ -1556,36 +1418,20 @@ content:
                         type: text
                       - name: credit
                         type: text
-
-          - name: book_metadata_sl
-            label: Book metadata
-            type: file
-            path: src/data/works.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: sl
-                label: Slovene book metadata
-                type: object
-                fields:
                   - name: title
+                    label: Book title
                     type: string
                     required: true
                   - name: subtitle
                     type: string
-                  - name: creator
-                    type: string
-                  - name: contributor
-                    type: string
                   - name: description
-                    type: text
-                  - name: publisher
-                    type: string
-                  - name: rights
+                    label: Book description
                     type: text
                   - name: language
+                    type: string
+                  - name: type
+                    type: string
+                  - name: subject
                     type: string
 
           - name: navigation_sl
@@ -1831,140 +1677,6 @@ content:
                     type: object
                     fields:
                       - name: link-to-page-assistive-text
-                        type: string
-
-          - name: app_settings_sl
-            label: Site and PDF settings
-            type: file
-            path: src/data/settings.json
-            format: json
-            operations:
-              create: false
-              delete: false
-            fields:
-              - name: math
-                label: Math rendering
-                type: object
-                fields:
-                  - name: enabled
-                    type: boolean
-                  - name: source
-                    type: select
-                    options:
-                      values:
-                        - name: cdn
-                          label: CDN
-                        - name: local
-                          label: Local
-              - name: web
-                label: Website settings
-                type: object
-                fields:
-                  - name: pagination
-                    type: boolean
-                  - name: paginationType
-                    label: Pagination type
-                    type: select
-                    options:
-                      values:
-                        - name: title-arrows
-                          label: Title and arrows
-                        - name: arrows
-                          label: Arrows only
-                        - name: titles
-                          label: Titles only
-                  - name: accordion
-                    type: boolean
-                  - name: accordionLevel
-                    label: Accordion heading level
-                    type: select
-                    options:
-                      values:
-                        - name: h2
-                          label: H2
-                        - name: h3
-                          label: H3
-                  - name: svgInject
-                    label: Inline SVG injection
-                    type: boolean
-                  - name: lazyload
-                    label: Lazy-load media
-                    type: boolean
-                  - name: bookmarks
-                    type: object
-                    fields:
-                      - name: enabled
-                        type: boolean
-                      - name: noteMaxLength
-                        label: Maximum note length
-                        type: number
-                  - name: nav
-                    label: Navigation behavior
-                    type: object
-                    fields:
-                      - name: expandBooks
-                        type: boolean
-                      - name: projectNavPosition
-                        type: select
-                        options:
-                          values:
-                            - name: before
-                              label: Before book navigation
-                            - name: after
-                              label: After book navigation
-                  - name: search
-                    type: object
-                    fields:
-                      - name: jumpBoxLocation
-                        type: string
-                      - name: param
-                        label: Search query parameter
-                        type: string
-                  - name: titleDivider
-                    label: Title divider
-                    type: string
-                  - name: indexing
-                    label: Search engine indexing
-                    type: object
-                    fields:
-                      - name: development
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-                      - name: live
-                        type: select
-                        options:
-                          values:
-                            - name: index
-                              label: Index
-                            - name: noindex
-                              label: No index
-              - name: pdf
-                label: PDF settings
-                type: object
-                fields:
-                  - name: notes
-                    label: Note placement
-                    type: select
-                    options:
-                      values:
-                        - name: footnotes
-                          label: Footnotes, bottom of page
-                        - name: chapter-footnotes
-                          label: End of chapter
-                        - name: book-footnotes
-                          label: End of book
-                  - name: page
-                    label: Page setup
-                    type: object
-                    fields:
-                      - name: size
-                        type: string
-                      - name: margin
                         type: string
 
           - name: glossary_terms_sl
