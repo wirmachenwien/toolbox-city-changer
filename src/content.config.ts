@@ -37,11 +37,13 @@ const pages = defineCollection({
 
 // Preview pages (component showcase): MDX source rendered through the shared
 // MdxContent scope, so demos use exactly the author-facing component set.
+// The showcase is English-only by design (no language switcher in the CMS),
+// so `lang` falls back to the default language.
 const preview = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/preview' }),
   schema: z.object({
     title: z.string(),
-    lang,
+    lang: lang.default('en'),
   }),
 });
 

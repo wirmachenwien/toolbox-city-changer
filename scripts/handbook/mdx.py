@@ -168,7 +168,7 @@ def option_entries(source: str) -> list[tuple[str, bool]]:
 
 # `{ label: "...", href: "..." }` entries (SideBySideButtons links,
 # Bibliography sources, SelectList options). Both quote styles are accepted:
-# the kitchen sink uses single quotes, chapter MDX double quotes.
+# the component showcase uses single quotes, chapter MDX double quotes.
 LINK_ENTRY_RE = re.compile(
     r"""\{\s*label:\s*(?:"([^"]+)"|'([^']+)')\s*"""
     r"""(?:,\s*href:\s*(?:"([^"]+)"|'([^']+)'))?[^}]*\}"""

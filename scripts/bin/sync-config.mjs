@@ -600,18 +600,16 @@ function languageOptions() {
 `).join('');
 }
 
-function kitchenSink() {
-  return `  - name: kitchen_sink
-    label: Kitchen Sink
+function componentShowcase() {
+  return `  - name: component_showcase
+    label: Component Showcase
     type: file
-    path: src/content/preview/kitchen-sink.mdx
+    path: src/content/preview/component-showcase.mdx
     format: yaml-frontmatter
     fields:
       - name: title
         type: string
         required: true
-      - name: lang
-        component: language
       - name: body
         component: markdown_body
     operations:
@@ -683,7 +681,7 @@ ${languageOptions()}
 content:
 ${sharedProjectSettings()}
 ${LANGS.map((lang) => languageSection(lang)).join('\n')}
-${kitchenSink()}`;
+${componentShowcase()}`;
 }
 
 function robotsTxt() {

@@ -1,19 +1,19 @@
 ---
-// Preview shell for preview collection pages: same BaseLayout wiring the old
-// kitchen-sink route used (German, unindexed, no hreflang alternates), so
-// preview pages stay out of the sitemap and search index.
+// Preview shell for preview collection pages: the showcase is English-only
+// by design, so preview pages stay out of the sitemap and search index.
 import BaseLayout from './BaseLayout.astro';
 import { withBase } from '../lib/site';
+import type { Language } from '../data/locales';
 
 interface Props {
+  lang: Language;
   title?: string;
 }
 
-const { frontmatter, title: titleProp } = Astro.props as Props & { frontmatter?: { title?: string } };
-const title = titleProp ?? frontmatter?.title ?? 'Preview';
-const url = withBase('/preview/kitchen-sink.html');
+const { lang, title = 'Preview' } = Astro.props;
+const url = withBase('/preview/component-showcase.html');
 ---
-<BaseLayout lang="de" title={title} kind="page" file="index" currentUrl={url} noindex hreflang={false}>
+<BaseLayout lang={lang} title={title} kind="page" file="index" currentUrl={url} noindex hreflang={false}>
   <div class="prose" data-prose>
     <slot />
   </div>
