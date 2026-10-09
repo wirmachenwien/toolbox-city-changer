@@ -26,7 +26,6 @@ import Glossary from '../../components/Glossary.astro';
 import Icon from '../../components/Icon.astro';
 import LanguageMenu from '../../components/LanguageMenu.astro';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
-import Math from '../../components/Math.astro';
 import MetadataTable from '../../components/MetadataTable.astro';
 import OpenerImage from '../../components/OpenerImage.astro';
 import PageRef from '../../components/PageRef.astro';
@@ -49,10 +48,15 @@ import VisualToc from '../../components/VisualToc.astro';
 import { withBase } from '../../lib/site';
 import { paginationNeighbours } from '../../data/works';
 import { slug } from '../../../handbook.config.ts';
+import katex from 'katex';
 
 const url = withBase('/preview/kitchen-sink.html');
 const iconNames = ['search', 'globe', 'menu', 'link', 'mail', 'bookmark', 'download', 'check', 'copy', 'bluesky', 'facebook', 'linkedin', 'reddit', 'x', 'whatsapp'] as const;
 const pagination = paginationNeighbours('de', 'book', '02');
+const inlineMathSource = 'E = mc^2';
+const displayMathSource = 'a^2 + b^2 = c^2';
+const inlineMath = katex.renderToString(inlineMathSource, { output: 'html', throwOnError: false });
+const displayMath = katex.renderToString(displayMathSource, { displayMode: true, output: 'html', throwOnError: false });
 ---
 <BaseLayout lang="de" title="Komponenten-Showcase" kind="page" file="index" currentUrl={url} noindex hreflang={false}>
   <div class="prose" data-prose>
@@ -152,7 +156,12 @@ const pagination = paginationNeighbours('de', 'book', '02');
     <div class="sink-demo"><LanguageSwitcher lang="de" kind="page" file="index" /></div>
 
     <h2 class="sink-label">Math</h2>
-    <div class="sink-demo"><Math display={false}>{"\\( E = mc^2 \\)"}</Math></div>
+    <div class="sink-demo">
+      <p><code>\({inlineMathSource}\)</code> renders inline: <span set:html={inlineMath} /></p>
+      <p>Display:</p>
+      <pre><code>\[{displayMathSource}\]</code></pre>
+      <div set:html={displayMath} />
+    </div>
 
     <h2 class="sink-label">MetadataTable</h2>
     <div class="sink-demo"><MetadataTable lang="de" /></div>

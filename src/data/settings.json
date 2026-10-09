@@ -1,5 +1,5 @@
 {
-  "math": { "enabled": true, "source": "cdn" },
+  "math": { "enabled": true },
   "web": {
     "pagination": true,
     "paginationType": "title-arrows",

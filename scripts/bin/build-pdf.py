@@ -37,9 +37,11 @@ from handbook.book import (
     front_opener,
     glossary_data,
     locale_text,
+    katex_css,
     load_works,
     markdown_to_html,
     read_chapter_mdx,
+    render_math_html,
     resolve_jobs,
 )
 from handbook.mdx import (
@@ -156,7 +158,9 @@ def font_uri(filename: str) -> str:
 def print_css() -> str:
     """Print stylesheet with logical font paths rewritten to file URIs."""
     css = PRINT_CSS.read_text(encoding="utf-8")
-    return FONT_RE.sub(lambda m: f'url("{font_uri(m.group(1))}")', css)
+    css = FONT_RE.sub(lambda m: f'url("{font_uri(m.group(1))}")', css)
+    katex_fonts = (ROOT / "node_modules" / "katex" / "dist" / "fonts").as_uri() + "/"
+    return css + "\n" + katex_css(katex_fonts)
 
 
 def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
@@ -228,7 +232,7 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
 
 
 def chapter_html(slug: str, md_text: str, lang: str = DEFAULT_LANG) -> str:
-    body = markdown_to_html(convert_mdx(md_text, lang), lang)
+    body = render_math_html(markdown_to_html(convert_mdx(md_text, lang), lang))
     return f'<section class="chapter" id="file-{slug}">\n{body}\n</section>'
 
 
@@ -297,7 +301,7 @@ def build_document(lang: str) -> str:
             print(f"warning: missing chapter {CONTENT / lang / f'{slug}.mdx'}", file=sys.stderr)
             continue
         if slug == "about":
-            body = markdown_to_html(convert_mdx(md_text, lang), lang)
+            body = render_math_html(markdown_to_html(convert_mdx(md_text, lang), lang))
             about_label = next(
                 (entry["label"] for entry in toc if entry["file"] == "about"),
                 "About",

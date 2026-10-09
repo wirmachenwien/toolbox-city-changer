@@ -1,6 +1,8 @@
 /* Toolbox for City Changers — global stylesheet.
    Modern CSS, logical properties throughout so RTL locales mirror for free. */
 
+@import "katex/dist/katex.css";
+
 /* Self-hosted Newsreader Text (OFL, see OFL-Newsreader.txt) so body copy
    renders identically online and in the WeasyPrint PDF, which embeds the
    same files. Static instances at the text optical size (opsz 16). */

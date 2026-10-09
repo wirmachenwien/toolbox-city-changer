@@ -2,8 +2,11 @@
 import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
-import { satteri } from '@astrojs/markdown-satteri';
-import { smartQuotesHastPlugin } from './src/lib/satteri-smart-quotes.ts';
+import { unified } from '@astrojs/markdown-remark';
+import rehypeKatex from 'rehype-katex';
+import remarkMath from 'remark-math';
+import { remarkBackslashMath } from './src/lib/remark-backslash-math.mjs';
+import { smartQuotesRehypePlugin } from './src/lib/satteri-smart-quotes.ts';
 import { site, base, defaultLang } from './handbook.config.ts';
 
 /** @typedef {{ file: string, web?: boolean }} Chapter */
@@ -43,9 +46,11 @@ export default defineConfig({
     // MDX inherits this processor (extendMarkdownConfig defaults to true).
     // Sätteri's built-in English quotes stay off so the plugin below has
     // straight quotes left to localise; dashes/ellipses are untouched.
-    processor: satteri({
-      features: { smartPunctuation: { quotes: false } },
-      hastPlugins: [smartQuotesHastPlugin(defaultLang)],
+    processor: unified({
+      gfm: true,
+      smartypants: false,
+      remarkPlugins: [remarkBackslashMath, remarkMath],
+      rehypePlugins: [rehypeKatex, smartQuotesRehypePlugin(defaultLang)],
     }),
   },
 });

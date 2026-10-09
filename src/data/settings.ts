@@ -1,7 +1,7 @@
 // Site feature toggles. Every toggle is typed and validated with Zod;
 // client islands read them from data attributes rendered by the layouts.
 // Full list of supported toggles:
-// - math.enabled / math.source ("cdn" | "local")
+// - math.enabled
 // - web.pagination / web.paginationType
 
 // - web.accordion / web.accordionLevel
@@ -20,9 +20,8 @@ const toggleSchema = z.object({
   math: z
     .object({
       enabled: z.boolean().default(true),
-      source: z.enum(['cdn', 'local']).default('cdn'),
     })
-    .default({ enabled: true, source: 'cdn' }),
+    .default({ enabled: true }),
   web: z
     .object({
       pagination: z.boolean().default(true),

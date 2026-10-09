@@ -118,14 +118,6 @@ function appSettings() {
             fields:
               - name: enabled
                 type: boolean
-              - name: source
-                type: select
-                options:
-                  values:
-                    - name: cdn
-                      label: CDN
-                    - name: local
-                      label: Local
           - name: web
             label: Website settings
             type: object
