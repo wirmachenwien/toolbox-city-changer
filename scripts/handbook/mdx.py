@@ -63,6 +63,10 @@ PULLQUOTE_RE = re.compile(r'<PullQuote\b([^>]*)>(.*?)</PullQuote>', re.DOTALL)
 TABLE_OPEN_RE = re.compile(r'<TableWrap\s*>')
 TABLE_CLOSE_RE = re.compile(r'</TableWrap>')
 FOOTNOTE_RE = re.compile(r'<Footnote\b([^>]*)\s*/>', re.DOTALL)
+# Inline Markdown links with absolute http(s) targets (image `![...]` links
+# excluded). The PDF builder turns these into lettered URL footnotes; anything
+# else (relative links, anchors) stays untouched.
+LINK_RE = re.compile(r'(?<!!)\[([^\]\n]+)\]\((https?://[^)\s]+)(?:\s+"[^"]*")?\)')
 GLOSSARY_RE = re.compile(r'<Glossary\s+entries=\{\[(.*?)\]\}\s*/>', re.DOTALL)
 QUIZ_RE = re.compile(r'<Quiz\b(.*?)options=\{\[(.*?)\]\}\s*/>', re.DOTALL)
 QUESTION_RE = re.compile(r'<Question\b(.*?)options=\{\[(.*?)\]\}(.*?)\s*/?>', re.DOTALL)

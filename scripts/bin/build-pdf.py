@@ -52,6 +52,7 @@ from handbook.mdx import (
     FOOTNOTE_RE,
     FRONTMATTER_RE,
     GLOSSARY_RE,
+    LINK_RE,
     PULLQUOTE_RE,
     QUESTION_RE,
     QUIZ_RE,
@@ -80,6 +81,16 @@ def pdf_notes_mode() -> str:
 def pdf_page_settings() -> tuple[str, str]:
     page = json.loads(SETTINGS.read_text(encoding="utf-8"))["pdf"]["page"]
     return page["size"], page["margin"]
+
+
+def link_marker(index: int) -> str:
+    """1-based counter to lowercase letters: 1->a ... 26->z, 27->aa, ..."""
+    label = ""
+    n = index
+    while n > 0:
+        n, rest = divmod(n - 1, 26)
+        label = chr(97 + rest) + label
+    return label
 
 
 def image_uri(filename: str) -> str:
@@ -177,6 +188,7 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
     answers_label = locale_text(lang, "questions.correct-answers", "Correct answers")
     chapter_notes: list[tuple[str, str, str]] = []
     footnote_count = 0
+    link_count = 0
     text = FRONTMATTER_RE.sub("", text, count=1)
 
     def figure(match: re.Match[str]) -> str:
@@ -191,7 +203,12 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
     text = FIGURE_RE.sub(figure, text)
     def video(match: re.Match[str]) -> str:
         values = attrs(match.group(1) or match.group(2))
-        return f"\n\n*Video: {values.get('caption', '')} (https://www.youtube.com/watch?v={values.get('id', '')})*\n"
+        url = f"https://www.youtube.com/watch?v={values.get('id', '')}"
+        # Emit a regular Markdown link so LINK_RE below moves the URL into
+        # a lettered link note like every other external link. The emphasis
+        # stays inside the link text so the call and note markup appended
+        # by LINK_RE end up outside <em> and print upright, not italic.
+        return f"\n\n[*Video: {values.get('caption', '')}*]({url})\n"
 
     text = VIDEO_RE.sub(video, text)
     text = strip_static_handlers(text)
@@ -199,6 +216,31 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
     text = FEATURE_OPEN_RE.sub(lambda m: feature_open_html(attrs(m.group(1)).get("title")), text)
     text = FEATURE_CLOSE_RE.sub('\n</div>\n', text)
     text = PULLQUOTE_RE.sub(pullquote_html, text)
+    # External links: keep the link text (plus its clickable anchor) and
+    # move the URL into a lettered note (a, b, c, ...), following the
+    # pdf.notes placement like regular Footnotes instead of printing it
+    # inline behind the text. Letters keep link URLs visually apart from
+    # the numbered Footnote notes.
+
+    def link_note(match: re.Match[str]) -> str:
+        nonlocal link_count
+        label, url = match.group(1), match.group(2)
+        link_count += 1
+        note_id, marker = f"link-{link_count}", link_marker(link_count)
+        call = f'<sup class="footnote-call" id="ref-{note_id}">{marker}</sup>'
+        if mode == "chapter-footnotes":
+            chapter_notes.append((note_id, marker, url))
+            return f'[{label}]({url}){call}'
+        if mode == "book-footnotes":
+            BOOK_FOOTNOTES.append((note_id, marker, url))
+            return f'[{label}]({url}){call}'
+        return (
+            f'[{label}]({url}){call}'
+            f'<span class="footnote">'
+            f'<span class="footnote-marker">{marker}</span> {url}</span>'
+        )
+
+    text = LINK_RE.sub(link_note, text)
     # Footnotes: attach inline notes to page, chapter end, or book end.
 
     def footnote(match: re.Match[str]) -> str:
@@ -223,7 +265,13 @@ def convert_mdx(text: str, lang: str = DEFAULT_LANG) -> str:
 
     text = FOOTNOTE_RE.sub(footnote, text)
     if chapter_notes:
-        items = ''.join(f'<li id="note-{note_id}">{note_text}</li>' for note_id, _, note_text in chapter_notes)
+        # Notes share one list in appearance order, but link URLs carry
+        # letter markers and Footnotes numbers, so each marker is printed
+        # explicitly (print.css suppresses the default <ol> numbering).
+        items = ''.join(
+            f'<li id="note-{note_id}"><span class="footnote-marker">{marker}</span> {note_text}</li>'
+            for note_id, marker, note_text in chapter_notes
+        )
         text += f'\n\n<section class="footnotes"><h2>{footnotes_title}</h2><ol>{items}</ol></section>\n'
     text = GLOSSARY_RE.sub(lambda m: glossary_html(m.group(1)), text)
     text = GLOSSARY_LANG_RE.sub(lambda m: glossary_lang_html(m.group(1), glossary_data()), text)
@@ -321,7 +369,10 @@ def build_document(lang: str) -> str:
         else:
             parts.append(chapter_html(slug, md_text, lang))
     if pdf_notes_mode() == "book-footnotes" and BOOK_FOOTNOTES:
-        items = ''.join(f'<li id="note-{note_id}">{note_text}</li>' for note_id, _, note_text in BOOK_FOOTNOTES)
+        items = ''.join(
+            f'<li id="note-{note_id}"><span class="footnote-marker">{marker}</span> {note_text}</li>'
+            for note_id, marker, note_text in BOOK_FOOTNOTES
+        )
         footnotes_title = locale_text(lang, "footnotes.notes", "Notes")
         parts.append(f'<section class="chapter footnotes" id="book-footnotes"><h1>{footnotes_title}</h1><ol>{items}</ol></section>')
     parts.append("</body></html>")
