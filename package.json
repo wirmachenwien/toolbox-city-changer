@@ -25,6 +25,7 @@
     "@astrojs/markdown-remark": "^7.3.2",
     "@astrojs/markdown-satteri": "^0.4.3",
     "astro": "^7.3.8",
+    "github-slugger": "^2.0.0",
     "katex": "^0.19.0",
     "qrcode": "^1.5.4",
     "rehype-katex": "^7.0.1",

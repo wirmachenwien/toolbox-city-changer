@@ -34,6 +34,19 @@ def _identity(text: str) -> str:
     return text
 
 
+def glossary_slug(term: str, seen: dict[str, int] | None = None) -> str:
+    """Anchor slug for a glossary term (mirrors src/lib/slug.ts, which uses
+    github-slugger like Astro's heading ids). No `#` permalink is rendered
+    on paper, matching headings: only the `id` is emitted so terms stay
+    linkable. `seen` deduplicates within one list ("term", "term-1")."""
+    slug = re.sub(r"\s+", "-", re.sub(r"[^\w\s-]", "", term.lower(), flags=re.UNICODE)).strip("-")
+    if seen is None:
+        return slug
+    count = seen.get(slug, 0)
+    seen[slug] = count + 1
+    return slug if count == 0 else f"{slug}-{count}"
+
+
 FRONTMATTER_RE = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
 FIGURE_RE = re.compile(r'<Figure\b([^>]*)\s*/>|<Figure\b([^>]*)>(.*?)</Figure>', re.DOTALL)
 VIDEO_RE = re.compile(r'<Video\b([^>]*)\s*/>|<Video\b([^>]*)>')
@@ -134,8 +147,9 @@ def option_entries(source: str) -> list[tuple[str, bool]]:
 
 
 def glossary_html(source: str, escape_fn: EscapeFn = _identity) -> str:
+    seen: dict[str, int] = {}
     items = ''.join(
-        f'<dt>{escape_fn(term)}</dt><dd>{escape_fn(definition)}</dd>'
+        f'<dt id="{glossary_slug(term, seen)}">{escape_fn(term)}</dt><dd>{escape_fn(definition)}</dd>'
         for term, definition in object_entries(source)
     )
     return f'\n\n<dl class="glossary">{items}</dl>\n'
@@ -143,8 +157,9 @@ def glossary_html(source: str, escape_fn: EscapeFn = _identity) -> str:
 
 def glossary_lang_html(lang: str, data: dict, escape_fn: EscapeFn = _identity) -> str:
     """Full shared glossary for a language (data = parsed glossary.json)."""
+    seen: dict[str, int] = {}
     items = ''.join(
-        f'<dt>{escape_fn(entry["term"])}</dt><dd>{escape_fn(entry["definition"])}</dd>'
+        f'<dt id="{glossary_slug(entry["term"], seen)}">{escape_fn(entry["term"])}</dt><dd>{escape_fn(entry["definition"])}</dd>'
         for entry in data.get(lang, [])
     )
     return f'\n\n<dl class="glossary">{items}</dl>\n'
