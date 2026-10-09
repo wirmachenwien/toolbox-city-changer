@@ -1336,7 +1336,6 @@ content:
     fields:
       - name: title
         type: string
-        required: true
         readonly: true
         description: "Preview: https://wirmachenwien.github.io/toolbox-city-changer/preview/component-showcase.html"
       - name: lang

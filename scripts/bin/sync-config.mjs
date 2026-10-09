@@ -609,7 +609,6 @@ function componentShowcase() {
     fields:
       - name: title
         type: string
-        required: true
         readonly: true
         description: "Preview: ${site}${BASE_PATH}/preview/component-showcase.html"
       - name: lang
